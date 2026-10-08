@@ -1,5 +1,27 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
-<title>Painel da Ju — Júlia Rocha</title>
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0E5552">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Painel da Ju">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title>Painel da Ju — Júlia Rocha</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" sizes="180x180" href="./icon-180.png">
+  <style>
+    :root{color-scheme:light;box-sizing:border-box}
+    *,*::before,*::after{box-sizing:inherit}
+    html{scroll-padding-top:env(safe-area-inset-top,0px)}
+    body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#FBF8F6;color:#141413}
+    img{max-width:100%}
+    [hidden]:not([hidden=until-found i]){display:none!important}
+  </style>
+</head>
+<body>
 <style>
   :root{
     --bg:#F4F6F1;
@@ -406,6 +428,7 @@
   .finance-bar-track i.spending{background:var(--pess);}
   .finance-bar-track i.transfer{background:var(--ok);}
   .finance-month-note{min-width:180px;text-align:left!important;white-space:normal!important;color:var(--ink-faint);font-size:10px;}
+  .app{padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right));padding-bottom:max(72px,env(safe-area-inset-bottom));}
   .finance-bar span{font:10px "IBM Plex Mono",monospace;color:var(--ink-faint);}
   .finance-legend{display:flex;flex-wrap:wrap;gap:12px;margin:10px 0 0;color:var(--ink-soft);font-size:11px;}
   .finance-legend span{display:flex;align-items:center;gap:6px;}
@@ -455,8 +478,8 @@
   }
   @media(max-width:560px){
     .appbar-top{align-items:flex-start;}
-    .backup-tools{width:100%;}
-    .backup-tools .btn{flex:1;}
+    .backup-tools{width:100%;flex-wrap:wrap;}
+    .backup-tools .btn{flex:1 1 calc(50% - 6px);}
     .today{text-align:left;}
     .tab-btn{padding:9px 10px;font-size:12px;}
   }
@@ -473,6 +496,7 @@
       </div>
       <div class="today mono" id="todayLabel"></div>
       <div class="backup-tools">
+        <button class="btn small" id="installApp" type="button">Instalar app</button>
         <button class="btn small" id="exportBackup" type="button">Exportar backup</button>
         <button class="btn small" id="importBackupButton" type="button">Restaurar backup</button>
         <input id="importBackup" type="file" accept="application/json,.json" hidden>
@@ -1063,6 +1087,32 @@
         });
       });
     }
+  }
+
+  function initAppInstall(){
+    var button=document.getElementById("installApp"),installPrompt=null;
+    var standalone=window.matchMedia("(display-mode: standalone)").matches||window.navigator.standalone===true;
+    if(standalone) button.hidden=true;
+    window.addEventListener("beforeinstallprompt",function(event){
+      event.preventDefault();
+      installPrompt=event;
+    });
+    window.addEventListener("appinstalled",function(){button.hidden=true;});
+    button.addEventListener("click",async function(){
+      if(installPrompt){
+        await installPrompt.prompt();
+        installPrompt=null;
+        return;
+      }
+      var ios=/iPad|iPhone|iPod/.test(navigator.userAgent);
+      var instructions=ios
+        ?"No iPhone: abra este painel no Safari, toque em Compartilhar e escolha “Adicionar à Tela de Início”."
+        :"No Android: abra este painel no Chrome e use o menu ⋮ > “Instalar app” ou “Adicionar à tela inicial”.";
+      if(location.protocol!=="https:"&&location.hostname!=="localhost"){
+        instructions+=" A instalação exige um endereço HTTPS publicado.";
+      }
+      window.alert(instructions);
+    });
   }
 
   function initBackups(){
@@ -2701,6 +2751,7 @@
     initToday();
     initTabs();
     initBackups();
+    initAppInstall();
     setSaveStatus("saving", "Carregando seus dados…");
     try{
       var saved=localStorage.getItem(LOCAL_DATA_KEY);
@@ -2728,6 +2779,13 @@
   }
 
   document.addEventListener("DOMContentLoaded", init);
+  if("serviceWorker" in navigator && window.isSecureContext && location.protocol!=="file:"){
+    window.addEventListener("load",function(){
+      navigator.serviceWorker.register("./service-worker.js").catch(function(error){
+        console.error("Falha ao registrar suporte offline:",error);
+      });
+    });
+  }
 })();
 </script>
 

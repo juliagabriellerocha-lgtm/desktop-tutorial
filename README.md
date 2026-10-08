@@ -6,6 +6,17 @@ Painel pessoal da Júlia Rocha para organizar vida pessoal, formação, rotina p
 
 Abra `index.html` em um navegador moderno. As alterações são salvas no armazenamento local do navegador; não há conta, sincronização entre dispositivos ou envio dos dados a um servidor. Use **Exportar backup** para guardar uma cópia JSON e **Restaurar backup** para recuperá-la. A restauração substitui os dados locais atuais.
 
+## Instalar no celular
+
+O painel pode ser instalado como PWA, em tela cheia, depois de publicado em um endereço HTTPS:
+
+- **Android:** abra o endereço no Chrome e toque em **Instalar app** (ou use o menu ⋮ > **Instalar app** / **Adicionar à tela inicial**).
+- **iPhone:** abra o endereço no Safari, toque em **Compartilhar** e escolha **Adicionar à Tela de Início**.
+
+Depois da primeira abertura online, o painel pode carregar offline. Os dados continuam salvos somente no navegador daquele dispositivo; não são sincronizados com o computador nem com outros celulares. Para levar dados entre dispositivos, exporte e restaure um backup com cuidado.
+
+**Privacidade:** este projeto contém informações pessoais, de saúde, profissionais e financeiras. Mantenha o repositório e qualquer hospedagem do painel privados, com acesso autenticado e HTTPS. Não publique esta versão em páginas públicas.
+
 ## Áreas incluídas
 
 - **Hoje:** agenda, check-in da rotina, treino, cardápio e lembretes.
