@@ -24,9 +24,11 @@ Use **Baixar meus dados** para exportar um backup JSON da janela de dados carreg
 
 ## Publicar e instalar
 
-1. Publique os arquivos estáticos deste repositório em um host com HTTPS, como Cloudflare Pages, Netlify ou GitHub Pages. Não publique chaves administrativas nem dados financeiros em arquivos estáticos.
-2. No Supabase, defina o domínio publicado como **Site URL** e inclua os endereços locais e de produção em **Redirect URLs**. Habilite confirmação de e-mail, configure recuperação de senha, limites de autenticação e SMTP próprio para produção.
-3. Abra o domínio HTTPS em um navegador compatível e escolha **Instalar app** quando disponível. Em iPhone/iPad, use Compartilhar → Adicionar à Tela de Início.
+Este repositório publica pelo GitHub Pages em `https://juliagabriellerocha-lgtm.github.io/desktop-tutorial/`. O workflow `.github/workflows/deploy-pages.yml` publica a branch da PR para validação e `main` após a integração; uma execução manual também pode ser iniciada em **Actions → Deploy finance dashboard → Run workflow**. Não publique chaves administrativas nem dados financeiros em arquivos estáticos.
+
+No Supabase, defina o domínio publicado como **Site URL** e inclua `https://juliagabriellerocha-lgtm.github.io/desktop-tutorial/` e os endereços locais em **Redirect URLs**. Habilite confirmação de e-mail, configure recuperação de senha, limites de autenticação e SMTP próprio para produção.
+
+Abra o endereço HTTPS em um navegador compatível e escolha **Instalar app** quando disponível. Em iPhone/iPad, use Compartilhar → Adicionar à Tela de Início.
 
 O service worker armazena somente o shell estático do app para abrir a interface offline; requisições e respostas do Supabase, sessões e dados financeiros nunca são colocados em cache. Edição, gravação, autenticação, recorrências e atualização de dashboards precisam de internet.
 
