@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f6f7f4">
+    <title>Painel Financeiro Ju</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <a class="brand" href="#overview" aria-label="Painel Financeiro Ju, início">
+          <span class="brand-mark">j<span>.</span></span>
+          <span class="brand-name">conta<span class="brand-name-dot">aí</span></span>
+        </a>
+        <div class="space-switcher">
+          <span class="avatar avatar-ju">J</span>
+          <span class="avatar avatar-andre">A</span>
+          <span class="space-copy"><strong>Ju + André</strong><small>Espaço do casal</small></span>
+          <span class="chevron">⌄</span>
+        </div>
+        <p class="nav-label">MENU</p>
+        <nav class="navigation" aria-label="Navegação principal">
+          <a class="nav-link active" href="#overview"><span class="nav-icon">▦</span>Visão geral</a>
+          <a class="nav-link" href="#individual"><span class="nav-icon">◷</span>Meu dinheiro</a>
+          <a class="nav-link" href="#home"><span class="nav-icon">⌂</span>Nosso lar</a>
+          <a class="nav-link" href="#settlement"><span class="nav-icon">↔</span>Acerto entre nós</a>
+        </nav>
+        <div class="sidebar-bottom">
+          <div class="privacy-note"><span class="privacy-icon">◉</span><p><strong>Privacidade primeiro</strong><br>Seus gastos pessoais só você vê.</p></div>
+          <div class="profile">
+            <span class="profile-avatar">J</span>
+            <span><strong>Ju</strong><small>Plano pessoal</small></span>
+            <span class="profile-more">•••</span>
+          </div>
+        </div>
+      </aside>
+
+      <main id="overview" class="main-content">
+        <header class="topbar">
+          <div class="mobile-brand"><span class="brand-mark">j<span>.</span></span><span class="brand-name">conta<span class="brand-name-dot">aí</span></span></div>
+          <div class="breadcrumb">Seu espaço <span>/</span> <strong>Visão geral</strong></div>
+          <div class="topbar-actions"><span class="period-caption">Período</span><label class="select-wrap"><span class="sr-only">Selecione o período do painel</span><select id="period-select"><option value="all">Últimos 8 meses</option><option value="recent">Últimos 3 meses</option></select></label><button class="text-button" id="backend-button" type="button">Conectar Supabase</button><button class="text-button" id="invite-button" type="button" hidden>Convidar</button><button class="text-button" id="account-button" type="button">Entrar</button></div>
+        </header>
+
+        <section class="welcome-row">
+          <div><p class="eyebrow">QUARTA-FEIRA, 7 DE OUTUBRO</p><h1>Oi, Ju <span class="wave">✳</span></h1><p class="welcome-subtitle">Um olhar leve sobre o seu dinheiro e o de vocês.</p></div>
+          <button class="export-button" id="export-button"><span>↓</span> Exportar resumo</button>
+        </section>
+
+        <section class="summary-grid" aria-label="Resumo financeiro">
+          <article class="summary-card">
+            <div class="summary-top"><span class="summary-label">Gastos individuais <span class="info-dot" title="Somente despesas pessoais da Ju">i</span></span><span class="summary-icon lilac">↘</span></div>
+            <strong class="summary-amount" id="individual-total">R$ 0</strong>
+            <div class="summary-foot"><span class="trend down">↓ 8,4%</span><span>vs. período anterior</span></div>
+            <span class="card-sparkline sparkline-lilac" aria-hidden="true">▁▃▂▅▃▄▂▃</span>
+          </article>
+          <article class="summary-card">
+            <div class="summary-top"><span class="summary-label">Custo mensal do lar <span class="info-dot" title="Média de janeiro a agosto">i</span></span><span class="summary-icon mint">⌂</span></div>
+            <strong class="summary-amount" id="home-average">R$ 0</strong>
+            <div class="summary-foot"><span class="trend up">↑ 3,2%</span><span>vs. quadrimestre anterior</span></div>
+            <span class="card-sparkline sparkline-mint" aria-hidden="true">▂▃▁▄▃▅▄▆</span>
+          </article>
+          <article class="summary-card settlement-summary">
+            <div class="summary-top"><span class="summary-label" id="settlement-summary-label">Acerto acumulado da Ju <span class="info-dot" title="Negativo significa que a Ju deve ao André">i</span></span><span class="summary-icon peach">↔</span></div>
+            <strong class="summary-amount negative" id="settlement-total">− R$ 0</strong>
+            <div class="summary-foot"><span class="trend neutral">Em andamento</span><span>abaixo de zero = Ju deve ao André</span></div>
+            <span class="card-sparkline sparkline-peach" aria-hidden="true">▆▅▇▄▅▃▂▃</span>
+          </article>
+        </section>
+
+        <section class="panel transactions-panel" aria-labelledby="transactions-title">
+          <div class="panel-heading"><div><p class="eyebrow">REGISTROS PRIVADOS E COMPARTILHADOS</p><h2 id="transactions-title">Lançamentos recentes</h2></div><button class="export-button" id="add-transaction-button" type="button">+ Novo lançamento</button></div>
+          <p class="backend-notice" id="backend-notice">Modo de demonstração: os lançamentos não são salvos. Conecte seu projeto Supabase para usar dados reais.</p>
+          <div class="transaction-list" id="transaction-list" aria-live="polite"></div>
+        </section>
+
+        <section class="dashboard-grid primary-grid" id="individual">
+          <article class="panel cashflow-panel">
+            <div class="panel-heading"><div><p class="eyebrow" id="cashflow-range">MARÇO A OUTUBRO · R$</p><h2>Entradas e saídas</h2></div><button class="more-button" aria-label="Mais opções do gráfico">•••</button></div>
+            <div class="chart-legend" id="cashflow-legend"></div>
+            <div class="chart-wrap"><svg id="cashflow-chart" class="chart" role="img" aria-label="Entradas e saídas mensais"></svg></div>
+            <div class="chart-insight"><span class="insight-bulb">✦</span><span id="cashflow-insight">Em <strong>outubro</strong>, suas entradas cobriram os gastos individuais e a parte do lar.</span></div>
+          </article>
+
+          <article class="panel categories-panel">
+            <div class="panel-heading"><div><p class="eyebrow" id="category-range">MARÇO A OUTUBRO · R$</p><h2>Para onde vai seu dinheiro</h2></div><button class="more-button" aria-label="Mais opções do gráfico">•••</button></div>
+            <div class="donut-area"><svg id="category-chart" class="donut-chart" role="img" aria-label="Gastos individuais por categoria"></svg><div id="category-legend" class="category-legend"></div></div>
+            <p class="panel-footnote" id="category-footnote">Gastos individuais da Ju · visíveis só para você</p>
+          </article>
+        </section>
+
+        <section class="dashboard-grid secondary-grid">
+          <article class="panel">
+            <div class="panel-heading"><div><p class="eyebrow">MÉDIA MENSAL</p><h2>Progresso pessoal</h2></div><span class="period-chip">Abr–Jun × Set–Out</span></div>
+            <div id="personal-progress" class="progress-list"></div>
+          </article>
+          <article class="panel" id="home">
+            <div class="panel-heading"><div><p class="eyebrow">POR MÊS · R$</p><h2>Quem pagou o lar</h2></div><div class="legend-person"><span class="legend-dot dot-andre"></span><span id="member-one-label">André</span><span class="legend-dot dot-ju"></span><span id="member-two-label">Ju</span></div></div>
+            <div class="chart-wrap compact-chart"><svg id="payer-chart" class="chart" role="img" aria-label="Pagamentos do lar por pessoa e por mês"></svg></div>
+          </article>
+        </section>
+
+        <section class="panel settlement-panel" id="settlement">
+          <div class="panel-heading settlement-heading"><div><p class="eyebrow">COM O QUE JÁ FOI SETORIZADO</p><h2 id="settlement-panel-title">Acerto acumulado da Ju</h2><p class="panel-subtitle" id="settlement-panel-subtitle">Abaixo de zero = Ju deve ao André <span class="info-dot" title="Se os gastos pendentes forem classificados conforme a sugestão, o saldo pode mudar.">i</span></p></div><div class="scenario-control" role="group" aria-label="Cenário da projeção"><button class="scenario-button active" data-scenario="base">Base</button><button class="scenario-button" data-scenario="optimistic">Otimista</button><button class="scenario-button" data-scenario="conservative">Conservador</button></div></div>
+          <div class="settlement-stats"><div><span class="stat-label">Saldo atual</span><strong class="negative" id="settlement-current">− R$ 0</strong></div><div><span class="stat-label">Acerto estimado</span><strong id="settlement-zero">—</strong></div><div class="pending-stat" id="pending-stat"><span class="stat-label">Pendentes de revisão</span><strong>8 lançamentos · R$ 1.240</strong></div></div>
+          <div class="chart-wrap settlement-chart-wrap"><svg id="settlement-chart" class="chart" role="img" aria-label="Acerto acumulado e projeção de quitação"></svg></div>
+          <p class="chart-note"><span class="projection-key"></span> Projeção ilustrativa; depende da classificação dos lançamentos pendentes.</p>
+        </section>
+
+        <div class="section-divider"><span>NOSSO LAR</span></div>
+        <section class="dashboard-grid home-grid">
+          <article class="panel home-sectors-panel">
+            <div class="panel-heading"><div><p class="eyebrow" id="home-sector-range">JANEIRO A AGOSTO · R$</p><h2>Custo do lar por setor</h2></div><span class="period-chip">Total e média/mês</span></div>
+            <div id="home-sectors" class="sector-list"></div>
+          </article>
+          <article class="panel">
+            <div class="panel-heading"><div><p class="eyebrow">PRÓXIMOS 12 MESES · R$</p><h2>Projeção do custo do lar</h2></div><button class="more-button" aria-label="Mais opções do gráfico">•••</button></div>
+            <div class="home-forecast-total"><strong id="forecast-average">R$ 0</strong><span>média mensal prevista</span><span class="forecast-tag">↗ 2,5% ao ano</span></div>
+            <div class="chart-wrap compact-chart"><svg id="home-forecast-chart" class="chart" role="img" aria-label="Projeção de custos mensais do lar para os próximos doze meses"></svg></div>
+          </article>
+        </section>
+        <section class="panel home-progress-panel">
+          <div class="panel-heading"><div><p class="eyebrow">MÉDIA MENSAL DO LAR</p><h2>Progresso e regressões</h2></div><span class="period-chip">Jan–Abr × Mai–Ago</span></div>
+          <div id="home-progress" class="progress-list home-progress-list"></div>
+        </section>
+        <footer class="footer"><span>Feito para cuidar do que é seu e do que é de vocês.</span><span id="footer-mode">Protótipo · valores fictícios</span></footer>
+      </main>
+    </div>
+
+    <dialog class="app-dialog" id="backend-dialog" aria-labelledby="backend-dialog-title">
+      <form method="dialog" class="dialog-close-form"><button class="dialog-close" aria-label="Fechar">×</button></form>
+      <p class="eyebrow">CONFIGURAÇÃO SEGURA</p>
+      <h2 id="backend-dialog-title">Conectar ao Supabase</h2>
+      <p class="dialog-copy">Use a URL do projeto e a chave publicável (anon/publishable) do Supabase. Nunca cole aqui a chave <code>service_role</code>.</p>
+      <form id="backend-config-form" class="stacked-form">
+        <label>URL do projeto<input name="projectUrl" type="url" placeholder="https://seu-projeto.supabase.co" required autocomplete="url"></label>
+        <label>Chave publicável<input name="publishableKey" type="password" placeholder="sb_publishable_... ou chave anon" required autocomplete="off"></label>
+        <p class="form-message" id="backend-config-message" role="status"></p>
+        <button class="primary-button" type="submit">Conectar</button>
+      </form>
+      <p class="dialog-hint">A configuração ficará salva somente neste navegador. A privacidade dos dados depende das políticas SQL/RLS descritas no README.</p>
+    </dialog>
+
+    <dialog class="app-dialog" id="auth-dialog" aria-labelledby="auth-dialog-title">
+      <form method="dialog" class="dialog-close-form"><button class="dialog-close" aria-label="Fechar">×</button></form>
+      <p class="eyebrow">SEU ESPAÇO FINANCEIRO</p>
+      <h2 id="auth-dialog-title">Entrar na sua conta</h2>
+      <p class="dialog-copy">Seus gastos pessoais ficam privados; somente despesas do lar são compartilhadas.</p>
+      <form id="auth-form" class="stacked-form">
+        <label class="signup-only">Seu nome<input name="displayName" type="text" maxlength="80" autocomplete="name"></label>
+        <label>E-mail<input name="email" type="email" required autocomplete="email"></label>
+        <label>Senha<input name="password" type="password" required minlength="8" autocomplete="current-password"></label>
+        <p class="form-message" id="auth-message" role="status"></p>
+        <button class="primary-button" type="submit" id="auth-submit">Entrar</button>
+      </form>
+      <button class="dialog-link" id="toggle-auth-mode" type="button">Criar uma conta</button>
+    </dialog>
+
+    <dialog class="app-dialog" id="space-dialog" aria-labelledby="space-dialog-title">
+      <form method="dialog" class="dialog-close-form"><button class="dialog-close" aria-label="Fechar">×</button></form>
+      <p class="eyebrow">ESPAÇO COMPARTILHADO</p>
+      <h2 id="space-dialog-title">Crie ou conecte o lar</h2>
+      <p class="dialog-copy">Convide seu parceiro compartilhando o código de uso único. O banco limita cada espaço a duas pessoas.</p>
+      <form id="create-space-form" class="stacked-form">
+        <label>Nome do espaço<input name="spaceName" type="text" maxlength="80" value="Nosso lar" required></label>
+        <button class="primary-button" type="submit">Criar espaço e gerar convite</button>
+      </form>
+      <div class="invite-result" id="invite-result" hidden></div>
+      <div class="dialog-divider"><span>ou entre com um convite</span></div>
+      <form id="join-space-form" class="stacked-form">
+        <label>Código de convite<input name="inviteCode" type="text" required placeholder="Cole o código enviado pelo parceiro" autocomplete="off"></label>
+        <button class="secondary-button" type="submit">Entrar no espaço</button>
+      </form>
+      <p class="form-message" id="space-message" role="status"></p>
+    </dialog>
+
+    <dialog class="app-dialog" id="transaction-dialog" aria-labelledby="transaction-dialog-title">
+      <form method="dialog" class="dialog-close-form"><button class="dialog-close" aria-label="Fechar">×</button></form>
+      <p class="eyebrow">NOVO REGISTRO</p>
+      <h2 id="transaction-dialog-title">Adicionar lançamento</h2>
+      <form id="transaction-form" class="stacked-form">
+        <label>Tipo<select name="direction"><option value="expense">Saída</option><option value="income">Entrada</option></select></label>
+        <label>Visibilidade<select name="visibility"><option value="personal">Individual — só eu vejo</option><option value="shared">Conjunto — visível para o casal</option></select></label>
+        <label>Valor (R$)<input name="amount" type="number" min="0.01" step="0.01" required inputmode="decimal" placeholder="0,00"></label>
+        <label>Categoria<input name="category" type="text" maxlength="80" required placeholder="Ex.: mercado, moradia, salário"></label>
+        <label>Descrição<input name="description" type="text" maxlength="160" placeholder="Opcional"></label>
+        <label>Data<input name="occurredOn" type="date" required></label>
+        <p class="dialog-hint" id="transaction-visibility-hint">Despesas individuais são privadas. Em despesas do lar, quem registra é considerado pagador.</p>
+        <p class="form-message" id="transaction-message" role="status"></p>
+        <button class="primary-button" type="submit">Salvar lançamento</button>
+      </form>
+    </dialog>
+  </body>
+</html>
