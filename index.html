@@ -1,0 +1,2792 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0E5552">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Painel da Ju">
+  <meta name="mobile-web-app-capable" content="yes">
+  <title>Painel da Ju — Júlia Rocha</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" sizes="180x180" href="./icon-180.png">
+  <style>
+    :root{color-scheme:light;box-sizing:border-box}
+    *,*::before,*::after{box-sizing:inherit}
+    html{scroll-padding-top:env(safe-area-inset-top,0px)}
+    body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#FBF8F6;color:#141413}
+    img{max-width:100%}
+    [hidden]:not([hidden=until-found i]){display:none!important}
+  </style>
+</head>
+<body>
+<style>
+  :root{
+    --bg:#F4F6F1;
+    --surface:#FFFFFF;
+    --surface-2:#EBEEE6;
+    --ink:#1A2420;
+    --ink-soft:#566158;
+    --ink-faint:#8A9285;
+    --line:#D3DACB;
+    --prof:#155263;   --prof-soft:#E1EBEC;
+    --pess:#B8842A;   --pess-soft:#F3E9D3;
+    --warn:#A6432E;   --warn-soft:#F3E0D9;
+    --ok:#3F7A52;     --ok-soft:#DFEBE2;
+    --diet:#4C7A3D;   --diet-soft:#E3ECDB;
+    --treino:#C14C64; --treino-soft:#F6E1E6;
+    --rotina:#55708A; --rotina-soft:#E3EAF0;
+    --compras:#155263; --compras-soft:#E1EBEC;
+    --leitura:#8B6B4A; --leitura-soft:#EFE6DA;
+    --fe:#7A5FA6; --fe-soft:#ECE6F5;
+    --academico:#3D5A99; --academico-soft:#E2E8F5;
+    --complementar:#C2703A; --complementar-soft:#F5E4D5;
+    --profissional:#3A4A6B; --profissional-soft:#E4E7EE;
+    --progresso:#1F8A8A; --progresso-soft:#DFF0EF;
+    --projecoes:#5A4A9E; --projecoes-soft:#E9E6F5;
+    --radius-card:10px;
+    --radius-chip:999px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#121815; --surface:#1A211D; --surface-2:#212923;
+      --ink:#EDEFE7; --ink-soft:#9FAA9C; --ink-faint:#697267; --line:#37423B;
+      --prof:#5FBBD1;   --prof-soft:#1B3238;
+      --pess:#E0AA55;   --pess-soft:#3A2E16;
+      --warn:#E1876F;   --warn-soft:#3B241D;
+      --ok:#7FBF93;     --ok-soft:#1E3324;
+      --diet:#8FC17B;   --diet-soft:#1F2E1A;
+      --treino:#E38399; --treino-soft:#3A1E24;
+      --rotina:#93AEC6; --rotina-soft:#212C36;
+      --compras:#5FBBD1; --compras-soft:#1B3238;
+      --leitura:#C7A47E; --leitura-soft:#2E2418;
+      --fe:#B79FE0; --fe-soft:#2A2338;
+      --academico:#7FA0D9; --academico-soft:#1C2838;
+      --complementar:#E0A06B; --complementar-soft:#33241A;
+      --profissional:#8B9BC0; --profissional-soft:#232A38;
+      --progresso:#5FCBCB; --progresso-soft:#173030;
+      --projecoes:#A79BE0; --projecoes-soft:#2C2748;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#121815; --surface:#1A211D; --surface-2:#212923;
+    --ink:#EDEFE7; --ink-soft:#9FAA9C; --ink-faint:#697267; --line:#37423B;
+    --prof:#5FBBD1;   --prof-soft:#1B3238;
+    --pess:#E0AA55;   --pess-soft:#3A2E16;
+    --warn:#E1876F;   --warn-soft:#3B241D;
+    --ok:#7FBF93;     --ok-soft:#1E3324;
+    --diet:#8FC17B;   --diet-soft:#1F2E1A;
+    --treino:#E38399; --treino-soft:#3A1E24;
+    --rotina:#93AEC6; --rotina-soft:#212C36;
+    --compras:#5FBBD1; --compras-soft:#1B3238;
+    --leitura:#C7A47E; --leitura-soft:#2E2418;
+    --fe:#B79FE0; --fe-soft:#2A2338;
+    --academico:#7FA0D9; --academico-soft:#1C2838;
+    --complementar:#E0A06B; --complementar-soft:#33241A;
+    --profissional:#8B9BC0; --profissional-soft:#232A38;
+    --progresso:#5FCBCB; --progresso-soft:#173030;
+    --projecoes:#A79BE0; --projecoes-soft:#2C2748;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Work Sans', ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .app{ max-width:960px; margin:0 auto; padding:0 20px 72px; }
+
+  h1,h2,h3{ font-family:'Fraunces', Georgia, serif; font-weight:600; text-wrap:balance; margin:0; }
+  .mono{ font-family:'IBM Plex Mono', ui-monospace, monospace; }
+  .kicker{ font-family:'IBM Plex Mono', ui-monospace, monospace; font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-faint); }
+
+  /* ---------- app bar ---------- */
+  .appbar{ position:sticky; top:0; z-index:5; background:var(--bg); padding-top:22px; }
+  .appbar-top{ display:flex; justify-content:space-between; align-items:flex-end; gap:14px; flex-wrap:wrap; padding-bottom:16px; }
+  .brand h1{ font-size:22px; letter-spacing:-.01em; }
+  .brand .kicker{ margin-bottom:4px; display:block; }
+  .today{ font-family:'IBM Plex Mono', ui-monospace, monospace; font-size:11px; color:var(--ink-faint); text-align:right; }
+  .save-status{ font-size:10px; text-align:right; padding-bottom:10px; color:var(--ink-faint); min-height:13px; }
+  .save-status.saving{ color:var(--ink-faint); }
+  .save-status.ok{ color:var(--ok); }
+  .save-status.error{ color:var(--warn); font-weight:600; }
+  .tabs{ display:flex; flex-wrap:wrap; gap:2px; border-bottom:1px solid var(--line); scrollbar-width:none; }
+  .tabs::-webkit-scrollbar{ display:none; }
+  .tab-btn{
+    appearance:none; border:none; background:none; cursor:pointer;
+    font-family:'Work Sans', sans-serif; font-size:13px; font-weight:600;
+    color:var(--ink-faint); padding:11px 14px; white-space:nowrap;
+    border-bottom:2.5px solid transparent; margin-bottom:-1px;
+    transition:color .12s ease, border-color .12s ease;
+  }
+  .tab-btn:hover{ color:var(--ink); }
+  .tab-btn[aria-selected="true"]{ color:var(--tab-c); border-color:var(--tab-c); }
+  main{ padding-top:26px; }
+  .panel{ display:flex; flex-direction:column; gap:22px; }
+
+  /* ---------- generic cards ---------- */
+  .card{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-card); padding:16px 18px; }
+  .section-head{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:4px; }
+  .section-head h2{ font-size:19px; }
+  .section-lede{ font-size:13px; line-height:1.6; color:var(--ink-soft); max-width:62ch; margin:2px 0 2px; }
+
+  .stat-tiles{ display:grid; grid-template-columns:repeat(auto-fit, minmax(180px,1fr)); gap:12px; }
+  .stat-tile{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-card); padding:14px 16px; }
+  .stat-tile .label{ font-family:'IBM Plex Mono'; font-size:9.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-faint); margin:0 0 7px; }
+  .stat-tile .value{ font-family:'Fraunces'; font-weight:600; font-size:21px; font-variant-numeric:tabular-nums; margin:0 0 3px; }
+  .stat-tile .hint{ font-size:11px; color:var(--ink-faint); line-height:1.4; }
+  .stat-tile.tone-warn .value{ color:var(--warn); }
+  .stat-tile.tone-ok .value{ color:var(--ok); }
+  .stat-tile.tone-t .value{ color:var(--tab-c); }
+
+  .chip{ font-family:'IBM Plex Mono'; font-size:9px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-faint); background:var(--surface-2); border-radius:var(--radius-chip); padding:2px 8px; white-space:nowrap; }
+  .chip.on-tab{ color:var(--tab-c); background:color-mix(in srgb, var(--tab-c) 14%, var(--surface-2)); }
+  .chip.paid{ color:var(--ok); background:var(--ok-soft); }
+
+  .btn{ appearance:none; border:1px solid var(--line); background:var(--surface); color:var(--ink); font-family:'Work Sans'; font-size:12.5px; font-weight:600; padding:8px 13px; border-radius:8px; cursor:pointer; }
+  .btn:hover{ border-color:var(--tab-c); color:var(--tab-c); }
+  .btn.primary{ background:var(--tab-c); border-color:var(--tab-c); color:var(--surface); }
+  .btn.primary:hover{ opacity:.9; color:var(--surface); }
+  .btn.ghost{ border-color:transparent; background:none; padding:6px 8px; color:var(--ink-faint); }
+  .btn.ghost:hover{ color:var(--warn); border-color:transparent; }
+  .btn.small{ font-size:11px; padding:6px 10px; }
+
+  .progress{ height:8px; border-radius:999px; background:var(--surface-2); overflow:hidden; }
+  .progress > i{ display:block; height:100%; background:var(--tab-c); border-radius:999px; transition:width .25s ease; }
+
+  input[type=text], input[type=number], textarea{
+    width:100%; font-family:'Work Sans'; font-size:13px; color:var(--ink);
+    background:var(--surface-2); border:1px solid var(--line); border-radius:7px;
+    padding:8px 10px; resize:none;
+  }
+  input[type=text]:focus, input[type=number]:focus, textarea:focus, [contenteditable]:focus{
+    outline:2px solid var(--tab-c); outline-offset:1px; background:var(--surface);
+  }
+  input[type=checkbox]{ width:17px; height:17px; accent-color:var(--tab-c); flex:none; cursor:pointer; }
+
+  /* ---------- Metas panel (life map) ---------- */
+  .root-node{ width:min(300px,90%); margin:0 auto; text-align:center; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-card); padding:18px 22px; }
+  .root-node .name{ font-family:'Fraunces'; font-weight:600; font-size:20px; margin:0 0 4px; }
+  .root-node .sub{ font-family:'IBM Plex Mono'; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-faint); margin:0; }
+  .stem{ width:2px; height:24px; background:var(--line); margin:0 auto; }
+  .trunks{ display:flex; justify-content:center; gap:48px; position:relative; }
+  .trunk{ flex:1 1 0; min-width:0; }
+  .trunk-head{ display:flex; align-items:center; justify-content:center; gap:8px; font-family:'Fraunces'; font-weight:600; font-size:17px; margin:0 0 16px; color:var(--trunk-c); }
+  .trunk-head .badge{ width:9px; height:9px; border-radius:3px; background:var(--trunk-c); flex:none; }
+  .trunk--prof{ --trunk-c:var(--prof); }
+  .trunk--pess{ --trunk-c:var(--pess); }
+  .branch-list{ border-left:2px solid var(--line); margin-left:8px; padding-left:18px; display:flex; flex-direction:column; gap:12px; }
+  .category-node{ position:relative; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-card); padding:13px 15px; }
+  .category-node::before{ content:''; position:absolute; left:-18px; top:16px; width:16px; height:2px; background:var(--line); }
+  .category-title{ display:flex; align-items:center; gap:7px; font-size:12.5px; font-weight:600; margin:0 0 10px; }
+  .category-title .stub{ width:6px; height:6px; border-radius:50%; background:var(--trunk-c); flex:none; }
+  .goal-list{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:9px; }
+  .goal-row{ display:flex; align-items:baseline; gap:8px; }
+  .goal-dot{ width:9px; height:9px; border-radius:50%; margin-top:4px; flex:none; cursor:pointer; border:1.6px solid var(--trunk-c); background:transparent; padding:0; }
+  .goal-dot[data-status="andamento"]{ background:var(--trunk-c); }
+  .goal-dot[data-status="sonho"]{ border-style:dashed; }
+  .goal-text{ color:var(--ink); font-size:13px; line-height:1.5; flex:1; }
+  .goal-status-label{ font-family:'IBM Plex Mono'; font-size:9px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-faint); white-space:nowrap; }
+  .legend{ display:flex; flex-wrap:wrap; gap:16px; font-size:11.5px; color:var(--ink-soft); }
+  .legend span{ display:flex; align-items:center; gap:6px; }
+  .legend .goal-dot{ cursor:default; border-color:var(--ink-soft); }
+  .legend .goal-dot[data-status="andamento"]{ background:var(--ink-soft); }
+
+  .timeline{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  @media (max-width:680px){ .timeline{ grid-template-columns:1fr; } .trunks{ flex-direction:column; gap:26px; } }
+  .horizon-label{ font-family:'IBM Plex Mono'; font-size:10px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-faint); border-top:2px solid var(--line); padding-top:8px; margin-bottom:10px; }
+  .horizon-label b{ display:block; font-family:'Fraunces'; font-size:14px; text-transform:none; letter-spacing:0; color:var(--ink); margin-top:2px; }
+  .dream-item{ display:flex; gap:8px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-card); padding:9px 11px; margin-bottom:8px; }
+  .dream-item .goal-dot{ border-color:var(--pess); }
+  .dream-item .goal-dot[data-status="andamento"]{ background:var(--pess); }
+  .dream-body .txt{ font-size:12.5px; line-height:1.45; color:var(--ink); display:block; }
+  .dream-body .req{ font-family:'IBM Plex Mono'; font-size:9.5px; color:var(--ink-faint); line-height:1.5; }
+
+  .wish-groups{ display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:16px 20px; }
+  .wish-group-title{ font-family:'IBM Plex Mono'; font-size:10px; letter-spacing:.07em; text-transform:uppercase; color:var(--ink-faint); margin:0 0 8px; }
+  .wish-chips{ display:flex; flex-wrap:wrap; gap:7px; }
+  .wish-chip{ background:var(--surface-2); border:1px solid var(--line); border-radius:999px; padding:6px 12px; font-size:12px; color:var(--ink); }
+
+  /* ---------- Dívidas panel ---------- */
+  .debt-group{ margin-bottom:4px; }
+  .debt-group-title{ font-size:12px; font-weight:600; color:var(--ink-soft); margin:0 0 8px; display:flex; align-items:center; gap:8px; }
+  .debt-row{ display:flex; align-items:flex-start; gap:10px; padding:9px 0; border-top:1px solid var(--line); }
+  .debt-row:first-of-type{ border-top:none; }
+  .debt-row.is-paid .debt-label{ color:var(--ink-faint); text-decoration:line-through; }
+  .debt-label{ flex:1; font-size:13px; line-height:1.45; }
+  .debt-note{ display:block; font-size:11px; color:var(--warn); margin-top:2px; }
+  .debt-value{ font-variant-numeric:tabular-nums; font-size:13px; white-space:nowrap; padding-top:1px; }
+  .callout{ background:var(--warn-soft); border:1px solid var(--warn); border-radius:var(--radius-card); padding:14px 16px; }
+  .callout .co-title{ display:flex; align-items:center; gap:7px; font-size:12.5px; font-weight:600; color:var(--warn); margin:0 0 8px; }
+  .callout .mark{ width:7px; height:7px; border-radius:50%; background:var(--warn); flex:none; }
+  .callout ul{ margin:0; padding-left:16px; display:flex; flex-direction:column; gap:5px; }
+  .callout li{ font-size:12px; line-height:1.55; color:var(--ink); }
+
+  .sermar-bar{ display:flex; align-items:center; gap:12px; }
+  .sermar-bar .progress{ flex:1; }
+  .lawsuit-row{ display:grid; grid-template-columns:1.3fr 1fr 1fr .8fr 1.4fr auto; gap:8px; align-items:center; padding:8px 0; border-top:1px solid var(--line); }
+  .lawsuit-row:first-of-type{ border-top:none; }
+  .lawsuit-head{ display:grid; grid-template-columns:1.3fr 1fr 1fr .8fr 1.4fr auto; gap:8px; font-family:'IBM Plex Mono'; font-size:9px; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-faint); padding-bottom:6px; }
+  @media (max-width:760px){ .lawsuit-row, .lawsuit-head{ grid-template-columns:1fr; } .lawsuit-head{ display:none; } .lawsuit-row{ background:var(--surface-2); border-radius:8px; padding:10px; border-top:none; margin-bottom:8px; } }
+
+  /* ---------- Dieta panel ---------- */
+  .diet-grid{ display:grid; grid-template-columns:90px repeat(4,1fr); gap:6px; overflow-x:auto; }
+  .diet-grid .hcell{ font-family:'IBM Plex Mono'; font-size:9.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-faint); padding:4px 2px; }
+  .diet-grid .daylabel{ font-size:12px; font-weight:600; color:var(--ink-soft); display:flex; align-items:center; padding:4px 2px; }
+  .diet-cell{ min-height:44px; background:var(--surface-2); border:1px solid var(--line); border-radius:7px; padding:7px 8px; font-size:12px; line-height:1.4; color:var(--ink); cursor:text; }
+  .diet-cell:empty::before{ content:attr(data-placeholder); color:var(--ink-faint); }
+  .today-card{ display:flex; flex-wrap:wrap; gap:20px; align-items:flex-start; }
+  .water-dots{ display:flex; gap:6px; }
+  .water-dot{ width:22px; height:22px; border-radius:50%; border:1.6px solid var(--diet); background:transparent; cursor:pointer; padding:0; }
+  .water-dot.filled{ background:var(--diet); }
+  .today-notes{ flex:1; min-width:220px; }
+  .today-notes textarea{ min-height:64px; }
+
+  /* ---------- Treino panel ---------- */
+  .week-row{ display:grid; grid-template-columns:110px 1fr auto; gap:10px; align-items:center; padding:8px 0; border-top:1px solid var(--line); }
+  .week-row:first-of-type{ border-top:none; }
+  .week-row .daylabel{ font-size:12.5px; font-weight:600; color:var(--ink-soft); }
+  .week-row.is-today .daylabel{ color:var(--treino); }
+  .streak-row{ display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+  .mini-cal{ display:flex; gap:5px; }
+  .mini-cal .d{ width:26px; height:26px; border-radius:7px; border:1.6px solid var(--line); display:flex; align-items:center; justify-content:center; font-family:'IBM Plex Mono'; font-size:9px; color:var(--ink-faint); }
+  .mini-cal .d.done{ background:var(--treino); border-color:var(--treino); color:var(--surface); }
+  .mini-cal .d.today{ border-color:var(--treino); border-width:2px; }
+  .check-label{ display:flex; align-items:center; gap:7px; font-size:12px; color:var(--ink-soft); white-space:nowrap; }
+  .wcards-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:14px; }
+  .wcard{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-card); padding:14px 16px; }
+  .wcard-head{ display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+  .wcard-letter{ font-family:'Fraunces'; font-weight:600; font-size:17px; color:var(--treino); background:var(--treino-soft); width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex:none; }
+  .wcard-title{ font-size:13px; font-weight:600; line-height:1.3; }
+  .wcard-day{ font-family:'IBM Plex Mono'; font-size:9.5px; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.05em; }
+  .wblock{ margin-bottom:9px; }
+  .wblock:last-child{ margin-bottom:0; }
+  .wblock-title{ font-family:'IBM Plex Mono'; font-size:9px; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-faint); margin-bottom:4px; }
+  .wex-row{ display:flex; justify-content:space-between; gap:8px; padding:2.5px 0; font-size:12px; }
+  .wex-row .n{ color:var(--ink); }
+  .wex-row .s{ font-family:'IBM Plex Mono'; font-size:10.5px; color:var(--ink-faint); white-space:nowrap; }
+
+  /* ---------- Rotina panel ---------- */
+  .routine-row{ display:flex; align-items:center; gap:10px; padding:9px 0; border-top:1px solid var(--line); }
+  .routine-row:first-of-type{ border-top:none; }
+  .routine-row label{ flex:1; font-size:13px; }
+  .routine-row.done label{ color:var(--ink-faint); text-decoration:line-through; }
+  .add-row{ display:flex; gap:8px; margin-top:12px; }
+  .add-row input{ flex:1; }
+
+  /* ---------- Compras panel ---------- */
+  .shop-group{ margin-bottom:4px; }
+  .shop-group-title{ font-size:12px; font-weight:600; color:var(--ink-soft); margin:0 0 6px; }
+  .shop-row{ display:flex; align-items:center; gap:10px; padding:7px 0; border-top:1px solid var(--line); }
+  .shop-row:first-of-type{ border-top:none; }
+  .shop-row label{ flex:1; font-size:13px; }
+  .shop-row.done label{ color:var(--ink-faint); text-decoration:line-through; }
+  .shop-row .btn.ghost{ padding:4px 6px; }
+
+  /* ---------- generic checklist (reused by Leitura, Espiritualidade, Estudos, Profissional) ---------- */
+  .glist-row{ display:flex; align-items:center; gap:10px; padding:8px 0; border-top:1px solid var(--line); }
+  .glist-row:first-of-type{ border-top:none; }
+  .glist-row label{ flex:1; font-size:13px; }
+  .glist-row.done label{ color:var(--ink-faint); text-decoration:line-through; }
+  .empty-state{ text-align:center; padding:28px 16px; color:var(--ink-faint); font-size:13px; }
+  .empty-state .big{ font-size:28px; display:block; margin-bottom:8px; }
+  .subhead{ font-size:11.5px; font-weight:600; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.04em; margin:16px 0 8px; }
+  .subhead:first-child{ margin-top:0; }
+  textarea.reflect{ min-height:70px; margin-top:6px; }
+  .field-label{ font-size:11.5px; color:var(--ink-faint); margin:10px 0 4px; display:block; }
+
+  /* ---------- Progresso panel ---------- */
+  .chart-block{ margin-bottom:18px; }
+  .chart-block:last-child{ margin-bottom:0; }
+  .chart-head{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px; }
+  .chart-head .t{ font-size:12.5px; font-weight:600; color:var(--ink); }
+  .chart-head .v{ font-family:'IBM Plex Mono'; font-size:11px; color:var(--ink-faint); }
+  .heat-row{ display:flex; gap:3px; }
+  .heat-row .d{ flex:1; aspect-ratio:1; border-radius:3px; background:var(--surface-2); border:1px solid var(--line); min-width:0; }
+  .heat-row .d.on{ background:var(--tab-c); border-color:var(--tab-c); }
+  .axis-labels{ display:flex; justify-content:space-between; font-family:'IBM Plex Mono'; font-size:9px; color:var(--ink-faint); margin-top:4px; }
+
+  /* ---------- Projeções panel ---------- */
+  .area-card{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-card); padding:13px 15px; display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:8px; }
+  .area-card:last-child{ margin-bottom:0; }
+  .area-card .ac-main{ flex:1; min-width:170px; }
+  .area-card .ac-label{ font-size:13px; font-weight:600; margin:0 0 3px; display:flex; align-items:center; gap:7px; }
+  .area-card .ac-dot{ width:8px; height:8px; border-radius:50%; flex:none; }
+  .area-card .ac-weight{ font-family:'IBM Plex Mono'; font-size:9.5px; color:var(--ink-faint); letter-spacing:.03em; }
+  .area-card .ac-action{ font-size:11.5px; color:var(--warn); margin:6px 0 0; line-height:1.4; }
+  .area-card .ac-value{ font-family:'Fraunces'; font-weight:600; font-size:17px; white-space:nowrap; }
+  .area-card .ac-spark{ flex:none; opacity:.85; }
+  .trend-chip{ font-family:'IBM Plex Mono'; font-size:9.5px; letter-spacing:.04em; text-transform:uppercase; border-radius:999px; padding:4px 10px; white-space:nowrap; }
+  .trend-chip.up{ color:var(--ok); background:var(--ok-soft); }
+  .trend-chip.down{ color:var(--warn); background:var(--warn-soft); }
+  .trend-chip.flat, .trend-chip.baseline{ color:var(--ink-faint); background:var(--surface-2); }
+  .weight-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; padding:7px 0; border-top:1px solid var(--line); }
+  .weight-row:first-of-type{ border-top:none; }
+  .weight-row label{ font-size:12.5px; flex:1; }
+  .weight-row input[type=number]{ width:56px; text-align:center; }
+
+  /* ---------- Profissional panel (gaps / plano / comparativo) ---------- */
+  .pgap{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-card); padding:16px 18px 18px; margin-bottom:10px; }
+  .pgap:last-child{ margin-bottom:0; }
+  .pgap-head{ display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap; }
+  .pgap-title{ display:flex; gap:10px; align-items:baseline; }
+  .pgap-num{ font-family:'Fraunces'; font-weight:600; font-size:17px; color:var(--profissional); min-width:1.3em; }
+  .pgap-title h4{ font-size:14.5px; font-weight:600; margin:0; }
+  .pbadge{ font-family:'IBM Plex Mono'; font-size:9.5px; letter-spacing:.04em; text-transform:uppercase; padding:3px 9px; border-radius:999px; white-space:nowrap; height:fit-content; }
+  .pbadge.crit{ background:var(--warn-soft); color:var(--warn); }
+  .pbadge.warn{ background:var(--pess-soft); color:var(--pess); }
+  .pbadge.good{ background:var(--ok-soft); color:var(--ok); }
+  .pgap-body{ margin-top:10px; font-size:13px; line-height:1.55; color:var(--ink-soft); }
+  .pgap-evidence{ margin-top:10px; padding:10px 12px; background:var(--surface-2); border-radius:7px; font-size:12px; color:var(--ink-soft); border-left:3px solid var(--line); }
+  .pgap-action{ margin-top:10px; display:flex; gap:8px; align-items:flex-start; padding-top:10px; border-top:1px dashed var(--line); }
+  .pgap-action .lbl{ font-family:'IBM Plex Mono'; font-size:9.5px; letter-spacing:.05em; text-transform:uppercase; color:var(--profissional); margin-top:2px; white-space:nowrap; flex:none; }
+  .pgap-action p{ margin:0; font-size:13px; color:var(--ink); }
+
+  .pphase{ padding:14px 0; border-top:1px solid var(--line); }
+  .pphase:first-child{ border-top:none; padding-top:0; }
+  .pphase-head{ margin-bottom:8px; }
+  .pphase-head .when{ font-family:'IBM Plex Mono'; font-size:10px; text-transform:uppercase; letter-spacing:.05em; color:var(--pess); }
+  .pphase-head .title{ font-family:'Fraunces'; font-weight:600; font-size:15px; margin-top:2px; }
+  .paction{ display:flex; gap:9px; padding:7px 0; border-top:1px solid var(--line); align-items:flex-start; }
+  .paction:first-of-type{ border-top:none; }
+  .paction .chk{ margin-top:2px; flex:none; }
+  .paction label{ flex:1; font-size:12.5px; line-height:1.45; }
+  .paction .impact{ display:block; font-size:10.5px; color:var(--ink-faint); margin-top:2px; }
+  .paction.done label{ color:var(--ink-faint); text-decoration:line-through; }
+
+  .palert{ background:var(--warn-soft); border:1px solid var(--warn); border-radius:var(--radius-card); padding:14px 16px; }
+  .palert .pa-title{ display:flex; align-items:center; gap:7px; font-size:12.5px; font-weight:600; color:var(--warn); margin:0 0 6px; }
+  .palert p{ margin:0; font-size:12.5px; line-height:1.55; color:var(--ink); }
+
+  .comp-row{ display:grid; grid-template-columns:132px 1fr 58px; align-items:center; gap:10px; padding:6px 0; }
+  .comp-row .name{ font-size:12.5px; color:var(--ink-soft); }
+  .comp-track{ background:var(--surface-2); border-radius:4px; height:16px; position:relative; overflow:hidden; }
+  .comp-fill{ position:absolute; top:0; bottom:0; right:0; border-radius:4px; }
+  .comp-val{ text-align:right; font-family:'IBM Plex Mono'; font-size:11.5px; font-weight:600; }
+
+  .phl-row{ padding:10px 0; border-top:1px solid var(--line); }
+  .phl-row:first-of-type{ border-top:none; }
+  .phl-row .t{ font-size:12.5px; font-weight:600; margin:0 0 4px; }
+  .phl-row .d{ font-size:12px; color:var(--ink-soft); line-height:1.5; margin:0; }
+  @media (max-width:700px){ .comp-row{ grid-template-columns:96px 1fr 52px; } }
+
+  .foot{ margin-top:44px; padding-top:18px; border-top:1px solid var(--line); font-size:11.5px; color:var(--ink-faint); line-height:1.6; }
+</style>
+
+<style>
+  @import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,600&family=Jost:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap");
+  :root{
+    color-scheme:light;
+    --bg:#FBF8F6; --surface:#FFFFFF; --surface-2:#F3E7E2;
+    --ink:#2E1F2B; --ink-soft:#5A4E57; --ink-faint:#837982; --line:#D6E4DF;
+    --prof:#0E5552; --prof-soft:#D6E4DF;
+    --pess:#2E1F2B; --pess-soft:#F3E7E2;
+    --warn:#9D463A; --warn-soft:#F6E7E2;
+    --ok:#0E5552; --ok-soft:#D6E4DF;
+    --diet:#426B50; --diet-soft:#E6EEE7;
+    --treino:#0E5552; --treino-soft:#D6E4DF;
+    --rotina:#5A4E57; --rotina-soft:#EEE9ED;
+    --compras:#0E5552; --compras-soft:#D6E4DF;
+    --leitura:#6B5545; --leitura-soft:#EFE6DA;
+    --fe:#59465F; --fe-soft:#EEE8F0;
+    --academico:#3E536A; --academico-soft:#E7ECF0;
+    --complementar:#80553E; --complementar-soft:#F3E7E2;
+    --profissional:#2E1F2B; --profissional-soft:#EEE9ED;
+    --progresso:#0E5552; --progresso-soft:#D6E4DF;
+    --projecoes:#59465F; --projecoes-soft:#EEE8F0;
+    --radius-card:10px;
+    font-family:"Jost",sans-serif;
+  }
+  body{font-family:"Jost",sans-serif;background:var(--bg);color:var(--ink);}
+  h1,h2,h3,.brand h1,.stat-tile .value,.root-node .name,.trunk-head,.horizon-label b,
+  .wcard-letter,.pphase-head .title,.stat-tile-value{font-family:"Cormorant Garamond",Georgia,serif;}
+  .app{max-width:1180px;padding-left:clamp(16px,3vw,38px);padding-right:clamp(16px,3vw,38px);}
+  .brand h1{font-size:32px;line-height:1.05;color:var(--prof);}
+  .brand .kicker{color:var(--prof);letter-spacing:.14em;}
+  .brand{display:grid;grid-template-columns:44px 1fr;column-gap:12px;align-items:center;}
+  .brand-mark{grid-row:1/3;position:relative;display:grid;width:42px;height:42px;place-items:center;border:1.5px solid #D99AA0;border-radius:24px 24px 4px 4px;color:var(--prof);font:600 16px "Cormorant Garamond",Georgia,serif;}
+  .brand-mark:before{position:absolute;inset:7px 9px 0;border:1px solid var(--prof);border-bottom:0;border-radius:18px 18px 0 0;content:"";}
+  .appbar{background:var(--bg);}
+  .tab-btn{font-family:"Jost",sans-serif;border-radius:7px 7px 0 0;}
+  .card,.stat-tile,.wcard,.category-node,.root-node,.dream-item{border-radius:var(--radius-card);box-shadow:none;}
+  .section-head h2{color:var(--prof);}
+  .progress>i{transition:none;}
+  .metric-finance{font-variant-numeric:tabular-nums;}
+  .finance-toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;}
+  .finance-toolbar input{max-width:180px;}
+  .finance-chart{display:grid;grid-template-columns:repeat(8,minmax(44px,1fr));gap:10px;align-items:end;min-height:158px;overflow-x:auto;}
+  .finance-bar{display:grid;grid-template-rows:18px 106px 20px;gap:5px;min-width:44px;text-align:center;}
+  .finance-bar strong{font:500 10px "IBM Plex Mono",monospace;color:var(--ink-soft);white-space:nowrap;}
+  .finance-bar-track{display:flex;align-items:flex-end;justify-content:center;gap:3px;border-bottom:1px solid var(--line);background:linear-gradient(to top,transparent 24%,var(--line) 25%,transparent 26%,transparent 49%,var(--line) 50%,transparent 51%,transparent 74%,var(--line) 75%,transparent 76%);}
+  .finance-bar-track i{display:block;width:8px;min-height:0;border-radius:5px 5px 0 0;background:var(--prof);}
+  .finance-bar-track i.ju{background:var(--pess);}
+  .finance-bar-track i.unknown{background:var(--warn);}
+  .finance-bar-track i.spending{background:var(--pess);}
+  .finance-bar-track i.transfer{background:var(--ok);}
+  .finance-month-note{min-width:180px;text-align:left!important;white-space:normal!important;color:var(--ink-faint);font-size:10px;}
+  .app{padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right));padding-bottom:max(72px,env(safe-area-inset-bottom));}
+  .finance-bar span{font:10px "IBM Plex Mono",monospace;color:var(--ink-faint);}
+  .finance-legend{display:flex;flex-wrap:wrap;gap:12px;margin:10px 0 0;color:var(--ink-soft);font-size:11px;}
+  .finance-legend span{display:flex;align-items:center;gap:6px;}
+  .finance-legend i{width:9px;height:9px;border-radius:2px;background:var(--prof);}
+  .finance-legend i.ju{background:var(--pess);}
+  .finance-legend i.unknown{background:var(--warn);}
+  .finance-legend i.transfer{background:var(--ok);}
+  .finance-table-wrap{overflow-x:auto;}
+  .finance-table{width:100%;min-width:840px;border-collapse:collapse;font-size:12px;}
+  .finance-table th,.finance-table td{padding:7px 6px;border-bottom:1px solid var(--line);text-align:right;}
+  .finance-table th{font:9px "IBM Plex Mono",monospace;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-faint);}
+  .finance-table th:first-child,.finance-table td:first-child{text-align:left;}
+  .finance-table td:first-child{font-weight:600;color:var(--ink);}
+  .finance-table input[type=number]{min-width:95px;text-align:right;}
+  .finance-category-form{display:grid;grid-template-columns:minmax(0,1fr) minmax(130px,.6fr) minmax(120px,.55fr) auto;gap:8px;align-items:center;margin-top:12px;}
+  .finance-category-list{display:grid;gap:5px;margin-top:10px;}
+  .finance-category-row{display:grid;grid-template-columns:minmax(0,1fr) 120px 110px auto;gap:8px;align-items:center;padding:8px 0;border-top:1px solid var(--line);}
+  .finance-category-row .amount{font:11px "IBM Plex Mono",monospace;text-align:right;}
+  .finance-empty{padding:12px;border:1px dashed var(--line);border-radius:8px;color:var(--ink-faint);font-size:12px;line-height:1.5;}
+  .finance-note{padding:13px 15px;border-left:2px solid var(--prof);background:var(--prof-soft);color:var(--ink);font-size:12px;line-height:1.6;}
+  .finance-note.warning{border-color:var(--warn);background:var(--warn-soft);}
+  .finance-scenario-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;}
+  .finance-scenario{padding:12px;border:1px solid var(--line);border-radius:var(--radius-card);background:var(--surface);}
+  .finance-scenario strong{display:block;margin-bottom:5px;color:var(--prof);font:600 18px "Cormorant Garamond",Georgia,serif;}
+  .finance-scenario span{color:var(--ink-soft);font-size:11px;line-height:1.5;}
+  .finance-projection-row{display:grid;grid-template-columns:70px repeat(3,minmax(0,1fr));gap:8px;padding:7px 4px;border-top:1px solid var(--line);font:10px "IBM Plex Mono",monospace;}
+  .finance-projection-row span:not(:first-child){text-align:right;}
+  .finance-projection-row.head{color:var(--ink-faint);text-transform:uppercase;}
+  .finance-good{color:var(--ok);font-weight:600;}
+  .finance-bad{color:var(--warn);font-weight:600;}
+  .snapshot-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:9px;margin-top:12px;}
+  .snapshot-item{padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);}
+  .snapshot-item span{display:block;color:var(--ink-faint);font:9px "IBM Plex Mono",monospace;letter-spacing:.04em;text-transform:uppercase;}
+  .snapshot-item strong{display:block;margin-top:5px;color:var(--ink);font:600 19px "Cormorant Garamond",Georgia,serif;}
+  .backup-tools{display:flex;align-items:center;gap:6px;}
+  .backup-tools .btn{white-space:nowrap;}
+  .save-status{min-height:18px;padding:0 0 10px;}
+  .save-status.ok{color:var(--prof);}
+  .save-status.error{color:var(--warn);}
+  .foot{color:var(--ink-faint);}
+  @media(max-width:760px){
+    .finance-category-form{grid-template-columns:1fr 1fr;}
+    .finance-category-form input:first-child{grid-column:1/-1;}
+    .finance-category-row{grid-template-columns:minmax(0,1fr) 75px auto;}
+    .finance-category-row .month{display:none;}
+    .finance-scenario-grid{grid-template-columns:1fr;}
+  }
+  @media(max-width:560px){
+    .appbar-top{align-items:flex-start;}
+    .backup-tools{width:100%;flex-wrap:wrap;}
+    .backup-tools .btn{flex:1 1 calc(50% - 6px);}
+    .today{text-align:left;}
+    .tab-btn{padding:9px 10px;font-size:12px;}
+  }
+</style>
+
+<div class="app">
+
+  <div class="appbar">
+    <div class="appbar-top">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">JR</span>
+        <span class="kicker">VENDAS · DADOS · MARKETING</span>
+        <h1>Júlia Rocha</h1>
+      </div>
+      <div class="today mono" id="todayLabel"></div>
+      <div class="backup-tools">
+        <button class="btn small" id="installApp" type="button">Instalar app</button>
+        <button class="btn small" id="exportBackup" type="button">Exportar backup</button>
+        <button class="btn small" id="importBackupButton" type="button">Restaurar backup</button>
+        <input id="importBackup" type="file" accept="application/json,.json" hidden>
+      </div>
+    </div>
+    <div class="save-status mono" id="saveStatus"></div>
+    <nav class="tabs" role="tablist" aria-label="Seções do painel">
+      <button class="tab-btn" role="tab" data-tab="hoje" style="--tab-c:var(--ok)">Hoje</button>
+      <button class="tab-btn" role="tab" data-tab="metas" style="--tab-c:var(--pess)">Metas &amp; Sonhos</button>
+      <button class="tab-btn" role="tab" data-tab="dividas" style="--tab-c:var(--warn)">Dívidas</button>
+      <button class="tab-btn" role="tab" data-tab="dieta" style="--tab-c:var(--diet)">Dieta</button>
+      <button class="tab-btn" role="tab" data-tab="treino" style="--tab-c:var(--treino)">Treino</button>
+      <button class="tab-btn" role="tab" data-tab="rotina" style="--tab-c:var(--rotina)">Rotina</button>
+      <button class="tab-btn" role="tab" data-tab="compras" style="--tab-c:var(--compras)">Compras</button>
+      <button class="tab-btn" role="tab" data-tab="leitura" style="--tab-c:var(--leitura)">Leitura</button>
+      <button class="tab-btn" role="tab" data-tab="espirito" style="--tab-c:var(--fe)">Espiritualidade</button>
+      <button class="tab-btn" role="tab" data-tab="academico" style="--tab-c:var(--academico)">Estudos Acadêmicos</button>
+      <button class="tab-btn" role="tab" data-tab="complementar" style="--tab-c:var(--complementar)">Estudos Complementares</button>
+      <button class="tab-btn" role="tab" data-tab="profissional" style="--tab-c:var(--profissional)">Profissional</button>
+      <button class="tab-btn" role="tab" data-tab="progresso" style="--tab-c:var(--progresso)">Progresso</button>
+      <button class="tab-btn" role="tab" data-tab="projecoes" style="--tab-c:var(--projecoes)">Projeções</button>
+      <button class="tab-btn" role="tab" data-tab="financeiro" style="--tab-c:var(--prof)">Financeiro</button>
+    </nav>
+  </div>
+
+  <main>
+    <section class="panel" id="panel-hoje" hidden style="--tab-c:var(--ok)"></section>
+    <section class="panel" id="panel-metas" hidden style="--tab-c:var(--pess)"></section>
+    <section class="panel" id="panel-dividas" hidden style="--tab-c:var(--warn)"></section>
+    <section class="panel" id="panel-dieta" hidden style="--tab-c:var(--diet)"></section>
+    <section class="panel" id="panel-treino" hidden style="--tab-c:var(--treino)"></section>
+    <section class="panel" id="panel-rotina" hidden style="--tab-c:var(--rotina)"></section>
+    <section class="panel" id="panel-compras" hidden style="--tab-c:var(--compras)"></section>
+    <section class="panel" id="panel-leitura" hidden style="--tab-c:var(--leitura)"></section>
+    <section class="panel" id="panel-espirito" hidden style="--tab-c:var(--fe)"></section>
+    <section class="panel" id="panel-academico" hidden style="--tab-c:var(--academico)"></section>
+    <section class="panel" id="panel-complementar" hidden style="--tab-c:var(--complementar)"></section>
+    <section class="panel" id="panel-profissional" hidden style="--tab-c:var(--profissional)"></section>
+    <section class="panel" id="panel-progresso" hidden style="--tab-c:var(--progresso)"></section>
+    <section class="panel" id="panel-projecoes" hidden style="--tab-c:var(--projecoes)"></section>
+    <section class="panel" id="panel-financeiro" hidden style="--tab-c:var(--prof)"></section>
+  </main>
+
+  <div class="foot">
+    Dados salvos automaticamente neste navegador. Os registros históricos permanecem como foram informados; confirme datas e valores antes de tomar decisões.
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var DAYS = ["seg","ter","qua","qui","sex","sab","dom"];
+  var DAY_LABELS = {seg:"Segunda",ter:"Terça",qua:"Quarta",qui:"Quinta",sex:"Sexta",sab:"Sábado",dom:"Domingo"};
+  var MEALS = ["cafe","almoco","lanche","jantar"];
+  var MEAL_LABELS = {cafe:"Café",almoco:"Almoço",lanche:"Lanche",jantar:"Jantar"};
+  var STATUS_CYCLE = ["andamento","planejado","sonho"];
+  var STATUS_LABELS = {andamento:"Em andamento",planejado:"Planejado",sonho:"Sonho"};
+
+  var WORKOUT_DETAIL = [
+    {letter:"A", title:"Pernas — Quadríceps", day:"Domingo", blocks:[
+      {name:"Aquecimento", items:[["Agachamento Barra Guiada","2×20 + 2×15"],["Agachamento Pêndulo + Passada Livre","3×15 + 3×20"]]},
+      {name:"Quadríceps", items:[["Agachamento Sumô Articulado","4×15"],["Leg 45°","4×15"],["Leg Horizontal Unilateral","3×20"],["Extensora (pico 2\")","4×15"]]},
+      {name:"Panturrilha", items:[["Panturrilha em Pé — Máquina","4×15"]]},
+      {name:"Core", items:[["Reto Sob","4×20"],["Prancha Frontal",'3×30"']]}
+    ]},
+    {letter:"B", title:"Ombros + Peito", day:"Terça", blocks:[
+      {name:"Ombros", items:[["Desenvolvimento c/ Halter","3×20"],["Elevação Lateral c/ Halter","3×20"],["Elevação Frontal c/ Corda no Cross","3×20"]]},
+      {name:"Peito", items:[["Supino Vertical","3×20"],["Peck Deck","3×20"]]},
+      {name:"Tríceps", items:[["Tríceps Cross Barra Reta Pronada","3×20"],["Tríceps Cross Corda","3×20"]]},
+      {name:"Core", items:[["Reto Sob","4×20"],["Prancha Frontal",'3×30"']]}
+    ]},
+    {letter:"C", title:"Posterior + Glúteo", day:"Quinta", blocks:[
+      {name:"Posterior + Glúteo", items:[["Glúteo Máquina / Elevação Pélvica","4×18"],["Flexora em Pé","3×20"],["Flexora Sentada","2×20 + 2×15"],["Flexora Deitada","4×15"],["Adutor","2×20 + 2×15"],["Abdutor Articulado","2×20 + 2×15"]]},
+      {name:"Panturrilha", items:[["Panturrilha Sentada — Máquina","3×20"]]},
+      {name:"Core", items:[["Reto Sob","4×20"],["Prancha Frontal",'3×30"']]}
+    ]},
+    {letter:"D", title:"Costas + Bíceps", day:"Sábado", blocks:[
+      {name:"Costas", items:[["Puxador Frente Supinado","3×20"],["Puxador High Row","3×20"],["Remada Curvada Guiada","3×20"],["Peck Deck Posterior","3×20"],["Tração Cross (Pull Down)","3×20"]]},
+      {name:"Bíceps", items:[["Rosca Scott Máquina","3×15"],["Rosca Martelo c/ Halter","3×20"]]},
+      {name:"Core", items:[["Reto Sob","4×20"],["Prancha Frontal",'3×30"']]}
+    ]}
+  ];
+
+  function brl(n){
+    n = Number(n)||0;
+    return "R$ " + n.toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2});
+  }
+  function uid(prefix){ return prefix + "_" + Math.random().toString(36).slice(2,9); }
+  function todayKey(offsetDays){
+    var d = new Date();
+    if(offsetDays) d.setDate(d.getDate()+offsetDays);
+    return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+  }
+  function weekdayIdx(){ var js = new Date().getDay(); return ["dom","seg","ter","qua","qui","sex","sab"][js]; }
+  // Short label for today's planned workout (from state.workout.plan), used to keep
+  // the "Treino EF Academia" routine checklist item in sync with the real weekly plan
+  // instead of always saying "academia" even on caminhada/rest days.
+  function todaysWorkoutShort(){
+    var plan = state.workout.plan[weekdayIdx()] || "Descanso";
+    var idx = plan.indexOf(":");
+    return idx>-1 ? plan.slice(0, idx) : plan;
+  }
+  function isoWeekKey(d){
+    d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+    var day = d.getUTCDay() || 7;
+    d.setUTCDate(d.getUTCDate() + 4 - day);
+    var yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+    var weekNo = Math.ceil((((d-yearStart)/86400000)+1)/7);
+    return d.getUTCFullYear()+"-W"+String(weekNo).padStart(2,"0");
+  }
+  function esc(s){
+    return String(s==null?"":s).replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+    });
+  }
+
+  var FINANCE_REPORT = {
+    version:"2026-10-07-v2",
+    generated:"07/10/2026",
+    quality:{total:199,selected:105,automatic:59,suggested:35,andreItems:231},
+    sources:"Flash mar–set (CSV) e jan (print); Itaú jan–jun e 02/09–03/10 (PDF); lista “Casa Cravinhos” do André, 231 lançamentos jan–ago.",
+    missing:"Faltam Itaú de 17/06 a 01/09, Flash de fevereiro e a lista do André de setembro–outubro. Meses do André seguem a fatura do cartão; os seus seguem a data da compra.",
+    monthNotes:{
+      "2026-03":"Itaú com pouco movimento; salário só começa em abril.",
+      "2026-07":"Sem extrato Itaú (só Flash).",
+      "2026-08":"Sem extrato Itaú (só Flash).",
+      "2026-09":"Itaú a partir de 02/09; salário de 01/09 não aparece. Lista do André ainda não veio.",
+      "2026-10":"Dados até 03/10; lista do André ainda não veio."
+    },
+    months:{
+      "2026-01":{homeJu:230.39,homeTransfer:0,homeAndre:2787.20,andreForJu:0,householdBalance:-1278.40,householdRunning:-1278.40,householdConfirmed:-1278.40},
+      "2026-02":{homeJu:0,homeTransfer:0,homeAndre:3020.07,andreForJu:0,householdBalance:-1510.04,householdRunning:-2788.44,householdConfirmed:-2788.44},
+      "2026-03":{income:520,individual:-32.14,homeJu:444.32,homeTransfer:0,homeAndre:4808.24,andreForJu:972.89,unidentified:100.60,cashFlow:7.22,householdBalance:-3154.85,householdRunning:-5943.29,householdConfirmed:-5981.15},
+      "2026-04":{income:3365.79,individual:1062.68,homeJu:1803.25,homeTransfer:392.75,homeAndre:3058.46,andreForJu:0,unidentified:109.64,cashFlow:-2.53,householdBalance:-234.86,householdRunning:-6178.14,householdConfirmed:-6231.91},
+      "2026-05":{income:5197.94,individual:1794.29,homeJu:1356.97,homeTransfer:1300,homeAndre:2946.62,andreForJu:0,unidentified:0,cashFlow:746.68,householdBalance:505.18,householdRunning:-5672.97,householdConfirmed:-5765.68},
+      "2026-06":{income:3128.92,individual:1857.73,homeJu:1462.01,homeTransfer:720,homeAndre:2988.43,andreForJu:0,unidentified:299.45,cashFlow:-1210.27,householdBalance:-43.21,householdRunning:-5716.18,householdConfirmed:-5808.89},
+      "2026-07":{income:0,individual:27.90,homeJu:432.93,homeTransfer:0,homeAndre:3204.59,andreForJu:0,unidentified:110.69,cashFlow:-571.52,householdBalance:-1385.83,householdRunning:-7102.01,householdConfirmed:-7214.72},
+      "2026-08":{income:170.15,individual:123.85,homeJu:594.25,homeTransfer:0,homeAndre:2736.11,andreForJu:0,unidentified:49,cashFlow:-596.95,householdBalance:-1070.93,householdRunning:-8172.94,householdConfirmed:-8299.15},
+      "2026-09":{income:0.03,individual:1269.78,homeJu:75.90,homeTransfer:0,homeAndre:null,andreForJu:null,unidentified:395.39,cashFlow:-1741.04,householdBalance:null,householdRunning:-8134.99,householdConfirmed:-8261.20},
+      "2026-10":{income:4548.19,individual:2086.27,homeJu:251.45,homeTransfer:900,homeAndre:null,andreForJu:null,unidentified:552.62,cashFlow:757.85,householdBalance:null,householdRunning:-7109.26,householdConfirmed:-7235.48}
+    },
+    individual:{
+      total:{income:16931.02,salary:12800.77,flash:3647.36,spending:8190.36,homeContribution:9733.83,unidentified:1617.39},
+      categories:[
+        {name:"Educação",value:3860.38},{name:"A identificar",value:1617.39},{name:"Saúde e academia",value:1325},
+        {name:"Lazer e restaurantes",value:1037.78},{name:"Advogada / serviços",value:936.56},{name:"Assinaturas e tecnologia",value:580.79},
+        {name:"Cuidados pessoais",value:370.39},{name:"Tarifas e seguros",value:49.50},{name:"Casa, farmácia e serviços",value:22},{name:"Transporte",value:7.96}
+      ],
+      progress:[
+        {name:"Lazer e restaurantes",before:46.67,after:429.94,delta:383.27},{name:"A identificar",before:136.36,after:474,delta:337.64},
+        {name:"Advogada / serviços",before:77.19,after:352.50,delta:275.31},{name:"Educação",before:867,after:629.69,delta:-237.31},
+        {name:"Saúde e academia",before:341.67,after:150,delta:-191.67},{name:"Cuidados pessoais",before:110.13,after:45,delta:-65.13},
+        {name:"Assinaturas e tecnologia",before:111.68,after:65.94,delta:-45.74},{name:"Casa, farmácia e serviços",before:7.33,after:0,delta:-7.33},
+        {name:"Tarifas e seguros",before:9.90,after:4.95,delta:-4.95}
+      ],
+      projection:{
+        start:-8299.15,salaryConservative:2880.64,salaryBase:3200.19,salaryOptimistic:4158.85,
+        flash:892.06,homeShare:1992.12,individualSpending:1707.93,
+        conservative:{surplus:-297.36,series:[-8299.15,-8596.50,-8893.86,-9191.22,-9488.57,-9785.93,-10083.28,-10380.64,-10677.99,-10975.35,-11272.70,-11570.06,-11867.41]},
+        base:{surplus:392.20,series:[-8299.15,-7906.95,-7514.75,-7122.55,-6730.35,-6338.15,-5945.95,-5553.75,-5161.55,-4769.35,-4377.15,-3984.95,-3592.75]},
+        optimistic:{surplus:1535.86,series:[-8299.15,-6763.29,-5227.43,-3691.56,-2155.70,-619.84,916.02,2451.89,3987.75,5523.61,7059.47,8595.34,10131.20]},
+        months:["2026-10","2026-11","2026-12","2027-01","2027-02","2027-03","2027-04","2027-05","2027-06","2027-07","2027-08","2027-09","2027-10"]
+      }
+    },
+    home:{
+      total:{cost:31873.84,andre:25549.72,juDirect:6324.12,juTransfer:2412.75,andreForJu:972.89,settlement:-8172.94,settlementConfirmed:-8299.15},
+      categories:[
+        {name:"Moradia (aluguel)",value:14596.49,monthly:1824.56},{name:"Alimentação em casa",value:7156.02,monthly:894.50},
+        {name:"Lazer do casal",value:3910.20,monthly:488.77},{name:"Contas de consumo",value:2569.03,monthly:321.13},
+        {name:"A classificar (Rebill, PIX, clínica…)",value:1363.80,monthly:170.47},{name:"Otto",value:1186.58,monthly:148.32},
+        {name:"Casa, farmácia e serviços",value:611.73,monthly:76.47},{name:"Combustível",value:479.99,monthly:60}
+      ],
+      progress:[
+        {name:"Alimentação em casa",before:722.31,after:1066.70,delta:344.39},{name:"Otto",before:240.82,after:55.83,delta:-184.99},
+        {name:"A classificar (Rebill, PIX, clínica…)",before:222.80,after:118.15,delta:-104.65},{name:"Contas de consumo",before:369.14,after:273.12,delta:-96.03},
+        {name:"Casa, farmácia e serviços",before:106.27,after:46.67,delta:-59.60},{name:"Lazer do casal",before:460.77,after:516.78,delta:56.02},
+        {name:"Moradia (aluguel)",before:1847.32,after:1801.80,delta:-45.52},{name:"Combustível",before:68.56,after:51.44,delta:-17.13}
+      ],
+      projection:{rent:1801.80,energy:231,water:46.60,internet:90.90,fixed:2170.30,variable:1813.93,monthly:3984.23,year:47810.76,juShare:1992.12}
+    }
+  };
+
+  var DEFAULTS = {
+    goals: [
+      {id:"g1",  trunk:"prof", cat:"Carreira & cargo", text:"Consolidar a atuação comercial B2B na HDL — prospecção, reativação de clientes e negociação", status:"andamento"},
+      {id:"g2",  trunk:"prof", cat:"Carreira & cargo", text:"Construir um perfil que una vendas B2B, análise de dados e estratégia de marketing", status:"planejado"},
+      {id:"g3",  trunk:"prof", cat:"Carreira & cargo", text:"Fortalecer storytelling de dados e métricas comerciais estruturadas", status:"planejado"},
+      {id:"g4",  trunk:"prof", cat:"Formação", text:"Sprint de Análise de Dados — TripleTen", status:"andamento"},
+      {id:"g5",  trunk:"prof", cat:"Formação", text:"Graduação em Gestão Comercial/Administração — Faculdade Sebrae EAD", status:"andamento"},
+      {id:"g6",  trunk:"prof", cat:"Formação", text:"Avaliar FIAP (Marketing Digital & Data Science) como próximo passo", status:"planejado"},
+      {id:"g7",  trunk:"prof", cat:"Atuação na HDL", text:"Ampliar conteúdo comercial e campanhas para clientes (scripts, e-mails, WhatsApp)", status:"andamento"},
+      {id:"g8",  trunk:"prof", cat:"Atuação na HDL", text:"Explorar novas frentes — linha de contraste e bombas injetoras GE HealthCare", status:"andamento"},
+      {id:"g9",  trunk:"pess", cat:"Fé & espiritualidade", text:"Manter a prática devocional diária estruturada", status:"andamento"},
+      {id:"g10", trunk:"pess", cat:"Corpo & saúde", text:"Seguir o programa de treino na EF Academia — definição e força, 4x por semana", status:"andamento"},
+      {id:"g11", trunk:"pess", cat:"Relacionamento & lar", text:"Fechar a divisão 50/50 de despesas e tarefas domésticas com o André", status:"andamento"},
+      {id:"g12", trunk:"pess", cat:"Idiomas", text:"Avançar em inglês e espanhol", status:"sonho"},
+      {id:"g13", trunk:"pess", cat:"Rotina & organização", text:"Manter a rotina semanal equilibrada — trabalho, estudo, treino e devocional", status:"andamento"},
+      {id:"g14", trunk:"pess", cat:"Financeiro", text:"Quitar as dívidas da Buyvet e a pendência do CPF — ver aba Dívidas", status:"planejado"}
+    ],
+    dreams: [
+      {id:"d1", horizon:"curto", text:"Começar a aprender mandarim", req:"escolher curso/app e reservar 15 min por dia", status:"andamento"},
+      {id:"d2", horizon:"curto", text:"Carro próprio, se o valor couber no orçamento", req:"definir teto de valor e comparar à vista x financiado", status:"planejado"},
+      {id:"d3", horizon:"medio", text:"Quitar as dívidas atuais", req:"R$ 39,4 mil confirmados + ≈ R$ 150 mil em processos a detalhar — ver aba Dívidas", status:"planejado"},
+      {id:"d4", horizon:"medio", text:"Intercâmbio para consolidar o inglês", req:"escolher programa e abrir poupança mensal dedicada", status:"sonho"},
+      {id:"d5", horizon:"medio", text:"Viagem para a Itália", req:"valor-alvo com data e poupança mensal fixa", status:"sonho"},
+      {id:"d6", horizon:"medio", text:"Casamento", req:"alinhar com André prazo e orçamento", status:"sonho"},
+      {id:"d7", horizon:"longo", text:"Casa própria", req:"reserva de emergência formada + entrada calculada", status:"sonho"},
+      {id:"d8", horizon:"longo", text:"Ter filhos", req:"alinhar com André momento e estrutura financeira", status:"sonho"},
+      {id:"d9", horizon:"longo", text:"Voltar a empreender", req:"primeira proposta validada com a experiência de HDL/estudos", status:"sonho"},
+      {id:"d10", horizon:"longo", text:"Renda mensal de R$ 35 mil ou mais", req:"converter TripleTen/Sebrae em aumento, novo cargo ou nova fonte de renda", status:"sonho"}
+    ],
+    wishes: [
+      {title:"Autocuidado", chips:["Fazer as unhas quinzenalmente","Cuidar melhor esteticamente de mim"]},
+      {title:"Estilo & consumo", chips:["Roupas novas","Perfumes","Calçados novos","Trocar de iPhone"]},
+      {title:"Lazer", chips:["Viagens curtas e relaxantes, esporadicamente","Bons restaurantes quinzenalmente"]},
+      {title:"Hobbies & mente", chips:["Ler um livro por mês","Voltar a tocar violão","Aprender bordado"]},
+      {title:"Rotina & casa", chips:["Voltar a ter rotina e alimentação organizadas","Faxineira a cada 15 dias","Trocar de sofá"]},
+      {title:"Otto", chips:["Operar o Otto"]}
+    ],
+    debts: [
+      {id:"p1", group:"Protestos em cartório", label:"Protesto R$ 1.796,48 → cancelamento", value:284.06, status:"pendente", note:"Autorização de cancelamento já disponível"},
+      {id:"p2", group:"Protestos em cartório", label:"Protesto R$ 376,89 → cancelamento", value:106.49, status:"pendente", note:""},
+      {id:"p3", group:"Protestos em cartório", label:"Protesto R$ 2.052,77 → cancelamento", value:284.06, status:"pendente", note:"Confirmar se é o mesmo título da linha abaixo"},
+      {id:"p4", group:"Protestos em cartório", label:"Protesto R$ 376,88 → cancelamento", value:106.49, status:"pendente", note:""},
+      {id:"p5", group:"Protestos em cartório", label:"Protesto R$ 135,87 → quitação", value:40.14, status:"pendente", note:""},
+      {id:"p6", group:"Protestos em cartório", label:"Protesto R$ 71,19 → quitação", value:40.14, status:"pendente", note:""},
+      {id:"p7", group:"Protestos em cartório", label:"Protesto R$ 10.600,00 → cancelamento", value:1437.92, status:"pendente", note:""},
+      {id:"p8", group:"Protestos em cartório", label:"Protesto R$ 2.052,77 → cancelamento (2ª consulta)", value:284.06, status:"pendente", note:"Possível duplicata — confirmar no cartório antes de pagar"},
+      {id:"g1", group:"PGDAS-D — Simples Nacional", label:"Competência 09/2024", value:4212.33, status:"pendente", note:""},
+      {id:"g2", group:"PGDAS-D — Simples Nacional", label:"Competência 01/2025", value:6824.15, status:"pendente", note:""},
+      {id:"g3", group:"PGDAS-D — Simples Nacional", label:"Competência 02/2025", value:4217.82, status:"pendente", note:""},
+      {id:"g4", group:"PGDAS-D — Simples Nacional", label:"Competência 03/2025", value:1399.16, status:"pendente", note:""},
+      {id:"g5", group:"PGDAS-D — Simples Nacional", label:"Competência 04/2025", value:2456.91, status:"pendente", note:""},
+      {id:"o1", group:"Lançamento de Ofício", label:"Débito venc. 06/03/2025", value:120.47, status:"pendente", note:""},
+      {id:"s1", group:"Serasa", label:"Appmax — negociado (5% off)", value:13190.08, status:"pendente", note:""},
+      {id:"s2", group:"Serasa", label:"Stone/pagar.me — negociado (70% off)", value:987.26, status:"pendente", note:""},
+      {id:"s3", group:"Serasa", label:"Santander — acordo 4/4", value:5917.66, status:"pago", note:"Comprovante guardado"},
+      {id:"l1", group:"Fornecedores", label:"Lab Culture — Buyvet", value:3175.00, status:"pendente", note:""},
+      {id:"l2", group:"Fornecedores", label:"HTC Móveis Hospitalares — NF 5699 (carro de emergência)", value:1498.00, status:"pendente", note:"Emitida 09/01/2025, boleto único venc. 07/02/2025 — já vencida, confirmar se foi paga ou renegociada"},
+      {id:"l3", group:"Fornecedores", label:"HTC Móveis Hospitalares — NF 5953 (10 cadeiras estofadas p/ obeso)", value:3940.00, status:"pendente", note:"Emitida 05/03/2025, 2 boletos de R$ 1.970,00 (venc. 04/04/2025 e 19/04/2025) — já vencidos, confirmar se foram pagos ou renegociados"},
+      {id:"l4", group:"Fornecedores", label:"Inovavett", value:10000.00, status:"pendente", note:"Valor informado por você, sem nota/comprovante anexado ainda — confirmar detalhes (data, vencimento, se já negociado)"},
+      {id:"c1", group:"Receita Federal (seu CPF)", label:"MAED-DIRPF", value:210.35, status:"pendente", note:""}
+    ],
+    lawsuits: [],
+    lawsuitsEstimate: 150000,
+    sermar: {accumulated:0, target:1200, perCycle:231.56},
+    diet: {
+      plan:{
+        seg:{cafe:"Ovos mexidos c/ cúrcuma + agrião + tomate cereja; fruta: mamão formosa", almoco:"Frango grelhado + arroz integral + feijão + salada (folhas + 2 vegetais)", lanche:"Vitamina de abacate proteica (whey chocolate)", jantar:"Bowl de salada c/ frango + folhas + tomate + cenoura ralada (low carb)"},
+        ter:{cafe:"Suco verde funcional (abacaxi + couve + chia) + 2 ovos mexidos", almoco:"Peixe branco assado + batata doce cozida + salada colorida", lanche:"2 ovos cozidos c/ fio de azeite + 80g de uva", jantar:"Legumes coloridos assados + peixe branco ou salmão (low carb)"},
+        qua:{cafe:"Mingau de aveia proteico (whey + farelo de aveia + leite vegetal + canela) + banana grelhada", almoco:"Patinho moído refogado + mandioquinha c/ azeite e alho + salada", lanche:"Vitamina proteica de banana (linhaça + whey + psyllium)", jantar:"Repete o almoço sem o carboidrato — proteína + vegetais"},
+        qui:{cafe:"Ovo na crosta de sementes (abóbora + girassol) + maçã picada c/ canela", almoco:"Frango cozido + grão-de-bico ou lentilha + salada", lanche:"10 uvas + 2 colheres de semente de abóbora", jantar:"Bowl de salada c/ atum (lata) ou frango + grão-de-bico"},
+        sex:{cafe:"Vitamina proteica c/ leite vegetal (morango + banana congelados + aveia + whey)", almoco:"Atum ou peixe + arroz 7 grãos + feijão + salada", lanche:"Vitamina de abacate proteica (repete segunda)", jantar:"Jantar leve — bowl completo c/ abacaxi ou grão-de-bico"},
+        sab:{cafe:"Mingau de aveia c/ maçã — sem pressa", almoco:"Livre — repita uma opção preferida da semana", lanche:"Livre — iogurte com fruta, por exemplo", jantar:"Livre — bom senso"},
+        dom:{cafe:"Ovo mexido c/ cúrcuma + fatia de mamão + castanha do pará + farelo de aveia", almoco:"Coxa-sobrecoxa assada + mandioca cozida + salada", lanche:"2 ovos cozidos + uva", jantar:"Jantar leve — bowl de salada simples"}
+      },
+      log:{}
+    },
+    workout: {
+      plan:{
+        dom:"Treino A — Pernas (quadríceps): agachamento guiada/sumô, leg 45°, leg unilateral, extensora, panturrilha + core",
+        seg:"Alongar e caminhada leve",
+        ter:"Treino B — Ombros + Peito: desenvolvimento, elevação lateral/frontal, supino vertical, peck deck, tríceps cross + core",
+        qua:"Alongar e caminhada leve",
+        qui:"Treino C — Posterior + Glúteo: glúteo máquina, flexora (pé/sentada/deitada), adutor/abdutor, panturrilha sentada + core",
+        sex:"Alongar e caminhada leve",
+        sab:"Treino D — Costas + Bíceps: puxador frente/high row, remada guiada, peck deck posterior, pull down, rosca scott/martelo + core"
+      },
+      log:{}
+    },
+    routine: {
+      items:[
+        {id:"r1", text:"Oração — Quaresma de São Miguel Arcanjo (04:00)"},
+        {id:"r2", text:"Estudo TripleTen — bloco da manhã"},
+        {id:"r3", text:"Treino EF Academia"},
+        {id:"r4", text:"Estudo TripleTen — bloco da noite"},
+        {id:"r5", text:"Aula Sebrae EAD"},
+        {id:"r6", text:"Rotina do sono (21:05–21:20)"}
+      ],
+      log:{}
+    },
+    supplements: [
+      {period:"Manhã (com o shot)", items:[
+        ["Vitamina D (Yosen®)","5 gotas, diariamente"],
+        ["Coenzima Q10","5 gotas ou 1 cáp (100mg), após o shot"],
+        ["NAC (N-acetilcisteína)","600mg junto com o shot"],
+        ["Zinco (bisglicinato)","1 cáp após o café da manhã"],
+        ["Rhodíola","1 cáp pela manhã"],
+        ["Transresveratrol","1 cáp pela manhã"],
+        ["Lactoferrina","100mg, 1 cáp ao dia"]
+      ]},
+      {period:"Almoço", items:[
+        ["Ômega 3 / óleo de peixe","1g EPA+DHA (2 cáps)"]
+      ]},
+      {period:"Noite (~1h antes de dormir)", items:[
+        ["Fórmula manipulada — sono","Magnésio + P5P + glicina + niacinamida + 5-HTP"]
+      ]}
+    ],
+    shopping: {
+      items: [
+        {id:"c1", category:"Proteínas", text:"Frango (peito/filé)", checked:false},
+        {id:"c2", category:"Proteínas", text:"Peixe branco / Salmão", checked:false},
+        {id:"c3", category:"Proteínas", text:"Atum (lata)", checked:false},
+        {id:"c4", category:"Proteínas", text:"Patinho moído", checked:false},
+        {id:"c5", category:"Proteínas", text:"Coxa-sobrecoxa de frango", checked:false},
+        {id:"c6", category:"Proteínas", text:"Ovos", checked:false},
+        {id:"c7", category:"Proteínas", text:"Whey protein (chocolate)", checked:false},
+        {id:"c8", category:"Vegetais e folhas", text:"Folhas variadas (alface, rúcula, agrião)", checked:false},
+        {id:"c9", category:"Vegetais e folhas", text:"Tomate cereja", checked:false},
+        {id:"c10", category:"Vegetais e folhas", text:"Cenoura", checked:false},
+        {id:"c11", category:"Vegetais e folhas", text:"Abobrinha", checked:false},
+        {id:"c12", category:"Vegetais e folhas", text:"Brócolis", checked:false},
+        {id:"c13", category:"Vegetais e folhas", text:"Couve manteiga", checked:false},
+        {id:"c14", category:"Frutas", text:"Mamão formosa", checked:false},
+        {id:"c15", category:"Frutas", text:"Abacaxi", checked:false},
+        {id:"c16", category:"Frutas", text:"Uva", checked:false},
+        {id:"c17", category:"Frutas", text:"Banana", checked:false},
+        {id:"c18", category:"Frutas", text:"Maçã", checked:false},
+        {id:"c19", category:"Frutas", text:"Morango (pode ser congelado)", checked:false},
+        {id:"c20", category:"Frutas", text:"Abacate", checked:false},
+        {id:"c21", category:"Carboidratos", text:"Arroz integral", checked:false},
+        {id:"c22", category:"Carboidratos", text:"Feijão", checked:false},
+        {id:"c23", category:"Carboidratos", text:"Batata doce", checked:false},
+        {id:"c24", category:"Carboidratos", text:"Mandioca / Mandioquinha", checked:false},
+        {id:"c25", category:"Carboidratos", text:"Grão-de-bico ou lentilha", checked:false},
+        {id:"c26", category:"Carboidratos", text:"Arroz 7 grãos integral", checked:false},
+        {id:"c27", category:"Despensa", text:"Aveia em flocos / farelo de aveia", checked:false},
+        {id:"c28", category:"Despensa", text:"Leite vegetal (amêndoas ou aveia)", checked:false},
+        {id:"c29", category:"Despensa", text:"Azeite extra virgem", checked:false},
+        {id:"c30", category:"Despensa", text:"Canela em pó", checked:false},
+        {id:"c31", category:"Despensa", text:"Chia", checked:false},
+        {id:"c32", category:"Despensa", text:"Linhaça", checked:false},
+        {id:"c33", category:"Despensa", text:"Semente de abóbora / girassol", checked:false},
+        {id:"c34", category:"Despensa", text:"Castanha do pará", checked:false},
+        {id:"c35", category:"Despensa", text:"Limão", checked:false},
+        {id:"c36", category:"Despensa", text:"Extrato de própolis", checked:false},
+        {id:"c37", category:"Despensa", text:"Cúrcuma em pó", checked:false}
+      ]
+    },
+    reading: { items: [], targetPerMonth: 1 },
+    spirituality: {
+      quaresma: [
+        {time:"04:00–04:25", text:"Coroa Angélica, ladainha e oração a São Miguel Arcanjo"},
+        {time:"21:05–21:20", text:"Rotina do sono — encerrar o dia em silêncio/oração"}
+      ],
+      dailyLog: {}
+    },
+    academico: {
+      periodoAtual: 1,
+      periods: [
+        {num:1, materias:["Introdução à Gestão","Programação Criativa e Letramento Digital","Princípios Analítico-Quantitativos","Empreendedorismo e Comportamento Empreendedor","Future Skills: Storymakers","Ética nos Negócios"]},
+        {num:2, materias:["Comportamento Organizacional","Desenvolvimento de Apps e Sites","Sociologia do Empreendedorismo","Matemática Financeira e Orçamento Pessoal","Future Skills: Formação de times colaborativos","Prospecção de Novos Negócios, Cenários e Tendências","Interdisciplinar: Jogos de Empresas"]},
+        {num:3, materias:["Modelagem de Negócios","Contabilidade Financeira","Gestão de Carreiras","Métodos Quantitativos Aplicados","Pensamento Crítico, Argumentação e Debates","Future Skills: Design Thinking I","Teoria Geral do Direito"]},
+        {num:4, materias:["Resolução de Casos Reais","Future Skills: Design Thinking II","Direito Aplicado aos Negócios I","Gestão de Projetos","Contabilidade Gerencial","Estatística Aplicada aos Negócios","Microeconomia"]},
+        {num:5, materias:["Optativa de Empreendedorismo I","Estratégia Organizacional","Pesquisa e Análise de Mercado","Direito Aplicado aos Negócios II","Macroeconomia","Inovação nas Organizações","Liderança e Formação de Equipes"]},
+        {num:6, materias:["Consultoria Empresarial","Gestão Estratégica de Pessoas","Introdução ao Marketing","Administração Financeira e Orçamentária","Gestão da Produção"]},
+        {num:7, materias:["Optativa de Empreendedorismo II","Future Skills: Cultura Maker e Economia Criativa","Pensamento e Metodologia Científicos","Marketing 4.0","Gestão de Operações e Serviços","Pesquisa Operacional e Modelagem Matemática","Estágio Supervisionado"]},
+        {num:8, materias:["Tópicos Avançados em Tecnologia","Future Skills: Projetos Audiovisuais","Optativa I","Indicadores, Valuation e Captação de Recursos","Tópicos Contemporâneos em Administração","Cultura e Realidade Brasileira","Business Analytics","Gestão da Cadeia de Suprimentos e Logística","Sustentabilidade e Responsabilidade Social","Trabalho de Conclusão de Curso"]}
+      ],
+      done: {}
+    },
+    complementar: {
+      tripleten: [
+        {id:"tt1", text:"Sprint em dia (bootcamp Análise de Dados)"},
+        {id:"tt2", text:"Projeto do sprint entregue"},
+        {id:"tt3", text:"Revisão de código/feedback do tutor"}
+      ],
+      copywriting: [],
+      iaAnthropic: [
+        {id:"ia1", text:"Anthropic Academy — introdução à API do Claude"},
+        {id:"ia2", text:"Boas práticas de prompt engineering"}
+      ],
+      iaMicrosoft: [
+        {id:"ia3", text:"Microsoft Learn — Fundamentos de IA (AI-900)"},
+        {id:"ia4", text:"Microsoft Copilot para produtividade"}
+      ]
+    },
+    professional: {
+      kpis: {
+        metaSetembro: 714543.71,
+        realizado: 530301.86,
+        diasUteisTotal: 21,
+        diaUtilAtual: 19,
+        diasUteisRestantes: 2,
+        ritmoEsperadoPct: -17.97,
+        faltamRitmo: 116190.07,
+        faltamMes: 184241.85,
+        mediaDiaNecessaria: 92120.93,
+        metaDiariaOriginal: 34025.89,
+        prazoMedioDias: 32.06,
+        prazoMetaDias: 35,
+        markup: 0.87,
+        parceirosAtendidos: 45,
+        conversaoSetor: 5.8,
+        conversaoGeral: 8.2,
+        ticketSetor: 2714,
+        ticketGeral: 3786,
+        vendas12m: 6650000,
+        orcado12m: 114600000,
+        coberturaAtivos: 63,
+        coberturaTotal: 119,
+        coberturaGeralPct: 40.7,
+        mesesMeta: 0,
+        mesesMetaTotal: 12,
+        mesesMetaGeral: 5,
+        inadimplencia: 15.1,
+        inadimplenciaGeral: 20.6,
+        atualizadoEm: "28/09/2026",
+        fechamentoMes: "30/09/2026"
+      },
+      comparativo: [
+        {nome:"Setor SJC", pct:-17.97},
+        {nome:"Matriz Uberlândia", pct:-8.28},
+        {nome:"Filial Cravinhos", pct:-18.88}
+      ],
+      gaps: [
+        {num:1, title:"Cotação não vira venda", badge:"crit", badgeLabel:"Maior impacto",
+          body:"Conversão de 5,8% contra 8,2% da média geral — apesar de o setor gerar mais cotações por dia que qualquer unidade comparável. O gargalo não é geração de demanda, é fechamento.",
+          evidence:"Orçado 12m: R$ 114,6 milhões · Vendido: R$ 6,65 milhões · 12 clientes orçaram e não compraram nos últimos 3 meses.",
+          action:"Retomar hoje os 12 clientes em \"somente cotação\" com prazo de decisão mais recente; mapear com o time o motivo de perda dos 5 maiores orçamentos abertos antes de esperar resposta espontânea do cliente."},
+        {num:2, title:"42% da carteira parada", badge:"crit", badgeLabel:"Maior impacto",
+          body:"50 dos 119 parceiros cadastrados não cotam nem compram há mais de 3 meses. É a maior única reserva de receita não explorada da carteira.",
+          evidence:"Carteira: 119 parceiros · Ativos: 63 (52,9%) · Abandono: 50 · Somente cotação: 12.",
+          action:"Campanha de reativação até 30/09: priorizar quem tem maior histórico de compra entre os 50, não os mais fáceis de contatar. Meta realista: reativar 8–10 contas ainda este mês."},
+        {num:3, title:"Linha GE praticamente ausente", badge:"crit", badgeLabel:"Whitespace de portfólio",
+          body:"GE representa 27,5% do vendido no geral da empresa — no setor, 2,3%. E o setor já compra Ioexol (contraste GE) como 4º produto do top 5, o que prova que a demanda de imagem já existe na carteira.",
+          evidence:"Setor SJC: 2,3% · Geral empresa: 27,5%.",
+          action:"Levantar quais das 63 contas ativas já compram Ioexol e oferecer o portfólio GE mais amplo (imagem, anestesia) nessas mesmas contas; pedir apoio de um especialista de linha da matriz para uma call conjunta ainda em setembro."},
+        {num:4, title:"Cateter vende, acessório não acompanha", badge:"warn", badgeLabel:"Cross-sell",
+          body:"Cateter intravenoso é o 3º produto do setor, mas os itens que naturalmente o acompanham estão bem abaixo da projeção: Flush −31,4%, Hypodermic −66,4%, Anestesia −80,4% (linhas BD, recorte SJC). É demanda que já está na mesa e não está sendo ofertada junto.",
+          evidence:"PIVC-SJC (cateter) está a +31,1% da projeção — a única ponta forte do kit.",
+          action:"Padronizar cotação em kit: todo orçamento de cateter intravenoso sai com flush, conector e seringa hipodérmica já inclusos como item padrão, não como oferta adicional."},
+        {num:5, title:"Bionexo: muita cotação, pouca margem", badge:"warn", badgeLabel:"Rentabilidade",
+          body:"Bionexo concentra 23,7% das cotações do setor mas entrega a pior rentabilidade entre os portais (0,69%) — abaixo de Planilhas (1,31%) e Texto (1,09%), que têm um décimo do volume.",
+          evidence:"Rentabilidade por portal — Planilhas 1,31% · Texto 1,09% · Central 0,96% · Apoio 0,87% · GTPlan 0,75% · Bionexo 0,69%.",
+          action:"Manter presença em Bionexo, mas com piso de desconto definido; direcionar tempo comercial extra para negociação direta (Texto/Planilhas), onde a margem por hora investida é maior."},
+        {num:6, title:"CR7 perdeu 83% em 8 meses", badge:"warn", badgeLabel:"Alavanca ociosa",
+          body:"Faturamento via CR7 caiu de R$ 23.803 (dez/25) para R$ 3.949 (ago/26) — mesmo com o setor tendo vínculo de produtos melhor que a média da empresa (26,4% vs 19,5%). A competência existe; o uso caiu.",
+          evidence:"CR7 12m: R$ 89.024,97 · 1,3% do faturamento · pico dez/25, queda contínua até ago/26.",
+          action:"Entender com o time comercial e financeiro por que o uso caiu — contrato vencido, tabela desatualizada ou o time simplesmente parou de oferecer. É a alavanca mais rápida de reativar por já ter comprovado eficácia."},
+        {num:7, title:"61% das devoluções são erro interno", badge:"warn", badgeLabel:"Operacional",
+          body:"92 das 150 devoluções do ano (R$ 99.106) são por \"produto faturado incorretamente\" — não é o cliente que erra, é o processo. É a única linha deste diagnóstico que se resolve sem depender de uma venda nova.",
+          evidence:"Produto faturado incorretamente: 92 casos / R$ 99.106 · Refaturamento: 13 / R$ 65.217 · Cliente não pagou: 7 / R$ 33.634 · Solicitação errada do cliente: 16 / R$ 15.175.",
+          action:"Checklist de conferência de pedido antes do faturamento nas contas com histórico de devolução recorrente. Reduz custo, tempo de reprocesso e desgaste com clientes que já estão no radar de risco."},
+        {num:8, title:"16% dos clientes seguram 80% da receita", badge:"warn", badgeLabel:"Concentração",
+          body:"19 dos 119 clientes respondem por 80% do faturamento. É também o mesmo tamanho do grupo com 2 ou mais devoluções no ano — vale cruzar as duas listas: erro operacional batendo justamente na conta mais valiosa é o pior cenário possível.",
+          evidence:"Concentração 80/20: 19 de 119 clientes (16% da carteira) · Clientes com 2+ devoluções: 19 nos últimos 12 meses.",
+          action:"Cruzar a lista dos 19 clientes-chave com a lista dos 19 com devolução recorrente. Onde houver sobreposição, visita do gestor — não só do vendedor — ainda este mês."},
+        {num:9, title:"Metade da carteira sem classificação de risco", badge:"warn", badgeLabel:"Crédito",
+          body:"50,4% dos parceiros não têm classificação de pagador definida, e 73 têm títulos vencidos em aberto — um número maior que o total de clientes ativos, o que sugere sobreposição com contas hoje inativas.",
+          evidence:"Sem classificação: 60 (50,4%) · Bom pagador: 50 (42,0%) · Títulos em atraso: 73 parceiros.",
+          action:"Cobrança ativa dos títulos vencidos antes de liberar novo crédito — pode destravar pedidos hoje parados por limite. Classificar os 60 pendentes junto com o financeiro para gestão de risco daqui pra frente."},
+        {num:10, title:"Cinco produtos concentram o risco de fornecimento", badge:"good", badgeLabel:"Monitorar",
+          body:"Imunoglobulina, Anfotericina B Lipossomal, Cateter Intravenoso, Ioexol e Albumina Humana são os cinco produtos mais vendidos — biológicos e insumos de alto custo, típicos de oncologia, hematologia e centro cirúrgico. Ruptura de estoque em qualquer um pesa desproporcionalmente na meta do mês.",
+          evidence:"Top 5 produtos: R$ 213.459 / R$ 174.400 / R$ 165.287 / R$ 152.364 / R$ 142.295 · 275 de 1.735 SKUs (15,9%) respondem por 80% do faturamento.",
+          action:"Confirmar com o fornecedor a disponibilidade desses cinco itens para as próximas duas semanas antes de fechar as cotações de maior valor em aberto."}
+      ],
+      phases: [
+        {when:"Hoje → 2 dias úteis", title:"Imediato", items:[
+          {id:"a1", text:"Retomar os 12 clientes em \"somente cotação\"", impact:"Gap 01 — conversão"},
+          {id:"a2", text:"Selecionar os 8–10 clientes de maior potencial entre os 50 em \"abandono\" e iniciar contato", impact:"Gap 02 — carteira parada"},
+          {id:"a3", text:"Cruzar a lista de clientes-chave (19) com a de devolução recorrente (19)", impact:"Gap 08 — concentração"},
+          {id:"a4", text:"Confirmar estoque dos 5 produtos-âncora para as cotações em aberto de maior valor", impact:"Gap 10 — fornecimento"}
+        ]},
+        {when:"Esta semana", title:"Curto prazo", items:[
+          {id:"a5", text:"Incluir flush, conector e seringa hipodérmica como itens padrão em toda cotação de cateter", impact:"Gap 04 — cross-sell"},
+          {id:"a6", text:"Levantar contas ativas que já compram Ioexol e propor portfólio GE ampliado, com apoio de especialista de linha", impact:"Gap 03 — whitespace GE"},
+          {id:"a7", text:"Contato com o responsável do setor de Uberlândia para identificar práticas replicáveis", impact:"Benchmark interno"},
+          {id:"a8", text:"Levantar com financeiro por que o faturamento via CR7 caiu 83% desde dezembro", impact:"Gap 06 — alavanca ociosa"},
+          {id:"a9", text:"Cobrar os 73 títulos vencidos para liberar limite de crédito represado", impact:"Gap 09 — crédito"}
+        ]},
+        {when:"Pós-setembro", title:"Estrutural", items:[
+          {id:"a10", text:"Checklist de conferência pré-faturamento para reduzir erro operacional em devoluções", impact:"Gap 07 — processo"},
+          {id:"a11", text:"Piso de desconto por portal e redistribuição de esforço comercial para canais de maior rentabilidade", impact:"Gap 05 — Bionexo"},
+          {id:"a12", text:"Classificar os 60 parceiros sem risco de pagador definido", impact:"Gap 09 — crédito"}
+        ]}
+      ],
+      highlights: [
+        {title:"Os 19 nomes por trás dos 80%", text:"19 dos 119 parceiros somam R$ 4.973.224,20 faturados em jan–set/26 — liderados por Santa Casa de Pindamonhangaba (R$ 503,7 mil) e GACC SJC (R$ 368,8 mil). 17 dos 19 são hospitais/Santa Casas com centro cirúrgico próprio."},
+        {title:"Contas de peso com faturamento zero", text:"58 dos 119 parceiros (49%) não faturaram nada em 2026 — incluindo HAPVIDA SJC, Centro Oncológico do Vale, 4 Santa Casas do litoral/região e a Rede Instituto Sócrates Guanaes (7 unidades, só 3 compraram algo)."},
+        {title:"Campanha 3M — receita 100% incremental", text:"7 linhas novas (Attest, Coban/Ioban, Tegaderm, Bair Hugger, Red Dot, Cavilon, Transpore) sem canibalizar portfólio atual. Primeira onda: 8 hospitais do top 19 para levar Attest + Coban/Ioban ainda em setembro."}
+      ],
+      log:{}
+    },
+    areaWeights: { profissional:5, dividas:5, treino:4, rotina:4, metas:4, dieta:3, espirito:3, academico:3, complementar:2, leitura:2, compras:1 },
+    weeklyReviews: [],
+    agenda: [],
+    finance: {
+      months: {},
+      individualCategories: [],
+      homeSectors: [],
+      openingBalance: null,
+      scenarios: { optimistic: 1.25, base: 1, conservative: 0.75 },
+      reportSnapshot: FINANCE_REPORT,
+      reportVersion: null
+    },
+    previousPanelData: null
+  };
+
+  var LOCAL_DATA_KEY = "painelJuDadosV1";
+  var PREVIOUS_DATA_KEY = "painel-da-ju:v1";
+  var state = null;
+  var stateDoc = null;
+
+  function cloneDefaults(){ return JSON.parse(JSON.stringify(DEFAULTS)); }
+  function mergeDefaults(saved){
+    var base = cloneDefaults();
+    if(saved && typeof saved === "object"){
+      Object.keys(base).forEach(function(k){ if(saved[k] !== undefined) base[k] = saved[k]; });
+    }
+    return base;
+  }
+
+  // ---------- save status (visible feedback, so a failed save is never silent) ----------
+  var saveFailCount = 0;
+  var saveRetryTimer = null;
+  function setSaveStatus(kind, text){
+    var el = document.getElementById("saveStatus");
+    if(!el) return;
+    el.className = "save-status mono" + (kind ? " "+kind : "");
+    el.textContent = text;
+  }
+  function persist(){
+    if(!stateDoc){
+      setSaveStatus("error", "Alterações não estão sendo salvas — recarregue a página");
+      return;
+    }
+    if(saveRetryTimer){ clearTimeout(saveRetryTimer); saveRetryTimer = null; }
+    setSaveStatus("saving", "Salvando…");
+    stateDoc.set(state).then(function(){
+      saveFailCount = 0;
+      var now = new Date();
+      var hh = String(now.getHours()).padStart(2,"0"), mm = String(now.getMinutes()).padStart(2,"0");
+      setSaveStatus("ok", "Salvo às "+hh+":"+mm);
+    }).catch(function(e){
+      console.warn("painel: falha ao salvar", e);
+      saveFailCount++;
+      if(saveFailCount <= 5){
+        setSaveStatus("error", "Não salvou, tentando de novo…");
+        saveRetryTimer = setTimeout(persist, 2000 * saveFailCount);
+      } else {
+        setSaveStatus("error", "Não foi possível salvar — recarregue a página antes de continuar");
+      }
+    });
+  }
+
+  function migratePreviousPanel(previous){
+    state.previousPanelData=previous;
+    var migratedItems={};
+    function addItems(items,prefix,label){
+      if(!Array.isArray(items)) return;
+      items.forEach(function(item){
+        if(!item||typeof item.name!=="string"&&typeof item.text!=="string") return;
+        var name=item.name||item.text;
+        if(!name.trim()) return;
+        var id=prefix+"-"+String(item.id||uid(prefix));
+        state.routine.items.push({id:id,text:label+name.trim()});
+        migratedItems[prefix+":"+item.id]=id;
+      });
+    }
+    addItems(previous.habits,"previous-habit","Hábito · ");
+    addItems(previous.routines,"previous-routine","Rotina · ");
+    if(previous.entries&&typeof previous.entries==="object"){
+      Object.keys(previous.entries).forEach(function(date){
+        var entry=previous.entries[date];
+        if(!entry||typeof entry!=="object") return;
+        var log=state.routine.log[date]||{};
+        Object.keys(entry.habits||{}).forEach(function(id){if(entry.habits[id]&&migratedItems["previous-habit:"+id])log[migratedItems["previous-habit:"+id]]=true;});
+        Object.keys(entry.routines||{}).forEach(function(id){if(entry.routines[id]&&migratedItems["previous-routine:"+id])log[migratedItems["previous-routine:"+id]]=true;});
+        state.routine.log[date]=log;
+        if(entry.reflection){
+          state.spirituality.dailyLog[date]=state.spirituality.dailyLog[date]||{tema:"",leitura:"",aplicacao:""};
+          state.spirituality.dailyLog[date].aplicacao=entry.reflection;
+        }
+      });
+    }
+    if(Array.isArray(previous.projects)){
+      previous.projects.forEach(function(project){
+        if(!project||typeof project.name!=="string"||!project.name.trim())return;
+        state.goals.push({
+          id:"previous-"+String(project.id||uid("goal")),
+          trunk:"prof",
+          cat:"Metas adicionadas no painel inicial",
+          text:project.name.trim()+" — progresso registrado: "+Math.max(0,Math.min(100,Number(project.progress)||0))+"%"+
+            (project.dueDate?" · prazo "+project.dueDate:""),
+          status:Number(project.progress)>0?"andamento":"planejado"
+        });
+      });
+    }
+  }
+
+  function initAppInstall(){
+    var button=document.getElementById("installApp"),installPrompt=null;
+    var standalone=window.matchMedia("(display-mode: standalone)").matches||window.navigator.standalone===true;
+    if(standalone) button.hidden=true;
+    window.addEventListener("beforeinstallprompt",function(event){
+      event.preventDefault();
+      installPrompt=event;
+    });
+    window.addEventListener("appinstalled",function(){button.hidden=true;});
+    button.addEventListener("click",async function(){
+      if(installPrompt){
+        await installPrompt.prompt();
+        installPrompt=null;
+        return;
+      }
+      var ios=/iPad|iPhone|iPod/.test(navigator.userAgent);
+      var instructions=ios
+        ?"No iPhone: abra este painel no Safari, toque em Compartilhar e escolha “Adicionar à Tela de Início”."
+        :"No Android: abra este painel no Chrome e use o menu ⋮ > “Instalar app” ou “Adicionar à tela inicial”.";
+      if(location.protocol!=="https:"&&location.hostname!=="localhost"){
+        instructions+=" A instalação exige um endereço HTTPS publicado.";
+      }
+      window.alert(instructions);
+    });
+  }
+
+  function initBackups(){
+    var exportButton=document.getElementById("exportBackup");
+    var importButton=document.getElementById("importBackupButton");
+    var input=document.getElementById("importBackup");
+    exportButton.addEventListener("click",function(){
+      var blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});
+      var url=URL.createObjectURL(blob);
+      var link=document.createElement("a");
+      link.href=url;link.download="painel-ju-backup-"+todayKey()+".json";link.click();
+      URL.revokeObjectURL(url);
+    });
+    importButton.addEventListener("click",function(){input.click();});
+    input.addEventListener("change",async function(){
+      var file=input.files&&input.files[0];
+      if(!file)return;
+      var priorState=state;
+      try{
+        var data=JSON.parse(await file.text());
+        if(!data||typeof data!=="object"||Array.isArray(data))throw new Error("Formato de backup inválido.");
+        if(!window.confirm("Restaurar este backup? Os dados salvos atualmente neste navegador serão substituídos."))return;
+        if(!stateDoc)throw new Error("O armazenamento local não está disponível neste navegador.");
+        state=mergeDefaults(data);
+        reconcileState();
+        await stateDoc.set(state);
+        setSaveStatus("ok","Backup restaurado");
+        renderAll();
+      }catch(error){
+        state=priorState;
+        console.error("Falha ao restaurar backup:",error);
+        window.alert("Não foi possível restaurar este backup: "+error.message);
+      }finally{
+        input.value="";
+      }
+    });
+  }
+
+  // ---------- render: Metas ----------
+  function renderMetas(){
+    var el = document.getElementById("panel-metas");
+    var trunkHtml = function(trunk, label){
+      var cats = {};
+      state.goals.filter(function(g){ return g.trunk===trunk; }).forEach(function(g){
+        (cats[g.cat] = cats[g.cat]||[]).push(g);
+      });
+      var catsHtml = Object.keys(cats).map(function(cat){
+        var rows = cats[cat].map(function(g){
+          return '<li class="goal-row">'+
+            '<button class="goal-dot" data-status="'+g.status+'" data-goal="'+g.id+'" title="Clique para mudar o status"></button>'+
+            '<span class="goal-text">'+esc(g.text)+'</span>'+
+            '<span class="goal-status-label">'+STATUS_LABELS[g.status]+'</span>'+
+          '</li>';
+        }).join("");
+        return '<article class="category-node"><p class="category-title"><span class="stub"></span>'+esc(cat)+'</p><ul class="goal-list">'+rows+'</ul></article>';
+      }).join("");
+      return '<section class="trunk trunk--'+trunk+'"><h3 class="trunk-head"><span class="badge"></span>'+label+'</h3><div class="branch-list">'+catsHtml+'</div></section>';
+    };
+
+    var horizonCol = function(h, label, years){
+      var items = state.dreams.filter(function(d){ return d.horizon===h; }).map(function(d){
+        return '<div class="dream-item">'+
+          '<button class="goal-dot" data-status="'+d.status+'" data-dream="'+d.id+'" title="Clique para mudar o status"></button>'+
+          '<div class="dream-body"><span class="txt">'+esc(d.text)+'</span><span class="req">'+esc(d.req)+'</span></div>'+
+        '</div>';
+      }).join("");
+      return '<div><div class="horizon-label">'+label+'<b>'+years+'</b></div>'+items+'</div>';
+    };
+
+    var wishesHtml = state.wishes.map(function(w){
+      return '<div><p class="wish-group-title">'+esc(w.title)+'</p><div class="wish-chips">'+
+        w.chips.map(function(c){ return '<span class="wish-chip">'+esc(c)+'</span>'; }).join("")+
+      '</div></div>';
+    }).join("");
+
+    el.innerHTML =
+      '<div class="card">'+
+        '<div class="section-head"><h2>Mapa de metas e sonhos</h2></div>'+
+        '<p class="section-lede">Seus objetivos profissionais e pessoais. Clique na bolinha de qualquer item para alternar entre em andamento, planejado e sonho.</p>'+
+        '<div class="legend">'+
+          '<span><span class="goal-dot" data-status="andamento"></span>Em andamento</span>'+
+          '<span><span class="goal-dot" data-status="planejado"></span>Planejado</span>'+
+          '<span><span class="goal-dot" data-status="sonho"></span>Sonho</span>'+
+        '</div>'+
+      '</div>'+
+      '<div class="root-node"><p class="name">Ju Rocha</p><p class="sub">Profissional &amp; Pessoal</p></div>'+
+      '<div class="stem"></div>'+
+      '<div class="trunks">'+trunkHtml("prof","Profissional")+trunkHtml("pess","Pessoal")+'</div>'+
+      '<div class="card">'+
+        '<div class="section-head"><h2>Grandes sonhos por horizonte</h2></div>'+
+        '<div class="timeline">'+
+          horizonCol("curto","Curto prazo","até 1 ano")+
+          horizonCol("medio","Médio prazo","1–3 anos")+
+          horizonCol("longo","Longo prazo","3–10+ anos")+
+        '</div>'+
+      '</div>'+
+      '<div class="card">'+
+        '<div class="section-head"><h2>Desejos do dia a dia</h2></div>'+
+        '<div class="wish-groups">'+wishesHtml+'</div>'+
+      '</div>';
+
+    el.querySelectorAll(".goal-dot[data-goal]").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var g = state.goals.find(function(x){ return x.id===btn.dataset.goal; });
+        var i = STATUS_CYCLE.indexOf(g.status);
+        g.status = STATUS_CYCLE[(i+1)%STATUS_CYCLE.length];
+        persist(); renderMetas();
+      });
+    });
+    el.querySelectorAll(".goal-dot[data-dream]").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var d = state.dreams.find(function(x){ return x.id===btn.dataset.dream; });
+        var i = STATUS_CYCLE.indexOf(d.status);
+        d.status = STATUS_CYCLE[(i+1)%STATUS_CYCLE.length];
+        persist(); renderMetas();
+      });
+    });
+  }
+
+  // ---------- render: Dívidas ----------
+  function renderDividas(){
+    var el = document.getElementById("panel-dividas");
+    var pend = state.debts.filter(function(d){ return d.status==="pendente"; });
+    var pago = state.debts.filter(function(d){ return d.status==="pago"; });
+    var totalPend = pend.reduce(function(s,d){ return s+d.value; },0);
+    var totalPago = pago.reduce(function(s,d){ return s+d.value; },0);
+    var lawTotal = state.lawsuits.reduce(function(s,l){ return s+(Number(l.valor)||0); },0);
+    var lawEstimateLeft = Math.max(0, state.lawsuitsEstimate - lawTotal);
+
+    var groups = {};
+    state.debts.forEach(function(d){ (groups[d.group]=groups[d.group]||[]).push(d); });
+    var groupsHtml = Object.keys(groups).map(function(gname){
+      var rows = groups[gname].map(function(d){
+        return '<div class="debt-row'+(d.status==="pago"?" is-paid":"")+'">'+
+          '<input type="checkbox" '+(d.status==="pago"?"checked":"")+' data-debt="'+d.id+'">'+
+          '<div class="debt-label">'+esc(d.label)+(d.note?'<span class="debt-note">'+esc(d.note)+'</span>':"")+'</div>'+
+          '<div class="debt-value">'+brl(d.value)+'</div>'+
+        '</div>';
+      }).join("");
+      var gsum = groups[gname].reduce(function(s,d){ return d.status==="pendente"? s+d.value : s; },0);
+      return '<div class="debt-group"><p class="debt-group-title">'+esc(gname)+' <span class="chip on-tab">'+brl(gsum)+' pendente</span></p>'+rows+'</div>';
+    }).join("");
+
+    var lawRows = state.lawsuits.map(function(l){
+      return '<div class="lawsuit-row" data-lid="'+l.id+'">'+
+        '<input type="text" data-lf="numero" placeholder="nº do processo" value="'+esc(l.numero)+'">'+
+        '<input type="text" data-lf="vara" placeholder="vara" value="'+esc(l.vara)+'">'+
+        '<input type="text" data-lf="fase" placeholder="fase" value="'+esc(l.fase)+'">'+
+        '<input type="number" data-lf="valor" placeholder="valor" value="'+(l.valor||"")+'">'+
+        '<input type="text" data-lf="obs" placeholder="observação / chance de acordo" value="'+esc(l.obs)+'">'+
+        '<button class="btn ghost" data-ldel="'+l.id+'" title="Remover">✕</button>'+
+      '</div>';
+    }).join("");
+
+    var sermarPct = Math.min(100, (state.sermar.accumulated/state.sermar.target)*100);
+
+    el.innerHTML =
+      '<div class="card">'+
+        '<div class="section-head"><h2>Diagnóstico financeiro — set/2026</h2></div>'+
+        '<p class="section-lede">Cruzando o extrato Itaú (15/08–14/09), Flash, Sankhya Benefícios e a planilha do casal. Detalhe completo na aba "Diagnóstico — Set 2026" da planilha <em>orcamento_casal.xlsx</em>.</p>'+
+        '<div class="callout">'+
+          '<p class="co-title"><span class="mark"></span>O que os números estão dizendo agora</p>'+
+          '<ul>'+
+            '<li>O salário de setembro caiu maior que o normal (R$ 4.013,85, já com comissão) e mesmo assim a conta ficou negativa (-R$ 209,55) 11 dias depois — hoje está em R$ 8,05, sem nenhum limite disponível.</li>'+
+            '<li><strong>Ação imediata: transferir o saldo da carteira "Premiações" do Sankhya para a conta corrente — hoje isso é R$ 1.608,01</strong> (atualizado no extrato de 15/09, 10:33). Correção do que eu tinha calculado antes: entraram R$ 3.217,60 em recargas (R$ 630 fixo + R$ 373,60 e R$ 2.214,00 de premiações de marca/laboratório) e saíram R$ 246,90, o que dava R$ 2.970,70 — mas à noite de 14/09 saiu mais uma compra de R$ 955,60 no Assai Atacadista (mercado), reduzindo para R$ 1.608,01. Isso ainda ajuda bastante (viraria de -R$ 2.169,47 para -R$ 561,46 de déficit), mas não fecha sozinho.</li>'+
+            '<li><strong>Atenção: os R$ 407,09 que aparecem na carteira "Alimentação/Refeição - PAT" NÃO podem ser transferidos</strong> — é benefício de alimentação (PAT), por lei só pode ser usado em mercado/restaurante, não pode virar dinheiro na conta. Só a carteira "Premiações" é transferível.</li>'+
+            '<li>Isso não é um colchão permanente: R$ 2.214,00 numa recarga só é um valor alto para premiação de marca/laboratório — pode não se repetir todo mês. O aperto estrutural (falta ≈ R$ 2.169,47/mês só com salário + comissão contra a parte justa da casa (Opção 4) + despesas pessoais já orçadas) continua de pé e é o que precisa de solução de verdade — mesmo transferindo a Premiações, ainda falta cobrir a diferença.</li>'+
+            '<li>Identifiquei ≈ R$ 1.379,89 gastos entre 05 e 11/09 que não estão em nenhuma das duas planilhas: ingressos/eventos (Oticket, EmotiCover, Sagrada Fac, Ticket Even — R$ 561), uma "Comunidade" paga (R$ 293,50) e 5 Pix pessoais (Vanne H, Martins E C, Carolin, Natalia, Euriped — R$ 525,39). Carolin e Vanne H já identificados: sua parte na divisão de custos de um retiro espiritual — não é gasto solto. Ainda faltam confirmar Martins E C, Natalia e Euriped.</li>'+
+            '<li>Dívida pessoal (Buyvet + CPF) confirmada nesta aba: '+brl(totalPend)+' pendente, fora ≈ '+brl(lawEstimateLeft)+' de processos ainda sem detalhar.</li>'+
+            '<li>Ponto positivo: o André pagou o aluguel de setembro em dia (R$ 1.801,80, 14/09) — o compromisso mais pesado da casa está sob controle.</li>'+
+          '</ul>'+
+        '</div>'+
+      '</div>'+
+      '<div class="card">'+
+        '<div class="section-head"><h2>Panorama das dívidas</h2></div>'+
+        '<p class="section-lede">Buyvet Ltda (CNPJ 48.367.358/0001-83) está em processo de encerramento — resolver protestos e débitos fiscais é prioridade antes do fechamento formal. Marque um item como pago para tirá-lo da conta.</p>'+
+        '<div class="stat-tiles">'+
+          '<div class="stat-tile tone-warn"><p class="label">Total pendente (confirmado)</p><p class="value">'+brl(totalPend)+'</p><p class="hint">soma dos itens não marcados como pagos</p></div>'+
+          '<div class="stat-tile tone-ok"><p class="label">Já resolvido</p><p class="value">'+brl(totalPago)+'</p><p class="hint">'+pago.length+' de '+state.debts.length+' itens quitados/pagos</p></div>'+
+          '<div class="stat-tile tone-t"><p class="label">Processos judiciais</p><p class="value">≈ '+brl(lawEstimateLeft)+'</p><p class="hint">estimativa restante além do que já foi detalhado abaixo</p></div>'+
+        '</div>'+
+      '</div>'+
+      '<div class="card">'+
+        '<div class="section-head"><h2>Itens a quitar</h2></div>'+
+        groupsHtml+
+      '</div>'+
+      '<div class="card">'+
+        '<div class="callout">'+
+          '<p class="co-title"><span class="mark"></span>Sermar — contabilidade de encerramento</p>'+
+          '<p style="font-size:12.5px;color:var(--ink);margin:0 0 10px;">Cobrança mensal de '+brl(state.sermar.perCycle)+'. Some acompanhando o acumulado — quando bater em '+brl(state.sermar.target)+', esse compromisso fixo sai da lista.</p>'+
+          '<div class="sermar-bar"><div class="progress"><i style="width:'+sermarPct.toFixed(0)+'%"></i></div><span class="mono" style="font-size:12px;white-space:nowrap;">'+brl(state.sermar.accumulated)+' / '+brl(state.sermar.target)+'</span></div>'+
+          '<div style="margin-top:10px;display:flex;gap:8px;">'+
+            '<button class="btn small" id="sermarAdd">+ Registrar cobrança ('+brl(state.sermar.perCycle)+')</button>'+
+            '<button class="btn small ghost" id="sermarReset">Zerar</button>'+
+          '</div>'+
+        '</div>'+
+      '</div>'+
+      '<div class="card">'+
+        '<div class="section-head"><h2>Processos judiciais — detalhamento</h2></div>'+
+        '<p class="section-lede">Estimativa média informada: ≈ '+brl(state.lawsuitsEstimate)+'. Vá preenchendo processo a processo conforme for levantando com o advogado.</p>'+
+        (state.lawsuits.length ? '<div class="lawsuit-head"><span>Nº processo</span><span>Vara</span><span>Fase</span><span>Valor</span><span>Observação</span><span></span></div>' : '')+
+        lawRows+
+        '<div style="margin-top:12px;"><button class="btn small" id="lawAdd">+ Adicionar processo</button></div>'+
+      '</div>';
+
+    el.querySelectorAll("[data-debt]").forEach(function(cb){
+      cb.addEventListener("change", function(){
+        var d = state.debts.find(function(x){ return x.id===cb.dataset.debt; });
+        d.status = cb.checked ? "pago" : "pendente";
+        persist(); renderDividas();
+      });
+    });
+    var sermarAdd = el.querySelector("#sermarAdd");
+    if(sermarAdd) sermarAdd.addEventListener("click", function(){
+      state.sermar.accumulated = Math.min(state.sermar.target, state.sermar.accumulated + state.sermar.perCycle);
+      persist(); renderDividas();
+    });
+    var sermarReset = el.querySelector("#sermarReset");
+    if(sermarReset) sermarReset.addEventListener("click", function(){
+      state.sermar.accumulated = 0; persist(); renderDividas();
+    });
+    var lawAdd = el.querySelector("#lawAdd");
+    if(lawAdd) lawAdd.addEventListener("click", function(){
+      state.lawsuits.push({id:uid("law"), numero:"", vara:"", fase:"", valor:"", obs:""});
+      persist(); renderDividas();
+    });
+    el.querySelectorAll("[data-ldel]").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        state.lawsuits = state.lawsuits.filter(function(l){ return l.id!==btn.dataset.ldel; });
+        persist(); renderDividas();
+      });
+    });
+    el.querySelectorAll(".lawsuit-row input").forEach(function(inp){
+      inp.addEventListener("change", function(){
+        var row = inp.closest(".lawsuit-row");
+        var l = state.lawsuits.find(function(x){ return x.id===row.dataset.lid; });
+        var field = inp.dataset.lf;
+        l[field] = field==="valor" ? Number(inp.value)||0 : inp.value;
+        persist(); renderDividas();
+      });
+    });
+  }
+
+  // ---------- render: Dieta ----------
+  function renderDieta(){
+    var el = document.getElementById("panel-dieta");
+    var tk = todayKey();
+    var logToday = state.diet.log[tk] || {water:0, notes:""};
+
+    var head = '<div class="hcell"></div>' + MEALS.map(function(m){ return '<div class="hcell">'+MEAL_LABELS[m]+'</div>'; }).join("");
+    var rows = DAYS.map(function(d){
+      var cells = MEALS.map(function(m){
+        var val = (state.diet.plan[d] && state.diet.plan[d][m]) || "";
+        return '<div class="diet-cell" contenteditable="true" data-day="'+d+'" data-meal="'+m+'" data-placeholder="adicionar">'+esc(val)+'</div>';
+      }).join("");
+      return '<div class="daylabel">'+DAY_LABELS[d]+'</div>' + cells;
+    }).join("");
+
+    var waterDots = "";
+    for(var i=1;i<=8;i++){
+      waterDots += '<button class="water-dot'+(i<=logToday.water?" filled":"")+'" data-w="'+i+'" title="'+i+' copo(s)"></button>';
+    }
+
+    var suppHtml = state.supplements.map(function(g){
+      var rowsHtml = g.items.map(function(it){
+        return '<div class="bd-row"><span class="k">'+esc(it[0])+'</span><span class="v" style="font-weight:400;">'+esc(it[1])+'</span></div>';
+      }).join("");
+      return '<div class="breakdown"><p class="bd-title">'+esc(g.period)+'</p>'+rowsHtml+'</div>';
+    }).join("");
+
+    el.innerHTML =
+      '<div class="card">'+
+        '<div class="section-head"><h2>Plano alimentar da semana</h2></div>'+
+        '<p class="section-lede">Cardápio da nutricionista Gabriella de Oliveira (último plano: ago/2024) — clique em qualquer célula para ajustar.</p>'+
+        '<div class="diet-grid">'+head+rows+'</div>'+
+      '</div>'+
+      '<div class="card">'+
+        '<div class="section-head"><h2>Suplementos</h2></div>'+
+        '<p class="section-lede">Último protocolo registrado (ago/2024). <strong>Não retome nada disso sem reconfirmar com a Gabriella</strong> — doses e fórmulas manipuladas dependem de reavaliação, ainda mais agora que o objetivo mudou para ganho de massa magra.</p>'+
+        suppHtml+
+      '</div>'+
+      '<div class="card">'+
+        '<div class="section-head"><h2>Hoje</h2></div>'+
+        '<div class="today-card">'+
+          '<div>'+
+            '<p class="kicker" style="margin-bottom:8px;">Água</p>'+
+            '<div class="water-dots">'+waterDots+'</div>'+
+          '</div>'+
+          '<div class="today-notes">'+
+            '<p class="kicker" style="margin-bottom:8px;">Como foi a alimentação hoje</p>'+
+            '<textarea id="dietNotes" placeholder="ex: segui o plano, troquei o lanche por fruta...">'+esc(logToday.notes)+'</textarea>'+
+          '</div>'+
+        '</div>'+
+      '</div>';
+
+    el.querySelectorAll(".diet-cell").forEach(function(cell){
+      cell.addEventListener("blur", function(){
+        var day = cell.dataset.day, meal = cell.dataset.meal;
+        state.diet.plan[day] = state.diet.plan[day] || {};
+        state.diet.plan[day][meal] = cell.textContent.trim();
+        persist();
+      });
+    });
+    el.querySelectorAll(".water-dot").forEach(function(dot){
+      dot.addEventListener("click", function(){
+        var n = Number(dot.dataset.w);
+        var cur = state.diet.log[tk] || {water:0, notes:""};
+        cur.water = (cur.water===n) ? n-1 : n;
+        state.diet.log[tk] = cur;
+        persist(); renderDieta();
+      });
+    });
+    var notes = el.querySelector("#dietNotes");
+    if(notes) notes.addEventListener("blur", function(){
+      var cur = state.diet.log[tk] || {water:0, notes:""};
+      cur.notes = notes.value;
+      state.diet.log[tk] = cur;
+      persist();
+    });
+  }
+
+  // ---------- render: Treino ----------
+  function renderTreino(){
+    var el = document.getElementById("panel-treino");
+    var todayD = weekdayIdx();
+    var tk = todayKey();
+
+    var rows = DAYS.map(function(d){
+      var plan = (state.workout.plan[d]) || "";
+      var isToday = d===todayD;
+      var doneToday = isToday && !!state.workout.log[tk];
+      return '<div class="week-row'+(isToday?" is-today":"")+'">'+
+        '<div class="daylabel">'+DAY_LABELS[d]+(isToday?' <span class="chip on-tab">hoje</span>':'')+'</div>'+
+        '<input type="text" data-wday="'+d+'" placeholder="ex: Treino A — superior, ou descanso" value="'+esc(plan)+'">'+
+        (isToday ? '<label class="check-label"><input type="checkbox" id="doneToday" '+(doneToday?"checked":"")+'> feito hoje</label>' : '<span></span>')+
+      '</div>';
+    }).join("");
+
+    var streak = 0;
+    for(var i=0;i<365;i++){
+      if(state.workout.log[todayKey(-i)]) streak++; else break;
+    }
+    var miniCal = "";
+    for(var j=6;j>=0;j--){
+      var k = todayKey(-j);
+      var d = new Date(); d.setDate(d.getDate()-j);
+      var lbl = ["D","S","T","Q","Q","S","S"][d.getDay()];
+      miniCal += '<div class="d'+(state.workout.log[k]?" done":"")+(j===0?" today":"")+'">'+lbl+'</div>';
+    }
+
+    var wcardsHtml = WORKOUT_DETAIL.map(function(w){
+      var blocksHtml = w.blocks.map(function(b){
+        var itemsHtml = b.items.map(function(it){
+          return '<div class="wex-row"><span class="n">'+esc(it[0])+'</span><span class="s">'+esc(it[1])+'</span></div>';
+        }).join("");
+        return '<div class="wblock"><p class="wblock-title">'+esc(b.name)+'</p>'+itemsHtml+'</div>';
+      }).join("");
+      return '<div class="wcard">'+
+        '<div class="wcard-head"><span class="wcard-letter">'+w.letter+'</span><div><div class="wcard-title">Treino '+w.letter+' — '+esc(w.title)+'</div><div class="wcard-day">'+esc(w.day)+'</div></div></div>'+
+        blocksHtml+
+      '</div>';
+    }).join("");
+
+    el.innerHTML =
+      '<div class="card">'+
+        '<div class="section-head"><h2>Plano semanal</h2></div>'+
+        '<p class="section-lede">EF Academia (prof. Bruna) — Definição/Fortalecimento, vigência 21/09–21/11/25. Treino nos dias A/B/C/D, alongamento e caminhada nos outros.</p>'+
+        rows+
+      '</div>'+
+      '<div class="card">'+
+        '<div class="section-head"><h2>Sequência</h2></div>'+
+        '<div class="streak-row">'+
+          '<div><p class="stat-tile-value mono" style="font-family:Fraunces;font-size:26px;font-weight:600;color:var(--treino);margin:0;">'+streak+'</p><p class="hint" style="color:var(--ink-faint);font-size:11px;">dia(s) seguidos</p></div>'+
+          '<div class="mini-cal">'+miniCal+'</div>'+
+        '</div>'+
+      '</div>'+
+      '<div class="card">'+
+        '<div class="section-head"><h2>Detalhamento dos treinos A / B / C / D</h2></div>'+
+        '<p class="section-lede">Séries e repetições de cada treino, direto da ficha da EF Academia. Explicação de cada exercício na <a href="https://claude.ai/code/artifact/3644a56c-3245-4fb6-8c38-b7e2785aaff6" target="_blank" style="color:var(--treino)">ficha completa</a>.</p>'+
+        '<div class="wcards-grid">'+wcardsHtml+'</div>'+
+      '</div>';
+
+    el.querySelectorAll("[data-wday]").forEach(function(inp){
+      inp.addEventListener("change", function(){
+        state.workout.plan[inp.dataset.wday] = inp.value;
+        persist();
+      });
+    });
+    var doneToday = el.querySelector("#doneToday");
+    if(doneToday) doneToday.addEventListener("change", function(){
+      if(doneToday.checked) state.workout.log[tk] = true; else delete state.workout.log[tk];
+      persist(); renderTreino();
+    });
+  }
+
+  // ---------- render: Rotina ----------
+  function renderRotina(){
+    var el = document.getElementById("panel-rotina");
+    var tk = todayKey();
+    var logToday = state.routine.log[tk] || {};
+    var doneCount = state.routine.items.filter(function(it){ return logToday[it.id]; }).length;
+    var total = state.routine.items.length || 1;
+    var pct = (doneCount/total)*100;
+
+    var rows = state.routine.items.map(function(it){
+      var done = !!logToday[it.id];
+      var label = it.id==="r3" ? todaysWorkoutShort() : it.text;
+      return '<div class="routine-row'+(done?" done":"")+'">'+
+        '<input type="checkbox" id="rt_'+it.id+'" data-ritem="'+it.id+'" '+(done?"checked":"")+'>'+
+        '<label for="rt_'+it.id+'">'+esc(label)+'</label>'+
+        '<button class="btn ghost" data-rdel="'+it.id+'" title="Remover">✕</button>'+
+      '</div>';
+    }).join("");
+
+    el.innerHTML =
+      '<div class="card">'+
+        '<div class="section-head"><h2>Rotina de hoje</h2></div>'+
+        '<p class="section-lede">Checklist diário — reseta a cada dia. Feito para manter trabalho, estudo, treino e devocional em equilíbrio.</p>'+
+        '<div class="progress" style="margin-bottom:14px;"><i style="width:'+pct.toFixed(0)+'%"></i></div>'+
+        '<p class="mono" style="font-size:11px;color:var(--ink-faint);margin:-4px 0 12px;">'+doneCount+' de '+total+' concluído hoje</p>'+
+        rows+
+        '<div class="add-row"><input type="text" id="newRoutineText" placeholder="novo item da rotina"><button class="btn small" id="addRoutine">Adicionar</button></div>'+
+      '</div>';
+
+    el.querySelectorAll("[data-ritem]").forEach(function(cb){
+      cb.addEventListener("change", function(){
+        var cur = state.routine.log[tk] || {};
+        if(cb.checked) cur[cb.dataset.ritem] = true; else delete cur[cb.dataset.ritem];
+        state.routine.log[tk] = cur;
+        persist(); renderRotina();
+      });
+    });
+    el.querySelectorAll("[data-rdel]").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        state.routine.items = state.routine.items.filter(function(it){ return it.id!==btn.dataset.rdel; });
+        persist(); renderRotina();
+      });
+    });
+    var addBtn = el.querySelector("#addRoutine");
+    var newInput = el.querySelector("#newRoutineText");
+    function addItem(){
+      var v = newInput.value.trim();
+      if(!v) return;
+      state.routine.items.push({id:uid("r"), text:v});
+      newInput.value = "";
+      persist(); renderRotina();
+    }
+    if(addBtn) addBtn.addEventListener("click", addItem);
+    if(newInput) newInput.addEventListener("keydown", function(e){ if(e.key==="Enter") addItem(); });
+  }
+
+  // ---------- render: Compras ----------
+  function renderCompras(){
+    var el = document.getElementById("panel-compras");
+    var items = state.shopping.items;
+    var doneCount = items.filter(function(i){ return i.checked; }).length;
+    var groups = {};
+    items.forEach(function(i){ (groups[i.category]=groups[i.category]||[]).push(i); });
+
+    var groupsHtml = Object.keys(groups).map(function(cat){
+      var rows = groups[cat].map(function(i){
+        return '<div class="shop-row'+(i.checked?" done":"")+'">'+
+          '<input type="checkbox" id="sh_'+i.id+'" data-sitem="'+i.id+'" '+(i.checked?"checked":"")+'>'+
+          '<label for="sh_'+i.id+'">'+esc(i.text)+'</label>'+
+          '<button class="btn ghost" data-sdel="'+i.id+'" title="Remover">✕</button>'+
+        '</div>';
+      }).join("");
+      return '<div class="shop-group"><p class="shop-group-title">'+esc(cat)+'</p>'+rows+'</div>';
+    }).join("");
+
+    el.innerHTML =
+      '<div class="card">'+
+        '<div class="section-head"><h2>Lista de compras</h2></div>'+
+        '<p class="section-lede">Ingredientes do cardápio da semana (aba Dieta), organizados por categoria. Marque o que já está no carrinho.</p>'+
+        '<p class="mono" style="font-size:11px;color:var(--ink-faint);margin:-4px 0 12px;">'+doneCount+' de '+items.length+' marcados</p>'+
+        groupsHtml+
+        '<div class="add-row"><input type="text" id="newShopText" placeholder="novo item (ex: leite, papel toalha...)"><button class="btn small" id="addShop">Adicionar</button></div>'+
+        '<div style="margin-top:10px;"><button class="btn small ghost" id="clearShop">Desmarcar todos</button></div>'+
+      '</div>';
+
+    el.querySelectorAll("[data-sitem]").forEach(function(cb){
+      cb.addEventListener("change", function(){
+        var it = state.shopping.items.find(function(x){ return x.id===cb.dataset.sitem; });
+        it.checked = cb.checked;
+        persist(); renderCompras();
+      });
+    });
+    el.querySelectorAll("[data-sdel]").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        state.shopping.items = state.shopping.items.filter(function(x){ return x.id!==btn.dataset.sdel; });
+        persist(); renderCompras();
+      });
+    });
+    var clearBtn = el.querySelector("#clearShop");
+    if(clearBtn) clearBtn.addEventListener("click", function(){
+      state.shopping.items.forEach(function(x){ x.checked = false; });
+      persist(); renderCompras();
+    });
+    var addBtn = el.querySelector("#addShop");
+    var newInput = el.querySelector("#newShopText");
+    function addItem(){
+      var v = newInput.value.trim();
+      if(!v) return;
+      state.shopping.items.push({id:uid("c"), category:"Outros", text:v, checked:false});
+      newInput.value = "";
+      persist(); renderCompras();
+    }
+    if(addBtn) addBtn.addEventListener("click", addItem);
+    if(newInput) newInput.addEventListener("keydown", function(e){ if(e.key==="Enter") addItem(); });
+  }
+
+  // ---------- render: Leitura ----------
+  function renderLeitura(){
+    var el = document.getElementById("panel-leitura");
+    var items = state.reading.items;
+    var lendo = items.filter(function(b){ return b.status==="lendo"; });
+    var concluidos = items.filter(function(b){ return b.status==="concluido"; });
+    var queroLer = items.filter(function(b){ return b.status==="quero_ler"; });
+
+    function bookRow(b){
+      return '<div class="glist-row">'+
+        '<span class="chip on-tab">'+({quero_ler:"quero ler",lendo:"lendo",concluido:"concluído"})[b.status]+'</span>'+
+        '<label style="flex:1">'+esc(b.title)+(b.author?' <span style="color:var(--ink-faint)">— '+esc(b.author)+'</span>':'')+'</label>'+
+        '<select data-bstatus="'+b.id+'" style="font-size:11px;padding:4px 6px;border-radius:6px;border:1px solid var(--line);background:var(--surface-2);">'+
+          '<option value="quero_ler"'+(b.status==="quero_ler"?" selected":"")+'>Quero ler</option>'+
+          '<option value="lendo"'+(b.status==="lendo"?" selected":"")+'>Lendo</option>'+
+          '<option value="concluido"'+(b.status==="concluido"?" selected":"")+'>Concluído</option>'+
+        '</select>'+
+        '<button class="btn ghost" data-bdel="'+b.id+'" title="Remover">✕</button>'+
+      '</div>';
+    }
+
+    el.innerHTML =
+      '<div class="card">'+
+        '<div class="section-head"><h2>Leitura</h2></div>'+
+        '<p class="section-lede">Meta: '+state.reading.targetPerMonth+' livro por mês.</p>'+
+        '<div class="stat-tiles">'+
+          '<div class="stat-tile tone-t"><p class="label">Lendo agora</p><p class="value">'+lendo.length+'</p></div>'+
+          '<div class="stat-tile tone-t"><p class="label">Concluídos</p><p class="value">'+concluidos.length+'</p></div>'+
+          '<div class="stat-tile"><p class="label">Na fila</p><p class="value">'+queroLer.length+'</p></div>'+
+        '</div>'+
+      '</div>'+
+      '<div class="card">'+
+        '<div class="section-head"><h2>Seus livros</h2></div>'+
+        (items.length ? items.map(bookRow).join("") : '<div class="empty-state"><span class="big">📚</span>Nenhum livro ainda — adicione o que está lendo ou quer ler.</div>')+
+        '<div class="add-row"><input type="text" id="newBookTitle" placeholder="título do livro"><input type="text" id="newBookAuthor" placeholder="autor (opcional)" style="max-width:160px"><button class="btn small" id="addBook">Adicionar</button></div>'+
+      '</div>';
+
+    el.querySelectorAll("[data-bstatus]").forEach(function(sel){
+      sel.addEventListener("change", function(){
+        var b = state.reading.items.find(function(x){ return x.id===sel.dataset.bstatus; });
+        b.status = sel.value;
+        persist(); renderLeitura();
+      });
+    });
+    el.querySelectorAll("[data-bdel]").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        state.reading.items = state.reading.items.filter(function(x){ return x.id!==btn.dataset.bdel; });
+        persist(); renderLeitura();
+      });
+    });
+    function addBook(){
+      var t = el.querySelector("#newBookTitle");
+      var a = el.querySelector("#newBookAuthor");
+      if(!t.value.trim()) return;
+      state.reading.items.push({id:uid("book"), title:t.value.trim(), author:a.value.trim(), status:"quero_ler"});
+      t.value=""; a.value="";
+      persist(); renderLeitura();
+    }
+    var addBtn = el.querySelector("#addBook");
+    if(addBtn) addBtn.addEventListener("click", addBook);
+    var titleInput = el.querySelector("#newBookTitle");
+    var authorInput = el.querySelector("#newBookAuthor");
+    if(titleInput) titleInput.addEventListener("keydown", function(e){ if(e.key==="Enter") addBook(); });
+    if(authorInput) authorInput.addEventListener("keydown", function(e){ if(e.key==="Enter") addBook(); });
+  }
+
+  // ---------- render: Espiritualidade ----------
+  function renderEspiritualidade(){
+    var el = document.getElementById("panel-espirito");
+    var tk = todayKey();
+    var log = state.spirituality.dailyLog[tk] || {tema:"", leitura:"", aplicacao:""};
+
+    var quaresmaHtml = state.spirituality.quaresma.map(function(q){
+      return '<div class="glist-row"><span class="chip on-tab">'+esc(q.time)+'</span><label>'+esc(q.text)+'</label></div>';
+    }).join("");
+
+    el.innerHTML =
+      '<div class="card">'+
+        '<div class="section-head"><h2>Quaresma de São Miguel Arcanjo</h2></div>'+
+        '<p class="section-lede">17/08–01/10/2026 — rotina de oração diária.</p>'+
+        quaresmaHtml+
+      '</div>'+
+      '<div class="card">'+
+        '<div class="section-head"><h2>Tema litúrgico de hoje</h2></div>'+
+        '<p class="section-lede">O app não busca isso sozinho — abra a <a href="https://liturgia.cancaonova.com/pb/" target="_blank" style="color:var(--fe)">liturgia diária da Canção Nova</a>, copie o tema/evangelho do dia aqui e anote como aplicar. Se quiser, me peça e eu busco por você.</p>'+
+        '<span class="field-label">Tema / evangelho do dia</span>'+
+        '<textarea class="reflect" id="temaHoje" placeholder="ex: Mt 5,1-12 — as Bem-aventuranças...">'+esc(log.tema)+'</textarea>'+
+        '<span class="field-label">Como aplicar na minha vida hoje</span>'+
+        '<textarea class="reflect" id="aplicacaoHoje" placeholder="uma atitude concreta pra hoje...">'+esc(log.aplicacao)+'</textarea>'+
+      '</div>';
+
+    var temaEl = el.querySelector("#temaHoje");
+    var apEl = el.querySelector("#aplicacaoHoje");
+    function saveLog(){
+      state.spirituality.dailyLog[tk] = {tema:temaEl.value, leitura:"", aplicacao:apEl.value};
+      persist();
+    }
+    if(temaEl) temaEl.addEventListener("blur", saveLog);
+    if(apEl) apEl.addEventListener("blur", saveLog);
+  }
+
+  // ---------- render: Estudos Acadêmicos ----------
+  function renderAcademico(){
+    var el = document.getElementById("panel-academico");
+    var periods = state.academico.periods;
+    var done = state.academico.done;
+    var totalMaterias = periods.reduce(function(s,p){ return s+p.materias.length; },0);
+    var totalDone = Object.keys(done).filter(function(k){ return done[k]; }).length;
+
+    var periodsHtml = periods.map(function(p){
+      var rows = p.materias.map(function(m,i){
+        var id = "p"+p.num+"_"+i;
+        var isDone = !!done[id];
+        return '<div class="glist-row'+(isDone?" done":"")+'">'+
+          '<input type="checkbox" id="ac_'+id+'" data-acid="'+id+'" '+(isDone?"checked":"")+'>'+
+          '<label for="ac_'+id+'">'+esc(m)+'</label>'+
+        '</div>';
+      }).join("");
+      var open = p.num===state.academico.periodoAtual ? "open" : "";
+      return '<details class="card" style="margin-bottom:12px" '+open+'><summary style="cursor:pointer;font-weight:600;font-size:13.5px;">'+p.num+'º Período'+(p.num===state.academico.periodoAtual?' <span class="chip on-tab">atual</span>':'')+'</summary><div style="margin-top:10px">'+rows+'</div></details>';
+    }).join("");
+
+    el.innerHTML =
+      '<div class="card">'+
+        '<div class="section-head"><h2>Faculdade Sebrae — Administração EAD</h2></div>'+
+        '<p class="section-lede">Matriz curricular completa (3.000h em 8 períodos + atividades complementares). Marque as disciplinas concluídas.</p>'+
+        '<div class="stat-tiles">'+
+          '<div class="stat-tile tone-t"><p class="label">Disciplinas concluídas</p><p class="value">'+totalDone+' / '+totalMaterias+'</p></div>'+
+          '<div class="stat-tile"><p class="label">Carga horária total do curso</p><p class="value">3.000h</p></div>'+
+        '</div>'+
+      '</div>'+
+      '<div class="card">'+
+        '<div class="section-head"><h2>Calendário 2026.2</h2></div>'+
+        '<div class="breakdown">'+
+          '<div class="bd-row"><span class="k">Início do semestre / aulas</span><span class="v">03/08</span></div>'+
+          '<div class="bd-row"><span class="k">Avaliação online I (AVA)</span><span class="v">28/09 a 03/10</span></div>'+
+          '<div class="bd-row"><span class="k">Avaliação online II (AVA)</span><span class="v">30/11 a 05/12</span></div>'+
+          '<div class="bd-row"><span class="k">Prova presencial no polo</span><span class="v">07 a 12/12</span></div>'+
+          '<div class="bd-row"><span class="k">Exame final</span><span class="v">17 e 18/12</span></div>'+
+          '<div class="bd-row"><span class="k">Término do período letivo</span><span class="v">16/12</span></div>'+
+        '</div>'+
+      '</div>'+
+      periodsHtml;
+
+    el.querySelectorAll("[data-acid]").forEach(function(cb){
+      cb.addEventListener("change", function(){
+        state.academico.done[cb.dataset.acid] = cb.checked;
+        persist(); renderAcademico();
+      });
+    });
+  }
+
+  // ---------- render: Estudos Complementares ----------
+  function renderComplementar(){
+    var el = document.getElementById("panel-complementar");
+    var c = state.complementar;
+
+    function section(title, key, hint){
+      var list = c[key];
+      var rows = list.map(function(it){
+        return '<div class="glist-row'+(it.done?" done":"")+'">'+
+          '<input type="checkbox" id="cx_'+it.id+'" data-cxid="'+key+'|'+it.id+'" '+(it.done?"checked":"")+'>'+
+          '<label for="cx_'+it.id+'">'+esc(it.text)+'</label>'+
+          '<button class="btn ghost" data-cxdel="'+key+'|'+it.id+'" title="Remover">✕</button>'+
+        '</div>';
+      }).join("");
+      return '<div class="card">'+
+        '<div class="section-head"><h2>'+esc(title)+'</h2></div>'+
+        (hint?'<p class="section-lede">'+hint+'</p>':'')+
+        (list.length?rows:'<div class="empty-state"><span class="big">✎</span>Ainda não mapeado — adicione o que quiser estudar aqui.</div>')+
+        '<div class="add-row"><input type="text" data-cxnew="'+key+'" placeholder="adicionar item"><button class="btn small" data-cxadd="'+key+'">Adicionar</button></div>'+
+      '</div>';
+    }
+
+    el.innerHTML =
+      section("TripleTen — Análise de Dados", "tripleten", "Bootcamp em andamento, prioridade máxima de estudo.")+
+      section("Copywriting", "copywriting", "Ainda não mapeado — seu espaço para construir essa habilidade.")+
+      section("IA — Anthropic", "iaAnthropic", "Cursos e recursos da Anthropic Academy sobre Claude e IA aplicada.")+
+      section("IA — Microsoft", "iaMicrosoft", "Trilhas do Microsoft Learn sobre IA e Copilot.");
+
+    el.querySelectorAll("[data-cxid]").forEach(function(cb){
+      cb.addEventListener("change", function(){
+        var parts = cb.dataset.cxid.split("|");
+        var it = state.complementar[parts[0]].find(function(x){ return x.id===parts[1]; });
+        it.done = cb.checked;
+        persist(); renderComplementar();
+      });
+    });
+    el.querySelectorAll("[data-cxdel]").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var parts = btn.dataset.cxdel.split("|");
+        state.complementar[parts[0]] = state.complementar[parts[0]].filter(function(x){ return x.id!==parts[1]; });
+        persist(); renderComplementar();
+      });
+    });
+    el.querySelectorAll("[data-cxadd]").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        var key = btn.dataset.cxadd;
+        var input = el.querySelector('[data-cxnew="'+key+'"]');
+        var v = input.value.trim();
+        if(!v) return;
+        state.complementar[key].push({id:uid("cx"), text:v, done:false});
+        input.value = "";
+        persist(); renderComplementar();
+      });
+    });
+  }
+
+  // ---------- render: Profissional ----------
+  function renderProfissional(){
+    var el = document.getElementById("panel-profissional");
+    var P = state.professional;
+    var k = P.kpis;
+    var pct = (k.realizado / k.metaSetembro) * 100;
+
+    var allItems = [];
+    P.phases.forEach(function(ph){ ph.items.forEach(function(it){ allItems.push(it); }); });
+    var doneCount = allItems.filter(function(it){ return it.done; }).length;
+
+    var gapsHtml = P.gaps.map(function(g){
+      return '<div class="pgap">'+
+        '<div class="pgap-head">'+
+          '<div class="pgap-title"><span class="pgap-num">'+String(g.num).padStart(2,"0")+'</span><h4>'+esc(g.title)+'</h4></div>'+
+          '<span class="pbadge '+g.badge+'">'+esc(g.badgeLabel)+'</span>'+
+        '</div>'+
+        '<div class="pgap-body">'+esc(g.body)+'</div>'+
+        '<div class="pgap-evidence">'+esc(g.evidence)+'</div>'+
+        '<div class="pgap-action"><span class="lbl">Ação</span><p>'+esc(g.action)+'</p></div>'+
+      '</div>';
+    }).join("");
+
+    var phasesHtml = P.phases.map(function(ph,pi){
+      var itemsHtml = ph.items.map(function(it){
+        return '<div class="paction'+(it.done?" done":"")+'">'+
+          '<input type="checkbox" class="chk" id="pp_'+it.id+'" data-ppid="'+it.id+'" '+(it.done?"checked":"")+'>'+
+          '<label for="pp_'+it.id+'">'+esc(it.text)+'<span class="impact">'+esc(it.impact)+'</span></label>'+
+        '</div>';
+      }).join("");
+      return '<div class="pphase">'+
+        '<div class="pphase-head"><div class="when">'+esc(ph.when)+'</div><div class="title">'+esc(ph.title)+'</div></div>'+
+        itemsHtml+
+      '</div>';
+    }).join("");
+
+    var compHtml = (P.comparativo||[]).map(function(c){
+      var w = Math.min(100, Math.abs(c.pct)/25*100);
+      var color = c.pct<=-15 ? "var(--warn)" : (c.pct<0 ? "var(--pess)" : "var(--ok)");
+      return '<div class="comp-row">'+
+        '<div class="name">'+esc(c.nome)+'</div>'+
+        '<div class="comp-track"><div class="comp-fill" style="width:'+w.toFixed(1)+'%; background:'+color+'"></div></div>'+
+        '<div class="comp-val" style="color:'+color+'">'+(c.pct>0?"+":"")+c.pct.toFixed(2).replace(".",",")+'%</div>'+
+      '</div>';
+    }).join("");
+
+    var highlightsHtml = (P.highlights||[]).map(function(h){
+      return '<div class="phl-row"><p class="t">'+esc(h.title)+'</p><p class="d">'+esc(h.text)+'</p></div>';
+    }).join("");
+
+    el.innerHTML =
+      '<div class="card">'+
+        '<div class="section-head"><h2>HDL — Setor São José dos Campos</h2></div>'+
+        '<p class="section-lede">Atualizado em '+k.atualizadoEm+' (dia útil '+k.diaUtilAtual+' de '+k.diasUteisTotal+'). Fechamento do mês em '+k.fechamentoMes+' — os dez gaps foram levantados em 11/09 como primeira base de diagnóstico, e os KPIs abaixo já refletem o painel de hoje.</p>'+
+        '<div class="stat-tiles">'+
+          '<div class="stat-tile tone-t"><p class="label">Realizado / Meta de setembro</p><p class="value">'+pct.toFixed(1)+'%</p><p class="hint">'+brl(k.realizado)+' de '+brl(k.metaSetembro)+'</p></div>'+
+          '<div class="stat-tile tone-warn"><p class="label">Dias úteis restantes</p><p class="value">'+k.diasUteisRestantes+'</p><p class="hint">restam de '+k.diasUteisTotal+' no mês</p></div>'+
+          '<div class="stat-tile tone-warn"><p class="label">Ritmo vs. meta acumulada</p><p class="value">'+k.ritmoEsperadoPct.toFixed(2).replace(".",",")+'%</p><p class="hint">faltam '+brl(k.faltamRitmo)+' p/ acompanhar o ritmo</p></div>'+
+          '<div class="stat-tile"><p class="label">Conversão do setor</p><p class="value">'+k.conversaoSetor+'%</p><p class="hint">geral da empresa: '+k.conversaoGeral+'%</p></div>'+
+          '<div class="stat-tile"><p class="label">Ticket médio</p><p class="value">'+brl(k.ticketSetor)+'</p><p class="hint">geral: '+brl(k.ticketGeral)+'</p></div>'+
+          '<div class="stat-tile"><p class="label">Cobertura de carteira</p><p class="value">'+k.coberturaAtivos+' / '+k.coberturaTotal+'</p><p class="hint">geral: '+k.coberturaGeralPct+'%</p></div>'+
+        '</div>'+
+        '<div class="progress" style="margin-top:16px"><i style="width:'+Math.min(100,pct).toFixed(1)+'%"></i></div>'+
+      '</div>'+
+      '<div class="palert">'+
+        '<p class="pa-title">⚠ Faltam '+k.diasUteisRestantes+' dias úteis</p>'+
+        '<p>Faltam <b>'+brl(k.faltamMes)+'</b> para bater a meta do mês inteiro — uma média de <b>'+brl(k.mediaDiaNecessaria)+'</b> por dia útil restante, bem acima da meta diária original de '+brl(k.metaDiariaOriginal)+'. Prazo médio em '+k.prazoMedioDias.toFixed(2).replace(".",",")+' dias (limite combinado: '+k.prazoMetaDias+') · markup atual '+k.markup.toFixed(2).replace(".",",")+' · '+k.parceirosAtendidos+' parceiros distintos atendidos este mês.</p>'+
+      '</div>'+
+      '<div class="card">'+
+        '<div class="section-head"><h2>Como o setor está frente às outras unidades</h2></div>'+
+        '<p class="section-lede">Desvio do faturado contra a meta projetada até hoje.</p>'+
+        '<div class="stack" style="margin-top:14px">'+compHtml+'</div>'+
+      '</div>'+
+      '<div class="card">'+
+        '<div class="section-head"><h2>Dez gaps, em ordem de impacto</h2></div>'+
+        '<p class="section-lede">Cada um vem com a evidência do painel e a ação correspondente.</p>'+
+        '<div class="stack" style="margin-top:16px">'+gapsHtml+'</div>'+
+      '</div>'+
+      '<div class="card">'+
+        '<div class="section-head"><h2>Plano de ação, por prazo</h2></div>'+
+        '<p class="mono" style="font-size:11px;color:var(--ink-faint);margin:6px 0 4px;">'+doneCount+' de '+allItems.length+' concluídas</p>'+
+        phasesHtml+
+      '</div>'+
+      '<div class="card">'+
+        '<div class="section-head"><h2>Destaques adicionais</h2></div>'+
+        highlightsHtml+
+      '</div>';
+
+    el.querySelectorAll("[data-ppid]").forEach(function(cb){
+      cb.addEventListener("change", function(){
+        var it = allItems.find(function(x){ return x.id===cb.dataset.ppid; });
+        it.done = cb.checked;
+        persist(); renderProfissional();
+      });
+    });
+  }
+
+  // ---------- render: Hoje ----------
+  function renderHoje(){
+    var el = document.getElementById("panel-hoje");
+    var tk = todayKey();
+    var wd = weekdayIdx();
+    var jsDay = new Date().getDay();
+    var isWeekday = jsDay>=1 && jsDay<=5;
+    var dateLabel = new Date().toLocaleDateString("pt-BR",{weekday:"long", day:"2-digit", month:"long"});
+    dateLabel = dateLabel.charAt(0).toUpperCase()+dateLabel.slice(1);
+    var hour = new Date().getHours();
+    var greeting = hour<12 ? "Bom dia" : (hour<18 ? "Boa tarde" : "Boa noite");
+
+    var lit = state.spirituality.dailyLog[tk];
+    var litHtml = lit ?
+      '<p style="font-size:13px;line-height:1.6;margin:0 0 8px;">'+esc(lit.tema)+'</p>'+
+      (lit.leitura?'<p style="font-size:12.5px;color:var(--ink-soft);line-height:1.55;margin:0 0 8px;">'+esc(lit.leitura)+'</p>':'')+
+      (lit.aplicacao?'<div class="breakdown"><p class="bd-title">Aplicação de hoje</p><p style="font-size:12.5px;margin:0;">'+esc(lit.aplicacao)+'</p></div>':'')
+      : '<div class="empty-state"><span class="big">🙏</span>Ainda sem o tema de hoje — a busca automática roda às 4h, ou confira na aba Espiritualidade.</div>';
+
+    var routineLog = state.routine.log[tk] || {};
+    var routineDone = state.routine.items.filter(function(it){ return routineLog[it.id]; }).length;
+    var routineTotal = state.routine.items.length || 1;
+    var routineHtml = state.routine.items.map(function(it){
+      var done = !!routineLog[it.id];
+      var label = it.id==="r3" ? todaysWorkoutShort() : it.text;
+      return '<div class="glist-row'+(done?" done":"")+'">'+
+        '<input type="checkbox" id="th_'+it.id+'" data-thritem="'+it.id+'" '+(done?"checked":"")+'>'+
+        '<label for="th_'+it.id+'">'+esc(label)+'</label>'+
+      '</div>';
+    }).join("");
+
+    var workoutPlan = state.workout.plan[wd] || "Descanso";
+    var workoutDoneToday = !!state.workout.log[tk];
+    var isTreinoDay = /^Treino/.test(workoutPlan);
+
+    var mealsPlan = state.diet.plan[wd] || {};
+    var mealsHtml = MEALS.map(function(m){
+      return '<div class="bd-row"><span class="k">'+MEAL_LABELS[m]+'</span><span class="v" style="font-weight:400;text-align:right;max-width:60%;">'+esc(mealsPlan[m]||"—")+'</span></div>';
+    }).join("");
+
+    var workHtml = isWeekday ?
+      '<div class="card"><div class="section-head"><h2>Trabalho — HDL</h2></div><p class="section-lede">Dia de trabalho. Veja os gaps e ações prioritárias na aba Profissional.</p></div>' : "";
+
+    var thisWeekReviewed = state.weeklyReviews.some(function(r){ return r.weekKey===isoWeekKey(new Date()); });
+    var sundayHtml = (jsDay===0 && !thisWeekReviewed) ?
+      '<div class="card" style="border-color:var(--projecoes)">'+
+        '<div class="section-head"><h2>Revisão semanal</h2><span class="chip" style="color:var(--projecoes);background:var(--projecoes-soft)">Domingo</span></div>'+
+        '<p class="section-lede">Hoje é dia de revisão. Veja onde você evoluiu essa semana, onde travou, e o que é mais importante focar agora.</p>'+
+        '<button class="btn primary" style="--tab-c:var(--projecoes)" id="thGoProjecoes">Abrir Projeções</button>'+
+      '</div>' : "";
+
+    // ---------- agenda: próximos compromissos (alerta na véspera e no dia) ----------
+    var todayMid = new Date(); todayMid.setHours(0,0,0,0);
+    var upcoming = (state.agenda||[]).filter(function(a){ return a && a.date; }).map(function(a){
+      var p = a.date.split("-"); var d = new Date(+p[0], +p[1]-1, +p[2]);
+      return { a:a, d:d, diff:Math.round((d - todayMid)/86400000) };
+    }).filter(function(x){ return x.diff >= 0; }).sort(function(x,y){
+      return x.diff - y.diff || String(x.a.time||"").localeCompare(String(y.a.time||""));
+    });
+    var agendaHtml = upcoming.length ?
+      '<div class="card"'+(upcoming[0].diff<=1?' style="border-color:var(--warn)"':'')+'>'+
+        '<div class="section-head"><h2>Agenda</h2><span class="chip">'+upcoming.length+' próximo'+(upcoming.length>1?'s':'')+'</span></div>'+
+        upcoming.map(function(x){
+          var a = x.a;
+          var when = x.diff===0 ? "Hoje" : (x.diff===1 ? "Amanhã" : "em "+x.diff+" dias");
+          var urgent = x.diff<=1;
+          var dLabel = x.d.toLocaleDateString("pt-BR",{weekday:"short", day:"2-digit", month:"2-digit"});
+          return '<div class="debt-row">'+
+            '<div class="debt-label"><b>'+esc(a.title||"Compromisso")+'</b>'+
+              '<span style="display:block;font-size:11.5px;color:var(--ink-soft);margin-top:2px;">'+esc(dLabel)+(a.time?' · '+esc(a.time):'')+(a.place?' · '+esc(a.place):'')+'</span>'+
+              (a.phone?'<span style="display:block;font-size:11.5px;color:var(--ink-soft);">Tel.: <a href="tel:'+esc(String(a.phone).replace(/\D/g,""))+'" style="color:inherit">'+esc(a.phone)+'</a></span>':'')+
+              (urgent?'<span class="debt-note">Lembrete: '+(x.diff===0?'é hoje!':'é amanhã — se organize.')+'</span>':'')+
+            '</div>'+
+            '<span class="chip'+(urgent?'':' on-tab')+'"'+(urgent?' style="color:var(--warn);background:var(--warn-soft)"':'')+'>'+when+'</span>'+
+          '</div>';
+        }).join("")+
+      '</div>' : "";
+
+    el.innerHTML =
+      sundayHtml+
+      '<div class="card">'+
+        '<div class="kicker">'+dateLabel+'</div>'+
+        '<h2 style="margin-top:4px;">'+greeting+', Ju!</h2>'+
+      '</div>'+
+      agendaHtml+
+      '<div class="card">'+
+        '<div class="section-head"><h2>Tema litúrgico de hoje</h2></div>'+
+        litHtml+
+      '</div>'+
+      '<div class="card">'+
+        '<div class="section-head"><h2>Treino de hoje</h2></div>'+
+        '<p class="section-lede">'+esc(workoutPlan)+'</p>'+
+        (isTreinoDay ? '<label class="check-label"><input type="checkbox" id="thWorkoutDone" '+(workoutDoneToday?"checked":"")+'> feito hoje</label>' : '')+
+      '</div>'+
+      '<div class="card">'+
+        '<div class="section-head"><h2>Cardápio de hoje</h2></div>'+
+        '<div class="breakdown">'+mealsHtml+'</div>'+
+      '</div>'+
+      '<div class="card">'+
+        '<div class="section-head"><h2>Rotina de hoje</h2></div>'+
+        '<div class="progress" style="margin-bottom:12px"><i style="width:'+((routineDone/routineTotal)*100).toFixed(0)+'%"></i></div>'+
+        '<p class="mono" style="font-size:11px;color:var(--ink-faint);margin:-6px 0 10px;">'+routineDone+' de '+routineTotal+' concluído</p>'+
+        routineHtml+
+      '</div>'+
+      workHtml;
+
+    el.querySelectorAll("[data-thritem]").forEach(function(cb){
+      cb.addEventListener("change", function(){
+        var cur = state.routine.log[tk] || {};
+        if(cb.checked) cur[cb.dataset.thritem] = true; else delete cur[cb.dataset.thritem];
+        state.routine.log[tk] = cur;
+        persist(); renderHoje(); renderRotina();
+      });
+    });
+    var wDone = el.querySelector("#thWorkoutDone");
+    if(wDone) wDone.addEventListener("change", function(){
+      if(wDone.checked) state.workout.log[tk] = true; else delete state.workout.log[tk];
+      persist(); renderHoje(); renderTreino();
+    });
+    var goProj = el.querySelector("#thGoProjecoes");
+    if(goProj) goProj.addEventListener("click", function(){ if(window.__painelGoTo) window.__painelGoTo("projecoes"); });
+  }
+
+  // ---------- render: Progresso ----------
+  function radialGauge(pct, color, size){
+    size = size || 118;
+    var r = size/2 - 11, c = size/2;
+    var circumference = 2*Math.PI*r;
+    var clamped = Math.max(0, Math.min(100, pct));
+    var offset = circumference * (1 - clamped/100);
+    return '<svg viewBox="0 0 '+size+' '+size+'" width="'+size+'" height="'+size+'" style="display:block;flex:none;">'+
+      '<circle cx="'+c+'" cy="'+c+'" r="'+r+'" fill="none" stroke="var(--surface-2)" stroke-width="11"/>'+
+      '<circle cx="'+c+'" cy="'+c+'" r="'+r+'" fill="none" stroke="'+color+'" stroke-width="11" stroke-linecap="round" stroke-dasharray="'+circumference.toFixed(1)+'" stroke-dashoffset="'+offset.toFixed(1)+'" transform="rotate(-90 '+c+' '+c+')" style="transition:stroke-dashoffset .3s ease;"/>'+
+      '<text x="'+c+'" y="'+(c+7)+'" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-weight="600" font-size="24" fill="var(--ink)">'+Math.round(clamped)+'%</text>'+
+    '</svg>';
+  }
+
+  function barsSvg(values, max, fmt){
+    var w = 300, h = 64, n = values.length, gap = 3;
+    var bw = (w - gap*(n-1)) / n;
+    var bars = values.map(function(v,i){
+      var bh = Math.max(2, (v/max)*h);
+      var x = i*(bw+gap);
+      var y = h-bh;
+      return '<rect x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+Math.max(1,bw).toFixed(1)+'" height="'+bh.toFixed(1)+'" rx="2" fill="var(--tab-c)"><title>'+fmt(v)+'</title></rect>';
+    }).join("");
+    return '<svg viewBox="0 0 '+w+' '+h+'" width="100%" height="64" preserveAspectRatio="none" style="display:block;overflow:visible;">'+
+      '<line x1="0" y1="'+(h-0.5)+'" x2="'+w+'" y2="'+(h-0.5)+'" stroke="var(--line)" stroke-width="1"/>'+
+      bars+
+    '</svg>';
+  }
+
+  function renderProgresso(){
+    var el = document.getElementById("panel-progresso");
+    var N = 14;
+    var days = [];
+    for(var i=N-1;i>=0;i--) days.push(todayKey(-i));
+
+    var routineTotal = state.routine.items.length || 1;
+    var routinePct = days.map(function(d){
+      var log = state.routine.log[d] || {};
+      var done = state.routine.items.filter(function(it){ return log[it.id]; }).length;
+      return Math.round((done/routineTotal)*100);
+    });
+    var routineAvg = Math.round(routinePct.reduce(function(a,b){return a+b;},0)/N);
+
+    var waterVals = days.map(function(d){ return (state.diet.log[d] && state.diet.log[d].water) || 0; });
+    var waterGoalDays = waterVals.filter(function(v){ return v>=6; }).length;
+
+    var treinoHeat = days.map(function(d){ return !!state.workout.log[d]; });
+    var streak = 0;
+    for(var j=0;j<365;j++){ if(state.workout.log[todayKey(-j)]) streak++; else break; }
+
+    var debtsPago = state.debts.filter(function(d){ return d.status==="pago"; }).length;
+    var totalMaterias = state.academico.periods.reduce(function(s,p){ return s+p.materias.length; },0);
+    var materiasDone = Object.keys(state.academico.done).filter(function(k){ return state.academico.done[k]; }).length;
+    var booksDone = state.reading.items.filter(function(b){ return b.status==="concluido"; }).length;
+
+    var axisLabels = '<div class="axis-labels"><span>'+N+' dias atrás</span><span>hoje</span></div>';
+    var evoIndex = computeEvolutionIndex();
+    var evoColor = evoIndex>=70 ? "var(--ok)" : (evoIndex>=40 ? "var(--pess)" : "var(--warn)");
+
+    el.innerHTML =
+      '<div class="card">'+
+        '<div class="section-head"><h2>Sua progressão</h2></div>'+
+        '<p class="section-lede">Últimos '+N+' dias, calculado a partir do que você já vem marcando nas outras abas.</p>'+
+        '<div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap;margin:6px 0 16px;">'+
+          radialGauge(evoIndex, evoColor)+
+          '<div style="flex:1;min-width:180px;">'+
+            '<p class="kicker" style="margin-bottom:4px;">Índice geral de evolução</p>'+
+            '<p style="font-size:12.5px;line-height:1.6;color:var(--ink-soft);margin:0;">Média ponderada de todas as frentes (rotina, treino, dieta, estudos, leitura, metas e compras), usando as prioridades que você define na aba Projeções. Dívidas não entram aqui — acompanhe pelo card de dívidas quitadas abaixo.</p>'+
+          '</div>'+
+        '</div>'+
+        '<div class="stat-tiles">'+
+          '<div class="stat-tile tone-t"><p class="label">Sequência de treino</p><p class="value">'+streak+'</p><p class="hint">dia(s) seguidos</p></div>'+
+          '<div class="stat-tile tone-t"><p class="label">Rotina — média 14 dias</p><p class="value">'+routineAvg+'%</p></div>'+
+          '<div class="stat-tile tone-t"><p class="label">Água (14 dias)</p><p class="value">'+waterGoalDays+' / '+N+'</p><p class="hint">dias com 6+ copos</p></div>'+
+          '<div class="stat-tile tone-ok"><p class="label">Dívidas quitadas</p><p class="value">'+debtsPago+' / '+state.debts.length+'</p></div>'+
+          '<div class="stat-tile"><p class="label">Sebrae — disciplinas</p><p class="value">'+materiasDone+' / '+totalMaterias+'</p></div>'+
+          '<div class="stat-tile"><p class="label">Livros concluídos</p><p class="value">'+booksDone+'</p></div>'+
+        '</div>'+
+      '</div>'+
+      '<div class="card">'+
+        '<div class="chart-block">'+
+          '<div class="chart-head"><span class="t">Rotina concluída por dia (%)</span><span class="v">média '+routineAvg+'%</span></div>'+
+          barsSvg(routinePct, 100, function(v){ return v+"%"; })+
+          axisLabels+
+        '</div>'+
+        '<div class="chart-block">'+
+          '<div class="chart-head"><span class="t">Treino feito</span><span class="v">'+treinoHeat.filter(Boolean).length+' de '+N+' dias</span></div>'+
+          '<div class="heat-row">'+treinoHeat.map(function(on){ return '<div class="d'+(on?" on":"")+'"></div>'; }).join("")+'</div>'+
+          axisLabels+
+        '</div>'+
+        '<div class="chart-block">'+
+          '<div class="chart-head"><span class="t">Copos de água por dia</span><span class="v">meta: 6+</span></div>'+
+          barsSvg(waterVals, 8, function(v){ return v+" copo(s)"; })+
+          axisLabels+
+        '</div>'+
+      '</div>';
+  }
+
+  // ---------- render: Projeções (revisão semanal) ----------
+  var AREAS = [
+    {key:"profissional", label:"Profissional", color:"--profissional", kind:"pct", eps:8, hint:"% da meta de setembro realizada",
+      calc:function(s){ var k=s.professional.kpis; return {value: Math.round((k.realizado/k.metaSetembro)*1000)/10}; }},
+    {key:"dividas", label:"Dívidas", color:"--warn", kind:"money", lowerIsBetter:true, hint:"valor total ainda pendente",
+      calc:function(s){ var v=s.debts.filter(function(d){return d.status!=="pago";}).reduce(function(a,d){return a+(Number(d.value)||0);},0); return {value: Math.round(v*100)/100}; }},
+    {key:"treino", label:"Treino", color:"--treino", kind:"pct", eps:8, hint:"dias treinados nos últimos 7",
+      calc:function(s){ var c=0; for(var i=0;i<7;i++){ if(s.workout.log[todayKey(-i)]) c++; } return {value: Math.round((c/7)*100)}; }},
+    {key:"rotina", label:"Rotina", color:"--rotina", kind:"pct", eps:8, hint:"cumprimento médio da rotina (7 dias)",
+      calc:function(s){ var tot=s.routine.items.length||1, sum=0; for(var i=0;i<7;i++){ var log=s.routine.log[todayKey(-i)]||{}; sum += s.routine.items.filter(function(it){return log[it.id];}).length/tot; } return {value: Math.round((sum/7)*100)}; }},
+    {key:"dieta", label:"Dieta", color:"--diet", kind:"pct", eps:8, hint:"dias com meta de água batida (7 dias)",
+      calc:function(s){ var c=0; for(var i=0;i<7;i++){ var l=s.diet.log[todayKey(-i)]; if(l && l.water>=6) c++; } return {value: Math.round((c/7)*100)}; }},
+    {key:"espirito", label:"Espiritualidade", color:"--fe", kind:"pct", eps:8, hint:"dias com devocional registrado (7 dias)",
+      calc:function(s){ var c=0; for(var i=0;i<7;i++){ if(s.spirituality.dailyLog[todayKey(-i)]) c++; } return {value: Math.round((c/7)*100)}; }},
+    {key:"academico", label:"Estudos Acadêmicos", color:"--academico", kind:"count", eps:1, hint:"disciplinas da grade concluídas",
+      calc:function(s){ var tot=s.academico.periods.reduce(function(su,p){return su+p.materias.length;},0); var done=Object.keys(s.academico.done).filter(function(k){return s.academico.done[k];}).length; return {value: done, total: tot}; }},
+    {key:"complementar", label:"Estudos Complementares", color:"--complementar", kind:"count", eps:1, hint:"itens de estudo concluídos",
+      calc:function(s){ var all=[].concat(s.complementar.tripleten,s.complementar.copywriting,s.complementar.iaAnthropic,s.complementar.iaMicrosoft); var done=all.filter(function(i){return i.done;}).length; return {value: done, total: all.length}; }},
+    {key:"leitura", label:"Leitura", color:"--leitura", kind:"count", eps:1, hint:"livros concluídos",
+      calc:function(s){ var done=s.reading.items.filter(function(b){return b.status==="concluido";}).length; return {value: done, total: s.reading.items.length}; }},
+    {key:"metas", label:"Metas & Sonhos", color:"--pess", kind:"count", eps:1, hint:"metas e sonhos em andamento",
+      calc:function(s){ var v = s.goals.filter(function(g){return g.status==="andamento";}).length + s.dreams.filter(function(d){return d.status==="andamento";}).length; return {value:v, total: s.goals.length+s.dreams.length}; }},
+    {key:"compras", label:"Compras", color:"--compras", kind:"pct", eps:12, hint:"itens já comprados da lista atual",
+      calc:function(s){ var tot=s.shopping.items.length||1, done=s.shopping.items.filter(function(i){return i.checked;}).length; return {value: Math.round((done/tot)*100)}; }}
+  ];
+
+  // Concrete next-step suggestions per front — shown on an area's card whenever
+  // that area is flagged "down" or "baseline" in the weekly comparison, so the
+  // dashboard doesn't just show a number but a next action to move it.
+  var AREA_ACTIONS = {
+    profissional: "Priorizar hoje os clientes com cotação parada há mais tempo.",
+    dividas: "Revisar o próximo boleto ou protesto a resolver esta semana.",
+    treino: "Reagendar o treino perdido para os próximos 2 dias.",
+    rotina: "Escolher 1 item da rotina para priorizar amanhã cedo.",
+    dieta: "Deixar a garrafa de água visível como lembrete ao longo do dia.",
+    espirito: "Reservar um horário fixo pro devocional amanhã.",
+    academico: "Concluir 1 disciplina pendente esta semana.",
+    complementar: "Retomar 1 item de estudo complementar parado.",
+    leitura: "Separar 15 minutos de leitura hoje.",
+    metas: "Escolher 1 meta \"planejada\" para virar \"em andamento\".",
+    compras: "Fechar a compra da lista atual esta semana."
+  };
+
+  // Composite 0–100 score across every non-monetary front, weighted by the
+  // priorities set in "Prioridades" — the headline number for the Progresso
+  // dashboard gauge. Dívidas (a money-kind area) is excluded since it isn't a
+  // 0–100 scale; it has its own card ("Dívidas quitadas").
+  function computeEvolutionIndex(){
+    var total = 0, weightSum = 0;
+    AREAS.forEach(function(a){
+      if(a.kind==="money") return;
+      var m = a.calc(state);
+      var pct = a.kind==="pct" ? m.value : (m.total ? (m.value/m.total)*100 : 0);
+      pct = Math.max(0, Math.min(100, pct));
+      var w = (state.areaWeights && state.areaWeights[a.key]) || 3;
+      total += pct*w; weightSum += w;
+    });
+    return weightSum ? Math.round(total/weightSum) : 0;
+  }
+
+  function formatMetric(area, m){
+    if(area.kind==="pct") return m.value+"%";
+    if(area.kind==="money") return brl(m.value);
+    return m.value + (m.total!=null ? " / "+m.total : "");
+  }
+
+  function statusFor(area, curVal, prevVal){
+    if(prevVal==null) return {label:"linha de base", tone:"baseline", arrow:"–", deltaTxt:"primeira leitura"};
+    var delta = curVal - prevVal;
+    var eff = area.lowerIsBetter ? -delta : delta;
+    var eps = area.kind==="money" ? Math.max(50, Math.abs(prevVal)*0.02) : (area.eps||1);
+    var label, tone, arrow;
+    if(eff > eps){ label="melhorou"; tone="up"; arrow="↑"; }
+    else if(eff < -eps){ label="piorou"; tone="down"; arrow="↓"; }
+    else { label="estável"; tone="flat"; arrow="→"; }
+    var deltaTxt;
+    if(area.kind==="money") deltaTxt = (delta>0?"+":"")+brl(delta);
+    else if(area.kind==="pct") deltaTxt = (delta>0?"+":"")+delta+" pp";
+    else deltaTxt = (delta>0?"+":"")+delta;
+    return {label:label, tone:tone, arrow:arrow, deltaTxt:deltaTxt};
+  }
+
+  function microSpark(values, color){
+    values = values.filter(function(v){ return v!=null && !isNaN(v); });
+    if(values.length<2) return '<span class="mono" style="font-size:10px;color:var(--ink-faint);">sem histórico</span>';
+    var w=88,h=26,max=Math.max.apply(null,values),min=Math.min.apply(null,values);
+    var range = (max-min)||1;
+    var pts = values.map(function(v,i){
+      var x = (i/(values.length-1))*w;
+      var y = h - ((v-min)/range)*h;
+      return x.toFixed(1)+","+y.toFixed(1);
+    }).join(" ");
+    return '<svg viewBox="0 0 '+w+' '+h+'" width="'+w+'" height="'+h+'" style="display:block;overflow:visible;">'+
+      '<polyline points="'+pts+'" fill="none" stroke="'+color+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>'+
+    '</svg>';
+  }
+
+  function getPrevMetrics(){
+    var wk = isoWeekKey(new Date());
+    var prior = state.weeklyReviews.filter(function(r){ return r.weekKey!==wk; });
+    return prior.length ? prior[prior.length-1].metrics : null;
+  }
+
+  function doReview(){
+    var wk = isoWeekKey(new Date());
+    var cur = {};
+    AREAS.forEach(function(a){ cur[a.key] = a.calc(state).value; });
+    var noteEl = document.getElementById("projNote");
+    var note = noteEl ? noteEl.value.trim() : "";
+    var idx = state.weeklyReviews.findIndex(function(r){ return r.weekKey===wk; });
+    var entry = {weekKey:wk, date: todayKey(), metrics:cur, note:note};
+    if(idx>=0) state.weeklyReviews[idx] = entry; else state.weeklyReviews.push(entry);
+    if(state.weeklyReviews.length>30) state.weeklyReviews = state.weeklyReviews.slice(-30);
+    persist(); renderProjecoes(); renderHoje();
+  }
+
+  function renderProjecoes(){
+    var el = document.getElementById("panel-projecoes");
+    var wk = isoWeekKey(new Date());
+    var prevMetrics = getPrevMetrics();
+    var thisWeekEntry = state.weeklyReviews.find(function(r){ return r.weekKey===wk; });
+    var reviewed = !!thisWeekEntry;
+    var toneRank = {down:3, baseline:1.5, flat:1, up:0.3};
+
+    var rows = AREAS.map(function(a){
+      var m = a.calc(state);
+      var prevVal = prevMetrics ? prevMetrics[a.key] : null;
+      var st = statusFor(a, m.value, prevVal);
+      var weight = state.areaWeights[a.key] || 3;
+      var rank = (toneRank[st.tone]||1) * weight;
+      var hist = state.weeklyReviews.slice(-7).map(function(r){ return r.metrics[a.key]; }).concat([m.value]);
+      return {area:a, m:m, st:st, weight:weight, rank:rank, hist:hist};
+    }).sort(function(x,y){ return y.rank-x.rank; });
+
+    var upList = rows.filter(function(r){return r.st.tone==="up";}).sort(function(x,y){return y.weight-x.weight;}).slice(0,3);
+    var downList = rows.filter(function(r){return r.st.tone==="down";}).sort(function(x,y){return y.weight-x.weight;}).slice(0,3);
+    var hasHistory = prevMetrics!=null;
+
+    el.innerHTML =
+      '<div class="card">'+
+        '<div class="section-head"><h2>Revisão semanal</h2>'+
+          (reviewed?'<span class="chip" style="color:var(--ok);background:var(--ok-soft)">Revisado em '+esc(thisWeekEntry.date.split("-").reverse().join("/"))+'</span>':'<span class="chip">Ainda não revisado essa semana</span>')+
+        '</div>'+
+        '<p class="section-lede">Toda semana, de preferência aos domingos: veja em quais áreas você está evoluindo, quais estão travadas, e o que é mais importante focar agora. Os pesos definem a prioridade — ajuste quando sua vida mudar.</p>'+
+        '<label class="field-label">Como foi a semana? (opcional)</label>'+
+        '<textarea id="projNote" rows="2" placeholder="uma nota rápida sobre a semana...">'+esc(reviewed?thisWeekEntry.note:"")+'</textarea>'+
+        '<div style="margin-top:12px;"><button class="btn primary" id="projReviewBtn" style="--tab-c:var(--projecoes)">'+(reviewed?"Atualizar revisão desta semana":"Fazer a revisão de domingo")+'</button></div>'+
+      '</div>'+
+      '<div class="card">'+
+        '<div class="section-head"><h2>Evoluindo &amp; precisando de atenção</h2></div>'+
+        (hasHistory ?
+          '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;">'+
+            '<div class="callout tone-ok"><p class="co-title"><span class="mark"></span>Evoluindo</p>'+
+              (upList.length? '<ul>'+upList.map(function(r){return '<li>'+esc(r.area.label)+' — '+esc(r.st.deltaTxt)+'</li>';}).join("")+'</ul>' : '<p style="font-size:12px;color:var(--ink-soft);margin:0;">Nenhuma área com melhora relevante nesta comparação.</p>')+
+            '</div>'+
+            '<div class="callout"><p class="co-title"><span class="mark"></span>Precisa de atenção</p>'+
+              (downList.length? '<ul>'+downList.map(function(r){return '<li>'+esc(r.area.label)+' — '+esc(r.st.deltaTxt)+'</li>';}).join("")+'</ul>' : '<p style="font-size:12px;color:var(--ink-soft);margin:0;">Nada caindo de forma relevante — bom sinal.</p>')+
+            '</div>'+
+          '</div>'
+          : '<p class="section-lede">Ainda sem histórico suficiente para comparar. Faça a primeira revisão de domingo para começar a acompanhar semana a semana.</p>')+
+      '</div>'+
+      '<div class="card">'+
+        '<div class="section-head"><h2>Todas as áreas — por prioridade e urgência</h2></div>'+
+        '<p class="section-lede">Combina a importância que você define com a direção da semana. O que está no topo é o que mais merece atenção agora.</p>'+
+        rows.map(function(r){
+          var needsAction = (r.st.tone==="down" || r.st.tone==="baseline") && AREA_ACTIONS[r.area.key];
+          return '<div class="area-card">'+
+            '<div class="ac-main">'+
+              '<p class="ac-label"><span class="ac-dot" style="background:var('+r.area.color+')"></span>'+esc(r.area.label)+'</p>'+
+              '<span class="ac-weight">prioridade '+r.weight+'/5 · '+esc(r.area.hint)+'</span>'+
+              (needsAction ? '<p class="ac-action">→ '+esc(AREA_ACTIONS[r.area.key])+'</p>' : '')+
+            '</div>'+
+            '<div class="ac-spark">'+microSpark(r.hist, 'var('+r.area.color+')')+'</div>'+
+            '<p class="ac-value">'+formatMetric(r.area, r.m)+'</p>'+
+            '<span class="trend-chip '+r.st.tone+'">'+r.st.arrow+' '+esc(r.st.label)+'</span>'+
+          '</div>';
+        }).join("")+
+      '</div>'+
+      '<div class="card">'+
+        '<div class="section-head"><h2>Prioridades — o que pesa mais agora</h2></div>'+
+        '<p class="section-lede">De 1 (pouco relevante agora) a 5 (essencial agora). Isso muda o que aparece no topo da lista acima.</p>'+
+        AREAS.map(function(a){
+          return '<div class="weight-row"><label>'+esc(a.label)+'</label><input type="number" min="1" max="5" data-weight="'+a.key+'" value="'+(state.areaWeights[a.key]||3)+'"></div>';
+        }).join("")+
+      '</div>'+
+      (state.weeklyReviews.length ?
+        '<div class="card">'+
+          '<div class="section-head"><h2>Histórico de revisões</h2></div>'+
+          '<p class="mono" style="font-size:11px;color:var(--ink-faint);">'+state.weeklyReviews.length+' revisão(ões) registrada(s)'+(state.weeklyReviews[0]?', desde '+esc(state.weeklyReviews[0].date.split("-").reverse().join("/")):'')+'</p>'+
+          state.weeklyReviews.slice().reverse().slice(0,8).filter(function(r){return r.note;}).map(function(r){
+            return '<div style="padding:8px 0;border-top:1px solid var(--line);"><span class="mono" style="font-size:10px;color:var(--ink-faint);">'+esc(r.date.split("-").reverse().join("/"))+'</span><p style="font-size:12.5px;margin:4px 0 0;">'+esc(r.note)+'</p></div>';
+          }).join("")+
+        '</div>' : '');
+
+    el.querySelectorAll("[data-weight]").forEach(function(inp){
+      inp.addEventListener("change", function(){
+        var v = Math.max(1, Math.min(5, parseInt(inp.value,10)||3));
+        state.areaWeights[inp.dataset.weight] = v;
+        persist(); renderProjecoes();
+      });
+    });
+    var btn = el.querySelector("#projReviewBtn");
+    if(btn) btn.addEventListener("click", doReview);
+  }
+
+  // ---------- render: Financeiro ----------
+  function financeMonths(start,end){
+    var result=[];
+    for(var month=start;month<=end;month++) result.push("2026-"+String(month).padStart(2,"0"));
+    return result;
+  }
+  function financeMonthLabel(key,options){
+    var parts=key.split("-");
+    return new Date(Number(parts[0]),Number(parts[1])-1,1).toLocaleDateString("pt-BR",options||{month:"short"});
+  }
+  function financeNumber(value){
+    if(value===null||value===undefined||value==="") return null;
+    var amount=Number(value);
+    return Number.isFinite(amount)?amount:null;
+  }
+  function financeDisplay(value){
+    var amount=financeNumber(value);
+    return amount===null?"—":brl(amount);
+  }
+  function financeRecord(key){
+    return state.finance.months[key]||{};
+  }
+  function financeInput(key,field,label,disabled){
+    var value=financeNumber(financeRecord(key)[field]);
+    return '<input type="number" '+(field==="income"?'min="0"':'')+' step="0.01" inputmode="decimal" data-fin-month="'+key+'" data-fin-field="'+field+'" aria-label="'+esc(label)+' — '+esc(financeMonthLabel(key,{month:"long"}))+'" value="'+(value===null?"":value)+'" placeholder="—" '+(disabled?"disabled":"")+'>';
+  }
+  function financeAverage(values){
+    var valid=values.map(financeNumber).filter(function(value){return value!==null;});
+    return valid.length?valid.reduce(function(sum,value){return sum+value;},0)/valid.length:null;
+  }
+  function financeSum(values){
+    var valid=values.map(financeNumber).filter(function(value){return value!==null;});
+    return valid.length?valid.reduce(function(sum,value){return sum+value;},0):null;
+  }
+  function financeChart(keys,fields,maxValue,stacked){
+    return '<div class="finance-chart">'+keys.map(function(key){
+      var record=financeRecord(key);
+      return '<div class="finance-bar"><strong>'+(financeNumber(record[fields[0]])===null?"—":brl(financeNumber(record[fields[0]])))+'</strong>'+
+        '<div class="finance-bar-track">'+fields.map(function(field,index){
+          var amount=financeNumber(record[field]);
+          var height=amount===null||!maxValue?0:Math.max(2,Math.min(100,amount/maxValue*100));
+          var type=field==="homeJu"?"ju":(field==="homeTransfer"?"transfer":(field==="unidentified"?"unknown":""));
+          return '<i class="'+type+'" style="height:'+height.toFixed(1)+'%" title="'+esc(field)+' · '+esc(financeDisplay(amount))+'"></i>';
+        }).join("")+'</div><span>'+esc(financeMonthLabel(key))+'</span></div>';
+    }).join("")+'</div>';
+  }
+  function financeCategoryRows(kind,items){
+    if(!items.length) return '<div class="finance-empty">Ainda não há lançamentos categorizados. Os dados ausentes ficam em branco, não são tratados como R$ 0.</div>';
+    return '<div class="finance-category-list">'+items.map(function(item){
+      return '<div class="finance-category-row"><span>'+esc(item.category)+'</span><span class="month">'+esc(financeMonthLabel(item.month))+'</span><span class="amount">'+brl(Number(item.amount)||0)+'</span><button class="btn ghost" type="button" data-fin-delete="'+kind+'" data-fin-id="'+esc(item.id)+'" aria-label="Remover categoria '+esc(item.category)+'">Remover</button></div>';
+    }).join("")+'</div>';
+  }
+  function financeComparison(label,first,second){
+    if(first===null||second===null) return '<div class="stat-tile"><p class="label">'+label+'</p><p class="value">Aguardando dados</p><p class="hint">Preencha os meses de comparação para ver a variação.</p></div>';
+    var delta=second-first, pct=first===0?null:delta/Math.abs(first)*100;
+    return '<div class="stat-tile '+(delta>0?"tone-warn":(delta<0?"tone-ok":""))+'"><p class="label">'+label+'</p><p class="value">'+(delta>0?"+":"")+brl(delta)+'</p><p class="hint">'+(pct===null?"sem base percentual":(pct>0?"+":"")+pct.toFixed(1).replace(".",",")+"%")+' · antes '+brl(first)+' / depois '+brl(second)+'</p></div>';
+  }
+  function financeReportTrend(items,beforeLabel,afterLabel){
+    return '<div class="finance-table-wrap"><table class="finance-table"><thead><tr><th>Setor/categoria</th><th>'+beforeLabel+'</th><th>'+afterLabel+'</th><th>Variação/mês</th><th>Sinal</th></tr></thead><tbody>'+
+      items.map(function(item){
+        var delta=item.delta===undefined?item.after-item.before:item.delta,up=delta>0.5,down=delta<-.5;
+        return '<tr><td>'+esc(item.name)+'</td><td>'+brl(item.before)+'</td><td>'+brl(item.after)+'</td><td class="'+(up?"finance-bad":(down?"finance-good":""))+'">'+(delta>0?"+":"")+brl(delta)+'</td><td class="'+(up?"finance-bad":(down?"finance-good":""))+'">'+(up?"regressão":(down?"progresso":"estável"))+'</td></tr>';
+      }).join("")+'</tbody></table></div>';
+  }
+  function renderFinanceiro(){
+    var el=document.getElementById("panel-financeiro");
+    var F=state.finance;
+    if(!F||typeof F!=="object") F=state.finance={months:{},individualCategories:[],homeSectors:[],openingBalance:null,scenarios:{optimistic:1.25,base:1,conservative:.75}};
+    if(!F.months||typeof F.months!=="object") F.months={};
+    if(!Array.isArray(F.individualCategories)) F.individualCategories=[];
+    if(!Array.isArray(F.homeSectors)) F.homeSectors=[];
+    if(!F.scenarios) F.scenarios={optimistic:1.25,base:1,conservative:.75};
+    var report=F.reportSnapshot||FINANCE_REPORT;
+    F.reportSnapshot=report;
+    var allMonths=financeMonths(1,10), personalMonths=financeMonths(3,10), homeMonths=financeMonths(1,8);
+    var monthRows=allMonths.map(function(key){
+      var personalOutside=key<"2026-03"||key>"2026-10";
+      var homeOutside=key>"2026-10";
+      var note=report.monthNotes[key]||"";
+      return '<tr><td>'+esc(financeMonthLabel(key,{month:"long"}))+'</td>'+
+        '<td>'+financeInput(key,"income","Entrada",personalOutside)+'</td>'+
+        '<td>'+financeInput(key,"individual","Gasto individual",personalOutside)+'</td>'+
+        '<td>'+financeInput(key,"homeJu","Lar pago diretamente pela Ju",homeOutside)+'</td>'+
+        '<td>'+financeInput(key,"homeTransfer","PIX ao André",homeOutside)+'</td>'+
+        '<td>'+financeInput(key,"homeAndre","Lar pago pelo André",homeOutside)+'</td>'+
+        '<td>'+financeInput(key,"andreForJu","André pagou por Ju, fora do custo do Lar",homeOutside)+'</td>'+
+        '<td>'+financeInput(key,"unidentified","A identificar",personalOutside)+'</td>'+
+        '<td>'+financeDisplay(financeRecord(key).cashFlow)+'</td><td class="finance-month-note">'+(note?"* "+esc(note):"")+'</td></tr>';
+    }).join("");
+    var personalIn=financeSum(personalMonths.map(function(key){return financeRecord(key).income;}));
+    var individualOut=financeSum(personalMonths.map(function(key){return financeRecord(key).individual;}));
+    var houseJu=financeSum(homeMonths.map(function(key){var r=financeRecord(key);return financeNumber(r.homeJu)===null&&financeNumber(r.homeTransfer)===null?null:(financeNumber(r.homeJu)||0)+(financeNumber(r.homeTransfer)||0);}));
+    var houseJuPersonal=financeSum(personalMonths.map(function(key){var r=financeRecord(key);return financeNumber(r.homeJu)===null&&financeNumber(r.homeTransfer)===null?null:(financeNumber(r.homeJu)||0)+(financeNumber(r.homeTransfer)||0);}));
+    var houseAndre=financeSum(homeMonths.map(function(key){return financeRecord(key).homeAndre;}));
+    var unknownOut=financeSum(personalMonths.map(function(key){return financeRecord(key).unidentified;}));
+    var monthlyMax=Math.max.apply(null,personalMonths.reduce(function(values,key){
+      var record=financeRecord(key);
+      ["income","individual","homeJu","homeAndre","unidentified"].forEach(function(field){
+        var value=financeNumber(record[field]);if(value!==null) values.push(value);
+      });
+      return values;
+    },[0]));
+    var individualTotals={};
+    report.individual.categories.forEach(function(item){individualTotals[item.name]=item.value;});
+    F.individualCategories.forEach(function(item){var key=item.category;individualTotals[key]=(individualTotals[key]||0)+(Number(item.amount)||0);});
+    var individualCategoryHtml=Object.keys(individualTotals).length?'<div class="finance-category-list">'+Object.keys(individualTotals).sort().map(function(category){
+      return '<div class="finance-category-row"><span>'+esc(category)+'</span><span class="month">Mar–out/2026</span><span class="amount">'+brl(individualTotals[category])+'</span><span></span></div>';
+    }).join("")+'</div>':'<div class="finance-empty">Adicione gastos individuais por categoria para visualizar para onde o dinheiro está indo.</div>';
+    var sectorTotals={};
+    report.home.categories.forEach(function(item){sectorTotals[item.name]=item.value;});
+    F.homeSectors.forEach(function(item){var key=item.category;sectorTotals[key]=(sectorTotals[key]||0)+(Number(item.amount)||0);});
+    var homeMonthsRecorded=homeMonths.filter(function(key){
+      var record=financeRecord(key);return financeNumber(record.homeJu)!==null&&financeNumber(record.homeAndre)!==null;
+    });
+    var homeCostByMonth=homeMonths.map(function(key){
+      var record=financeRecord(key),ju=financeNumber(record.homeJu),andre=financeNumber(record.homeAndre);
+      return ju===null||andre===null?null:ju+andre;
+    });
+    var homeCostTotal=financeSum(homeCostByMonth);
+    var homeCostAverage=financeAverage(homeCostByMonth);
+    var individualFirst=financeAverage(["2026-04","2026-05","2026-06"].map(function(key){return financeRecord(key).individual;}));
+    var individualRecent=financeAverage(["2026-09","2026-10"].map(function(key){return financeRecord(key).individual;}));
+    var homeFirst=financeAverage(["2026-01","2026-02","2026-03","2026-04"].map(function(key){var r=financeRecord(key);var a=financeNumber(r.homeJu),b=financeNumber(r.homeAndre);return a===null||b===null?null:a+b;}));
+    var homeRecent=financeAverage(["2026-05","2026-06","2026-07","2026-08"].map(function(key){var r=financeRecord(key);var a=financeNumber(r.homeJu),b=financeNumber(r.homeAndre);return a===null||b===null?null:a+b;}));
+    var completeHomeMonths=homeMonths.filter(function(key){var r=financeRecord(key);return financeNumber(r.homeJu)!==null&&financeNumber(r.homeAndre)!==null;});
+    var knownDeltas=completeHomeMonths.map(function(key){
+      var r=financeRecord(key),ju=financeNumber(r.homeJu),andre=financeNumber(r.homeAndre);
+      return ju+(financeNumber(r.homeTransfer)||0)-(ju+andre)/2-(financeNumber(r.andreForJu)||0);
+    });
+    var currentSettlement=financeNumber(F.openingBalance);
+    if(currentSettlement!==null) currentSettlement+=knownDeltas.reduce(function(sum,value){return sum+value;},0);
+    var averageDelta=financeAverage(knownDeltas.slice(-3));
+    var scenarioValues=averageDelta===null?null:{
+      base:averageDelta*(Number(F.scenarios.base)||1),
+      optimistic:averageDelta*(Number(F.scenarios.optimistic)||1.25),
+      conservative:averageDelta*(Number(F.scenarios.conservative)||.75)
+    };
+    var scenarioCard=function(key,label,description){
+      if(currentSettlement===null||scenarioValues===null) return '<div class="finance-scenario"><strong>'+label+'</strong><span>Inclua saldo de abertura e pelo menos um mês completo (valores pagos por ambos) para projetar.</span></div>';
+      var rate=scenarioValues[key],monthsToZero=currentSettlement>=0?0:(rate>0?Math.ceil(Math.abs(currentSettlement)/rate):null);
+      var result=monthsToZero===0?"Acerto já está zerado":(monthsToZero===null?"Sem previsão de quitação neste ritmo":"Pode zerar em cerca de "+monthsToZero+" mês(es)");
+      return '<div class="finance-scenario"><strong>'+label+'</strong><span>'+description+' · variação estimada '+brl(rate)+'/mês. '+result+'.</span></div>';
+    };
+    var latestDate=new Date();
+    var projectionRows='<div class="finance-projection-row head"><span>Mês</span><span>Base</span><span>Otimista</span><span>Conservador</span></div>';
+    var projectionValues={base:currentSettlement,optimistic:currentSettlement,conservative:currentSettlement};
+    var projectionHtml="";
+    if(currentSettlement!==null&&scenarioValues!==null){
+      for(var pi=0;pi<12;pi++){
+        latestDate.setMonth(latestDate.getMonth()+1);
+        var label=latestDate.toLocaleDateString("pt-BR",{month:"short",year:"2-digit"}).replace(".","");
+        ["base","optimistic","conservative"].forEach(function(key){projectionValues[key]+=scenarioValues[key];});
+        projectionHtml+='<div class="finance-projection-row"><span>'+esc(label)+'</span>'+["base","optimistic","conservative"].map(function(key){
+          var value=projectionValues[key];return '<span class="'+(value<0?"finance-bad":"finance-good")+'">'+brl(value)+'</span>';
+        }).join("")+'</div>';
+      }
+    }
+    var sectorHtml=Object.keys(sectorTotals).length?'<div class="finance-category-list">'+Object.keys(sectorTotals).sort().map(function(category){
+      return '<div class="finance-category-row"><span>'+esc(category)+'</span><span class="month">Jan–ago/2026</span><span class="amount">'+brl(sectorTotals[category])+'</span><span></span></div>';
+    }).join("")+'</div>':'<div class="finance-empty">Nenhum setor do Lar foi informado. Adicione os valores setorizados abaixo; totais sem informação não são tratados como zero.</div>';
+    var expenseMax=Math.max.apply(null,Object.keys(individualTotals).map(function(key){return individualTotals[key];}).concat([1]));
+    var sectorMax=Math.max.apply(null,Object.keys(sectorTotals).map(function(key){return sectorTotals[key];}).concat([1]));
+    function categoryBars(totals,max){
+      return Object.keys(totals).length?'<div class="finance-chart">'+Object.keys(totals).sort(function(a,b){return totals[b]-totals[a];}).map(function(category){
+        var amount=totals[category];return '<div class="finance-bar"><strong>'+brl(amount)+'</strong><div class="finance-bar-track"><i style="height:'+Math.max(2,amount/max*100).toFixed(1)+'%"></i></div><span>'+esc(category.slice(0,12))+'</span></div>';
+      }).join("")+'</div>':'';
+    }
+    el.innerHTML=
+      '<div class="finance-note"><strong>Atualizado pelo relatório de '+esc(report.generated)+'.</strong> '+esc(report.quality.total+' lançamentos: '+report.quality.selected+' setorizados pela Ju, '+report.quality.automatic+' classificados automaticamente e '+report.quality.suggested+' ainda seguem uma sugestão provisória.')+' O resumo mantém essas classificações como vieram no arquivo; confira os itens sugeridos antes de tratar os totais como definitivos.</div>'+
+      '<div class="stat-tiles">'+
+        '<div class="stat-tile tone-t"><p class="label">Entradas mar–out</p><p class="value">'+brl(report.individual.total.income)+'</p><p class="hint">Salário '+brl(report.individual.total.salary)+' · Flash '+brl(report.individual.total.flash)+'</p></div>'+
+        '<div class="stat-tile"><p class="label">Gastos individuais</p><p class="value">'+brl(report.individual.total.spending)+'</p><p class="hint">Mar–out · relatório recebido</p></div>'+
+        '<div class="stat-tile"><p class="label">Lar — contribuição Ju</p><p class="value">'+brl(report.individual.total.homeContribution)+'</p><p class="hint">Contas pagas + PIX ao André · mar–out</p></div>'+
+        '<div class="stat-tile tone-warn"><p class="label">A identificar</p><p class="value">'+brl(report.individual.total.unidentified)+'</p><p class="hint">Sem classificação confirmada</p></div>'+
+      '</div>'+
+      '<div class="card"><div class="section-head"><h2>Entradas e saídas por mês</h2><span class="chip on-tab">Mar–out · R$</span></div>'+
+        '<p class="section-lede">Valores importados do resumo financeiro; edite os campos quando tiver correções confirmadas. Lançamentos negativos representam estorno/crédito. Saldo mensal é o saldo informado no relatório.</p>'+
+        '<div class="stat-tiles">'+
+          '<div class="stat-tile tone-t"><p class="label">Entradas registradas</p><p class="value">'+financeDisplay(personalIn)+'</p></div>'+
+          '<div class="stat-tile"><p class="label">Gastos individuais</p><p class="value">'+financeDisplay(individualOut)+'</p></div>'+
+          '<div class="stat-tile"><p class="label">Lar — Ju, pagos + PIX</p><p class="value">'+financeDisplay(houseJuPersonal)+'</p></div>'+
+          '<div class="stat-tile"><p class="label">A identificar</p><p class="value">'+financeDisplay(unknownOut)+'</p></div>'+
+        '</div>'+
+        '<div class="finance-legend"><span><i></i>Entradas</span><span><i class="ju"></i>Gastos individuais</span><span><i class="transfer"></i>Lar · Ju + PIX</span><span><i class="unknown"></i>A identificar</span></div>'+
+        '<div class="finance-chart">'+personalMonths.map(function(key){
+          var r=financeRecord(key),bars=[["income",financeNumber(r.income),"","Entradas"],["individual",financeNumber(r.individual),"spending","Gastos individuais"],["homeJu",(financeNumber(r.homeJu)||0)+(financeNumber(r.homeTransfer)||0),"transfer","Lar · Ju + PIX"],["unidentified",financeNumber(r.unidentified),"unknown","A identificar"]];
+          return '<div class="finance-bar"><strong>'+financeDisplay(r.cashFlow)+'</strong><div class="finance-bar-track">'+bars.map(function(bar){var amount=bar[1],height=amount===null||!monthlyMax?0:Math.max(2,Math.abs(amount)/monthlyMax*100);return '<i class="'+bar[2]+'" style="height:'+height.toFixed(1)+'%" title="'+esc(bar[3]+' · '+financeDisplay(amount))+'"></i>';}).join("")+'</div><span>'+esc(financeMonthLabel(key))+(report.monthNotes[key]?"*":"")+'</span></div>';
+        }).join("")+'</div>'+
+        '<div class="finance-table-wrap"><table class="finance-table"><thead><tr><th>Mês</th><th>Entradas</th><th>Gastos individuais</th><th>Ju · contas diretas</th><th>PIX ao André</th><th>André · Lar</th><th>André pagou por Ju</th><th>A identificar</th><th>Saldo</th><th>Observação</th></tr></thead><tbody>'+monthRows+'</tbody></table></div>'+
+        '<p class="section-lede">* Período com cobertura parcial ou informação pendente, conforme as observações do relatório. Campos em branco significam dado indisponível, não zero.</p>'+
+      '</div>'+
+      '<div class="card"><div class="section-head"><h2>Para onde vai o dinheiro individual</h2><span class="chip">Mar–out · 2026</span></div>'+
+        '<p class="section-lede">Categorias e valores importados do arquivo financeiro. O gráfico soma '+brl(report.individual.total.spending)+' classificados e '+brl(report.individual.total.unidentified)+' ainda “A identificar”; registros novos podem ser adicionados abaixo.</p>'+
+        categoryBars(individualTotals,expenseMax)+individualCategoryHtml+
+        '<div class="finance-category-form"><input type="text" id="finIndividualCategory" maxlength="60" placeholder="Categoria (ex.: mercado)">'+
+          '<select id="finIndividualMonth" aria-label="Mês da despesa individual">'+personalMonths.map(function(key){return '<option value="'+key+'">'+esc(financeMonthLabel(key,{month:"long"}))+'</option>';}).join("")+'</select>'+
+          '<input type="number" id="finIndividualAmount" min="0" step="0.01" placeholder="Valor em R$">'+
+          '<button class="btn small" type="button" id="finIndividualAdd">Adicionar</button></div>'+
+      '</div>'+
+      '<div class="card"><div class="section-head"><h2>Progressos e regressões</h2><span class="chip">abr–jun × set–out</span></div>'+
+        financeReportTrend(report.individual.progress,"Abr–jun · média","Set–out · média")+
+        '<p class="section-lede" style="margin-top:8px;">Variação positiva de gastos não significa melhora automaticamente; use as categorias e seu contexto para interpretar.</p>'+
+      '</div>'+
+      '<div class="card"><div class="section-head"><h2>Quem pagou o Lar</h2><span class="chip">Jan–ago · R$</span></div>'+
+        '<p class="section-lede">O PIX ao André é contribuição da Ju, mas não soma novamente ao custo das contas do Lar. “André pagou por Ju” (faculdade/celular) entra no acerto, fora do custo doméstico.</p>'+
+        financeChart(homeMonths,["homeAndre","homeJu","homeTransfer"],Math.max.apply(null,homeMonths.reduce(function(values,key){var r=financeRecord(key);["homeAndre","homeJu","homeTransfer"].forEach(function(field){var n=financeNumber(r[field]);if(n!==null)values.push(n);});return values;},[0])),true)+
+        '<div class="finance-legend"><span><i></i>André · contas do Lar</span><span><i class="ju"></i>Ju · contas diretas</span><span><i class="transfer"></i>Ju · PIX ao André</span></div>'+
+        '<div class="stat-tiles"><div class="stat-tile"><p class="label">André pagou</p><p class="value">'+brl(report.home.total.andre)+'</p><p class="hint">jan–ago</p></div><div class="stat-tile"><p class="label">Ju pagou direto + PIX</p><p class="value">'+brl(report.home.total.juDirect+report.home.total.juTransfer)+'</p><p class="hint">'+brl(report.home.total.juDirect)+' direto · '+brl(report.home.total.juTransfer)+' em PIX</p></div><div class="stat-tile"><p class="label">Custo do Lar · jan–ago</p><p class="value">'+brl(report.home.total.cost)+'</p><p class="hint">Média '+brl(report.home.total.cost/8)+' por mês</p></div></div>'+
+      '</div>'+
+      '<div class="card"><div class="section-head"><h2>Acerto acumulado da Ju</h2><span class="chip on-tab">abaixo de zero = Ju deve ao André</span></div>'+
+        '<p class="section-lede">Resumo do relatório até agosto; o cenário com sugestões é provisório. O detalhamento inclui '+brl(report.home.total.andreForJu)+' pagos pelo André por Ju (faculdade e celular), que não entram no custo do Lar.</p>'+
+        '<div class="stat-tiles"><div class="stat-tile tone-warn"><p class="label">Com sugestões nos pendentes</p><p class="value">'+brl(report.home.total.settlement)+'</p><p class="hint">saldo informado até agosto</p></div><div class="stat-tile"><p class="label">Somente itens confirmados</p><p class="value">'+brl(report.home.total.settlementConfirmed)+'</p><p class="hint">saldo informado até agosto</p></div></div>'+
+        '<div class="finance-legend"><span><i></i>Com sugestões</span><span><i class="ju"></i>Somente confirmados</span></div>'+
+        '<div class="finance-chart">'+allMonths.map(function(key){var r=financeRecord(key),values=[["householdRunning",""],["householdConfirmed","ju"]];return '<div class="finance-bar"><strong>'+esc(financeMonthLabel(key))+'</strong><div class="finance-bar-track">'+values.map(function(pair){var amount=financeNumber(r[pair[0]]),height=amount===null?0:Math.max(2,Math.abs(amount)/8299.15*100);return '<i class="'+pair[1]+'" style="height:'+height.toFixed(1)+'%" title="'+esc((pair[0]==="householdRunning"?"Com sugestões":"Confirmado")+" · "+financeDisplay(amount))+'"></i>';}).join("")+'</div><span>'+(report.monthNotes[key]?"*":"")+'</span></div>';}).join("")+'</div>'+
+        '<p class="section-lede">Saldos negativos indicam valor devido; setembro e outubro permanecem parciais porque falta a lista do André.</p>'+
+        '<div class="finance-toolbar"><label for="finOpeningBalance" class="field-label">Saldo de abertura antes de jan/2026 (R$)</label><input type="number" id="finOpeningBalance" step="0.01" value="'+(financeNumber(F.openingBalance)===null?"":financeNumber(F.openingBalance))+'" placeholder="Informe o saldo conhecido"></div>'+
+        '<div class="stat-tiles"><div class="stat-tile '+(currentSettlement===null?"":currentSettlement<0?"tone-warn":"tone-ok")+'"><p class="label">Saldo calculado</p><p class="value">'+financeDisplay(currentSettlement)+'</p><p class="hint">'+(currentSettlement===null?"Informe o saldo de abertura":homeMonthsRecorded.length+" mês(es) completo(s) somado(s)")+'</p></div>'+
+          '<div class="stat-tile"><p class="label">Custo médio do Lar</p><p class="value">'+financeDisplay(homeCostAverage)+'</p><p class="hint">somente meses com valores de ambos</p></div></div>'+
+        '<div class="finance-category-form"><input type="text" id="finHomeCategory" maxlength="60" placeholder="Setor do Lar (ex.: aluguel)">'+
+          '<select id="finHomeMonth" aria-label="Mês do custo do Lar">'+homeMonths.map(function(key){return '<option value="'+key+'">'+esc(financeMonthLabel(key,{month:"long"}))+'</option>';}).join("")+'</select>'+
+          '<input type="number" id="finHomeAmount" min="0" step="0.01" placeholder="Total do setor · R$">'+
+          '<button class="btn small" type="button" id="finHomeAdd">Adicionar setor</button></div>'+
+        sectorHtml+categoryBars(sectorTotals,sectorMax)+
+        '<div class="finance-category-list">'+F.homeSectors.map(function(item){return '<div class="finance-category-row"><span>'+esc(item.category)+'</span><span class="month">'+esc(financeMonthLabel(item.month))+'</span><span class="amount">'+brl(Number(item.amount)||0)+'</span><button class="btn ghost" type="button" data-fin-delete="home" data-fin-id="'+esc(item.id)+'" aria-label="Remover setor '+esc(item.category)+'">Remover</button></div>';}).join("")+'</div>'+
+      '</div>'+
+      '<div class="card"><div class="section-head"><h2>Projeção: quando o acerto zera</h2><span class="chip">12 meses · cenários</span></div>'+
+        '<p class="section-lede">Estimativas aplicam a variação média dos últimos até três meses completos: base, otimista (+25%) e conservador (−25%). Não é previsão garantida.</p>'+
+        '<div class="finance-scenario-grid">'+scenarioCard("base","Base","média recente")+scenarioCard("optimistic","Otimista","+25% sobre a base")+scenarioCard("conservative","Conservador","−25% sobre a base")+'</div>'+
+        (projectionHtml?'<div style="margin-top:16px;">'+projectionRows+projectionHtml+'</div>':'')+
+      '</div>'+
+      '<div class="card"><div class="section-head"><h2>Custo do Lar por setor</h2><span class="chip">Jan–ago · total e média/mês</span></div>'+
+        '<p class="section-lede">Valores e médias conforme o relatório. Setores são detalhamento dos totais mensais, não devem ser somados novamente ao acerto.</p>'+
+        '<div class="stat-tiles"><div class="stat-tile"><p class="label">Total setorizado</p><p class="value">'+(Object.keys(sectorTotals).length?brl(Object.keys(sectorTotals).reduce(function(sum,key){return sum+sectorTotals[key];},0)):"—")+'</p></div>'+
+          '<div class="stat-tile"><p class="label">Média por mês completo</p><p class="value">'+financeDisplay(homeCostAverage)+'</p></div></div>'+
+        sectorHtml+
+      '</div>'+
+      '<div class="card"><div class="section-head"><h2>Progressos e regressões do Lar</h2><span class="chip">jan–abr × mai–ago</span></div>'+
+        financeReportTrend(report.home.progress,"Jan–abr · média","Mai–ago · média")+
+      '</div>'+
+      '<div class="card"><div class="section-head"><h2>Projeção do custo do Lar</h2><span class="chip">próximos 12 meses</span></div>'+
+        '<p class="section-lede">Estimativa do relatório pela média de janeiro a agosto, mantendo os preços atuais. Rebill (faculdade) e TIM (celular) são pessoais e ficaram fora do Lar.</p>'+
+        '<div class="stat-tiles"><div class="stat-tile"><p class="label">Fixos por mês</p><p class="value">'+brl(report.home.projection.fixed)+'</p><p class="hint">Aluguel '+brl(report.home.projection.rent)+' · energia '+brl(report.home.projection.energy)+' · água '+brl(report.home.projection.water)+' · internet '+brl(report.home.projection.internet)+'</p></div><div class="stat-tile"><p class="label">Variáveis por mês</p><p class="value">'+brl(report.home.projection.variable)+'</p></div><div class="stat-tile"><p class="label">Custo médio mensal</p><p class="value">'+brl(report.home.projection.monthly)+'</p></div><div class="stat-tile"><p class="label">Próximos 12 meses</p><p class="value">'+brl(report.home.projection.year)+'</p><p class="hint">Metade da Ju: '+brl(report.home.projection.juShare)+'/mês</p></div></div>'+
+      '</div>'+
+      '<div class="card"><div class="section-head"><h2>Projeção do acerto conforme o relatório</h2><span class="chip">out/2026–out/2027</span></div>'+
+        '<p class="section-lede">Ponto de partida informado: '+brl(report.individual.projection.start)+'. Premissas mensais: Flash '+brl(report.individual.projection.flash)+', metade do Lar '+brl(report.individual.projection.homeShare)+' e gastos individuais '+brl(report.individual.projection.individualSpending)+'. São cenários, não garantias.</p>'+
+        '<div class="finance-scenario-grid">'+["conservative","base","optimistic"].map(function(key){var p=report.individual.projection[key],first=p.series.findIndex(function(v){return v>=0;});var result=first<0?"Acerto não zera nos próximos 12 meses":"Cruza zero em "+first+" mês(es) · "+financeMonthLabel(report.individual.projection.months[first],{month:"long",year:"numeric"});return '<div class="finance-scenario"><strong>'+({conservative:"Conservador",base:"Base",optimistic:"Otimista"}[key])+'</strong><span>Sobra estimada '+brl(p.surplus)+'/mês. '+result+'.</span></div>';}).join("")+'</div>'+
+        '<div class="finance-projection-row head"><span>Mês</span><span>Conservador</span><span>Base</span><span>Otimista</span></div>'+
+        report.individual.projection.months.slice(1).map(function(month,index){var rowIndex=index+1;return '<div class="finance-projection-row"><span>'+esc(financeMonthLabel(month,{month:"short",year:"2-digit"}))+'</span>'+["conservative","base","optimistic"].map(function(key){var value=report.individual.projection[key].series[rowIndex];return '<span class="'+(value<0?"finance-bad":"finance-good")+'">'+brl(value)+'</span>';}).join("")+'</div>';}).join("")+
+        '<p class="section-lede">Salário: conservador '+brl(report.individual.projection.salaryConservative)+' (abr–jun), base '+brl(report.individual.projection.salaryBase)+' (média incluindo outubro), otimista '+brl(report.individual.projection.salaryOptimistic)+' (outubro). A premissa conservadora aumenta gastos individuais em 10%.</p>'+
+      '</div>'+
+      '<div class="finance-note warning"><strong>Fontes e limitações · relatório de '+esc(report.generated)+'.</strong> '+esc(report.sources)+' '+esc(report.missing)+' Valores de setembro e outubro têm cobertura parcial; o arquivo não trouxe a fatura do André nesses meses. Sugestões de setor permanecem provisórias e os totais podem mudar quando os pendentes forem confirmados.</div>';
+
+    el.querySelectorAll("[data-fin-month]").forEach(function(input){
+      input.addEventListener("change",function(){
+        var key=input.dataset.finMonth,field=input.dataset.finField;
+        F.months[key]=F.months[key]||{};
+        F.months[key][field]=input.value===""?null:Number(input.value);
+        persist();renderFinanceiro();
+      });
+    });
+    var opening=el.querySelector("#finOpeningBalance");
+    if(opening) opening.addEventListener("change",function(){
+      F.openingBalance=opening.value===""?null:Number(opening.value);
+      persist();renderFinanceiro();
+    });
+    var individualAdd=el.querySelector("#finIndividualAdd");
+    if(individualAdd) individualAdd.addEventListener("click",function(){
+      var category=el.querySelector("#finIndividualCategory").value.trim(),amount=financeNumber(el.querySelector("#finIndividualAmount").value);
+      if(!category||amount===null) return;
+      F.individualCategories.push({id:uid("ind"),category:category,month:el.querySelector("#finIndividualMonth").value,amount:amount});
+      persist();renderFinanceiro();
+    });
+    var homeAdd=el.querySelector("#finHomeAdd");
+    if(homeAdd) homeAdd.addEventListener("click",function(){
+      var category=el.querySelector("#finHomeCategory").value.trim(),amount=financeNumber(el.querySelector("#finHomeAmount").value);
+      if(!category||amount===null) return;
+      F.homeSectors.push({id:uid("home"),category:category,month:el.querySelector("#finHomeMonth").value,amount:amount});
+      persist();renderFinanceiro();
+    });
+    el.querySelectorAll("[data-fin-delete]").forEach(function(button){
+      button.addEventListener("click",function(){
+        var list=button.dataset.finDelete==="home"?F.homeSectors:F.individualCategories;
+        if(!window.confirm("Remover este lançamento?"))return;
+        if(button.dataset.finDelete==="home") F.homeSectors=list.filter(function(item){return item.id!==button.dataset.finId;});
+        else F.individualCategories=list.filter(function(item){return item.id!==button.dataset.finId;});
+        persist();renderFinanceiro();
+      });
+    });
+  }
+
+  function renderAll(){
+    renderMetas(); renderDividas(); renderDieta(); renderTreino(); renderRotina(); renderCompras();
+    renderLeitura(); renderEspiritualidade(); renderAcademico(); renderComplementar(); renderProfissional();
+    renderProjecoes(); renderHoje(); renderProgresso(); renderFinanceiro();
+  }
+
+  // ---------- tabs ----------
+  function initTabs(){
+    var btns = Array.prototype.slice.call(document.querySelectorAll(".tab-btn"));
+    var saved = "hoje";
+    try{ saved = localStorage.getItem("painelJuTab") || "hoje"; }catch(e){}
+    function activate(tab){
+      btns.forEach(function(b){ b.setAttribute("aria-selected", String(b.dataset.tab===tab)); });
+      ["hoje","metas","dividas","dieta","treino","rotina","compras","leitura","espirito","academico","complementar","profissional","progresso","projecoes","financeiro"].forEach(function(t){
+        document.getElementById("panel-"+t).hidden = (t!==tab);
+      });
+      try{ localStorage.setItem("painelJuTab", tab); }catch(e){}
+    }
+    btns.forEach(function(b){ b.addEventListener("click", function(){ activate(b.dataset.tab); }); });
+    activate(btns.some(function(b){return b.dataset.tab===saved;}) ? saved : "hoje");
+    window.__painelGoTo = activate;
+  }
+
+  function initToday(){
+    var el = document.getElementById("todayLabel");
+    var d = new Date();
+    var txt = d.toLocaleDateString("pt-BR",{weekday:"long", day:"2-digit", month:"long"});
+    el.textContent = txt.charAt(0).toUpperCase()+txt.slice(1);
+  }
+
+  // ---------- one-time repair: heal saved data left in an old shape ----------
+  // mergeDefaults() only fills in keys the saved doc never had — it never overwrites
+  // a key that's already there, even if that key's *shape* is stale from an older
+  // version of the app. That's correct for most fields (we don't want to blow away
+  // your checkboxes), but it means a saved "professional" object from before the
+  // 28/09 rebuild had no .phases array (renderProfissional() crashed reading it,
+  // which is why the tab looked empty), and new debt entries never appear on a
+  // saved "debts" array that predates them. This patches both without touching
+  // anything else you've already filled in.
+  function reconcileState(){
+    var healed = false;
+    if(!state.professional || !Array.isArray(state.professional.phases)){
+      // Preserve any action items she's already ticked in "Plano de ação" — a shape
+      // rebuild should never erase what she's checked off, only fix the structure.
+      var oldProfLog = (state.professional && state.professional.log) || {};
+      state.professional = cloneDefaults().professional;
+      state.professional.log = oldProfLog;
+      healed = true;
+    }
+    var defDebts = cloneDefaults().debts;
+    var haveIds = {};
+    state.debts.forEach(function(d){ haveIds[d.id] = true; });
+    defDebts.forEach(function(d){
+      if(!haveIds[d.id]){ state.debts.push(d); healed = true; }
+    });
+    // Guard the user's own added data (e.g. books in Leitura) against ever being
+    // silently lost to a future shape change: never replace state.reading wholesale,
+    // only patch it into a safe shape if it's missing or corrupted, preserving any
+    // items already saved.
+    if(!state.reading || typeof state.reading !== "object"){
+      state.reading = {items:[], targetPerMonth:1};
+      healed = true;
+    } else if(!Array.isArray(state.reading.items)){
+      state.reading.items = [];
+      healed = true;
+    }
+    if(!Array.isArray(state.agenda)){
+      state.agenda = [];
+      healed = true;
+    }
+    if(typeof state.reading.targetPerMonth !== "number"){
+      state.reading.targetPerMonth = 1;
+      healed = true;
+    }
+    var finance=state.finance;
+    if(!finance||typeof finance!=="object"){
+      finance=state.finance={months:{},individualCategories:[],homeSectors:[],openingBalance:null,scenarios:{optimistic:1.25,base:1,conservative:.75}};
+      healed=true;
+    }
+    if(!finance.months||typeof finance.months!=="object"){finance.months={};healed=true;}
+    if(!Array.isArray(finance.individualCategories)){finance.individualCategories=[];healed=true;}
+    if(!Array.isArray(finance.homeSectors)){finance.homeSectors=[];healed=true;}
+    if(!finance.scenarios) finance.scenarios={optimistic:1.25,base:1,conservative:.75};
+    if(finance.reportVersion!==FINANCE_REPORT.version){
+      finance.reportSnapshot=JSON.parse(JSON.stringify(FINANCE_REPORT));
+      Object.keys(FINANCE_REPORT.months).forEach(function(key){
+        var target=finance.months[key]||(finance.months[key]={});
+        var source=FINANCE_REPORT.months[key];
+        Object.keys(source).forEach(function(field){
+          var previousDefault=key==="2026-09"&&
+            ((field==="income"&&target[field]===4013.85)||(field==="homeAndre"&&target[field]===1801.80));
+          if(previousDefault||target[field]===undefined||target[field]===null){
+            if(source[field]!==null||previousDefault) target[field]=source[field];
+          }
+        });
+      });
+      finance.reportVersion=FINANCE_REPORT.version;
+      healed=true;
+    }
+    return healed;
+  }
+
+  async function init(){
+    initToday();
+    initTabs();
+    initBackups();
+    initAppInstall();
+    setSaveStatus("saving", "Carregando seus dados…");
+    try{
+      var saved=localStorage.getItem(LOCAL_DATA_KEY);
+      state=saved?mergeDefaults(JSON.parse(saved)):cloneDefaults();
+      stateDoc={set:function(value){
+        try{localStorage.setItem(LOCAL_DATA_KEY,JSON.stringify(value));return Promise.resolve();}
+        catch(error){return Promise.reject(error);}
+      }};
+      if(!saved){
+        var previous=localStorage.getItem(PREVIOUS_DATA_KEY);
+        if(previous){
+          migratePreviousPanel(JSON.parse(previous));
+          await stateDoc.set(state);
+        }
+      }
+      if(reconcileState()) await stateDoc.set(state);
+      setSaveStatus("ok","Salvo neste dispositivo");
+    }catch(e){
+      console.error("Falha ao carregar o painel salvo:",e);
+      state = cloneDefaults();
+      stateDoc = null;
+      setSaveStatus("error", "Falha no armazenamento local — exporte/restaure backup em outro navegador");
+    }
+    renderAll();
+  }
+
+  document.addEventListener("DOMContentLoaded", init);
+  if("serviceWorker" in navigator && window.isSecureContext && location.protocol!=="file:"){
+    window.addEventListener("load",function(){
+      navigator.serviceWorker.register("./service-worker.js").catch(function(error){
+        console.error("Falha ao registrar suporte offline:",error);
+      });
+    });
+  }
+})();
+</script>
+
+</body></html>
