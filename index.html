@@ -3,8 +3,12 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#f6f7f4">
+    <meta name="theme-color" content="#2f765e">
     <title>Painel Financeiro Ju</title>
+    <meta name="description" content="Gestão financeira privada e compartilhada para o dia a dia.">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
     <link rel="stylesheet" href="styles.css">
     <script src="app.js" defer></script>
   </head>
@@ -42,7 +46,7 @@
         <header class="topbar">
           <div class="mobile-brand"><span class="brand-mark">j<span>.</span></span><span class="brand-name">conta<span class="brand-name-dot">aí</span></span></div>
           <div class="breadcrumb">Seu espaço <span>/</span> <strong>Visão geral</strong></div>
-          <div class="topbar-actions"><span class="period-caption">Período</span><label class="select-wrap"><span class="sr-only">Selecione o período do painel</span><select id="period-select"><option value="all">Últimos 8 meses</option><option value="recent">Últimos 3 meses</option></select></label><button class="text-button" id="backend-button" type="button">Conectar Supabase</button><button class="text-button" id="invite-button" type="button" hidden>Convidar</button><button class="text-button" id="account-button" type="button">Entrar</button></div>
+          <div class="topbar-actions"><span class="period-caption">Período</span><label class="select-wrap"><span class="sr-only">Selecione o período do painel</span><select id="period-select"><option value="all">Últimos 8 meses</option><option value="recent">Últimos 3 meses</option></select></label><button class="text-button" id="install-button" type="button" hidden>Instalar app</button><button class="text-button" id="backend-button" type="button">Conectar Supabase</button><button class="text-button" id="invite-button" type="button" hidden>Convidar</button><button class="text-button" id="account-button" type="button">Entrar</button></div>
         </header>
 
         <section class="welcome-row">
@@ -74,7 +78,26 @@
         <section class="panel transactions-panel" aria-labelledby="transactions-title">
           <div class="panel-heading"><div><p class="eyebrow">REGISTROS PRIVADOS E COMPARTILHADOS</p><h2 id="transactions-title">Lançamentos recentes</h2></div><button class="export-button" id="add-transaction-button" type="button">+ Novo lançamento</button></div>
           <p class="backend-notice" id="backend-notice">Modo de demonstração: os lançamentos não são salvos. Conecte seu projeto Supabase para usar dados reais.</p>
+          <div class="daily-toolbar">
+            <label class="search-field"><span aria-hidden="true">⌕</span><span class="sr-only">Buscar lançamentos</span><input id="transaction-search" type="search" placeholder="Buscar descrição ou categoria"></label>
+            <label><span class="sr-only">Filtrar por tipo de gasto</span><select id="transaction-filter"><option value="all">Todos os tipos</option><option value="personal">Individuais</option><option value="shared">Do lar</option></select></label>
+            <label><span class="sr-only">Filtrar lançamentos por mês</span><input id="transaction-month" type="month"></label>
+            <button class="secondary-button" id="recurring-button" type="button" disabled>Ver recorrentes</button>
+            <button class="secondary-button" id="budget-button" type="button" disabled>Orçamentos</button>
+            <button class="secondary-button" id="download-data-button" type="button" disabled>Baixar meus dados</button>
+          </div>
           <div class="transaction-list" id="transaction-list" aria-live="polite"></div>
+          <button class="load-more-button" id="load-more-transactions" type="button" hidden>Carregar mais</button>
+        </section>
+
+        <section class="panel budget-panel" id="budget-panel" hidden>
+          <div class="panel-heading"><div><p class="eyebrow">MÊS ATUAL</p><h2>Orçamentos</h2></div><button class="text-button" id="new-budget-button" type="button">+ Definir limite</button></div>
+          <div class="budget-list" id="budget-list"></div>
+        </section>
+        <section class="panel recurring-panel" id="recurring-panel" hidden>
+          <div class="panel-heading"><div><p class="eyebrow">AUTOMÁTICO, COM CONTROLE</p><h2>Despesas recorrentes</h2></div><button class="text-button" id="close-recurring-panel" type="button" aria-label="Fechar recorrentes">Fechar</button></div>
+          <p class="panel-subtitle">Cada recorrência cria os lançamentos vencidos, uma vez, quando você abre o app online. Revise os lançamentos gerados como faria com os demais.</p>
+          <div class="recurring-list" id="recurring-list"></div>
         </section>
 
         <section class="dashboard-grid primary-grid" id="individual">
@@ -157,6 +180,7 @@
         <button class="primary-button" type="submit" id="auth-submit">Entrar</button>
       </form>
       <button class="dialog-link" id="toggle-auth-mode" type="button">Criar uma conta</button>
+      <button class="dialog-link" id="forgot-password-button" type="button">Esqueci minha senha</button>
     </dialog>
 
     <dialog class="app-dialog" id="space-dialog" aria-labelledby="space-dialog-title">
@@ -179,7 +203,7 @@
 
     <dialog class="app-dialog" id="transaction-dialog" aria-labelledby="transaction-dialog-title">
       <form method="dialog" class="dialog-close-form"><button class="dialog-close" aria-label="Fechar">×</button></form>
-      <p class="eyebrow">NOVO REGISTRO</p>
+      <p class="eyebrow" id="transaction-dialog-eyebrow">NOVO REGISTRO</p>
       <h2 id="transaction-dialog-title">Adicionar lançamento</h2>
       <form id="transaction-form" class="stacked-form">
         <label>Tipo<select name="direction"><option value="expense">Saída</option><option value="income">Entrada</option></select></label>
@@ -188,10 +212,44 @@
         <label>Categoria<input name="category" type="text" maxlength="80" required placeholder="Ex.: mercado, moradia, salário"></label>
         <label>Descrição<input name="description" type="text" maxlength="160" placeholder="Opcional"></label>
         <label>Data<input name="occurredOn" type="date" required></label>
+        <label class="recurrence-option"><input name="recurring" type="checkbox"> Repetir mensalmente a partir desta data</label>
+        <label class="recurrence-end" hidden>Repetir até (opcional)<input name="endsOn" type="date"></label>
         <p class="dialog-hint" id="transaction-visibility-hint">Despesas individuais são privadas. Em despesas do lar, quem registra é considerado pagador.</p>
         <p class="form-message" id="transaction-message" role="status"></p>
         <button class="primary-button" type="submit">Salvar lançamento</button>
       </form>
     </dialog>
+    <dialog class="app-dialog" id="budget-dialog" aria-labelledby="budget-dialog-title">
+      <form method="dialog" class="dialog-close-form"><button class="dialog-close" aria-label="Fechar">×</button></form>
+      <p class="eyebrow">PLANEJAMENTO DO MÊS</p>
+      <h2 id="budget-dialog-title">Definir limite</h2>
+      <form id="budget-form" class="stacked-form">
+        <label>Visibilidade<select name="visibility"><option value="personal">Meu orçamento privado</option><option value="shared">Orçamento do lar</option></select></label>
+        <label>Categoria<input name="category" type="text" maxlength="80" required placeholder="Ex.: Mercado"></label>
+        <label>Limite mensal (R$)<input name="limitAmount" type="number" min="0.01" step="0.01" required inputmode="decimal" placeholder="0,00"></label>
+        <p class="form-message" id="budget-message" role="status"></p>
+        <button class="primary-button" type="submit">Salvar orçamento</button>
+      </form>
+    </dialog>
+    <dialog class="app-dialog" id="password-dialog" aria-labelledby="password-dialog-title">
+      <form method="dialog" class="dialog-close-form"><button class="dialog-close" aria-label="Fechar">×</button></form>
+      <p class="eyebrow">RECUPERAÇÃO DE CONTA</p>
+      <h2 id="password-dialog-title">Redefinir senha</h2>
+      <form id="password-form" class="stacked-form">
+        <label class="recovery-email">E-mail da conta<input name="email" type="email" required autocomplete="email"></label>
+        <label class="new-password" hidden>Nova senha<input name="password" type="password" minlength="8" autocomplete="new-password"></label>
+        <p class="dialog-hint" id="password-dialog-hint">Enviaremos um link de recuperação para o e-mail informado.</p>
+        <p class="form-message" id="password-message" role="status"></p>
+        <button class="primary-button" id="password-submit" type="submit">Enviar link</button>
+      </form>
+    </dialog>
+    <nav class="mobile-navigation" aria-label="Acesso rápido">
+      <a href="#overview" aria-label="Visão geral"><span>▦</span></a>
+      <a href="#individual" aria-label="Meu dinheiro"><span>◷</span></a>
+      <a href="#home" aria-label="Nosso lar"><span>⌂</span></a>
+      <a href="#settlement" aria-label="Acerto"><span>↔</span></a>
+      <button id="mobile-add-button" type="button" aria-label="Novo lançamento">+</button>
+      <button id="mobile-install-button" class="mobile-install-button" type="button" hidden>↓ Instalar</button>
+    </nav>
   </body>
 </html>

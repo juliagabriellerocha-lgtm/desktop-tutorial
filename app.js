@@ -55,6 +55,11 @@ let sessionLoadUserId = null;
 let sessionLoadPromise = null;
 let authSubscription = null;
 let sessionGeneration = 0;
+let recurringRules = [];
+let monthlyBudgets = [];
+let transactionPageSize = 20;
+let deferredInstallPrompt = null;
+let editingTransactionId = null;
 
 const brl = (value) => new Intl.NumberFormat("pt-BR", {
   style: "currency",
@@ -394,10 +399,18 @@ function getDisplayName() {
 }
 
 function updateAccountControls() {
+  document.querySelector(".welcome-row .eyebrow").textContent = new Intl.DateTimeFormat("pt-BR", {
+    weekday: "long",
+    day: "2-digit",
+    month: "long",
+  }).format(new Date()).toLocaleUpperCase("pt-BR");
   document.querySelector("#account-button").textContent = currentUser ? "Sair" : "Entrar";
   document.querySelector("#invite-button").hidden = !currentSpace || currentMembers.length >= 2;
   document.querySelector("#backend-button").textContent = supabaseClient ? "Backend ativo" : "Conectar";
   document.querySelector("#add-transaction-button").disabled = !currentSpace;
+  document.querySelector("#recurring-button").disabled = !currentSpace;
+  document.querySelector("#budget-button").disabled = !currentSpace;
+  document.querySelector("#download-data-button").disabled = !currentSpace;
   document.querySelector("#footer-mode").textContent = usingLiveData
     ? "Dados protegidos pelo Supabase"
     : "Protótipo · valores fictícios";
@@ -417,6 +430,10 @@ function updateAccountControls() {
 function renderTransactionList(entries = []) {
   const container = document.querySelector("#transaction-list");
   container.replaceChildren();
+  document.querySelector("#load-more-transactions").hidden = true;
+  const search = document.querySelector("#transaction-search").value.trim().toLocaleLowerCase("pt-BR");
+  const visibility = document.querySelector("#transaction-filter").value;
+  const month = document.querySelector("#transaction-month").value;
   if (!usingLiveData) {
     const empty = document.createElement("p");
     empty.className = "empty-transactions";
@@ -424,7 +441,15 @@ function renderTransactionList(entries = []) {
     container.append(empty);
     return;
   }
-  if (entries.length === 0) {
+  const filteredEntries = entries.filter((entry) => {
+    const matchesSearch = !search || `${entry.description ?? ""} ${entry.category}`.toLocaleLowerCase("pt-BR").includes(search);
+    const matchesVisibility = visibility === "all" || entry.visibility === visibility;
+    const matchesMonth = !month || entry.occurred_on.startsWith(month);
+    return matchesSearch && matchesVisibility && matchesMonth;
+  }).sort((left, right) => right.occurred_on.localeCompare(left.occurred_on)
+    || (right.created_at ?? "").localeCompare(left.created_at ?? ""));
+  const shownEntries = filteredEntries.slice(0, transactionPageSize);
+  if (filteredEntries.length === 0) {
     const empty = document.createElement("p");
     empty.className = "empty-transactions";
     empty.textContent = currentSpace
@@ -434,7 +459,7 @@ function renderTransactionList(entries = []) {
     return;
   }
   const formatter = new Intl.DateTimeFormat("pt-BR", { day: "2-digit", month: "short" });
-  entries.slice().sort((left, right) => right.occurred_on.localeCompare(left.occurred_on)).slice(0, 8).forEach((entry) => {
+  shownEntries.forEach((entry) => {
     const row = document.createElement("div");
     row.className = "transaction-row";
     const icon = document.createElement("span");
@@ -445,12 +470,124 @@ function renderTransactionList(entries = []) {
     const title = document.createElement("strong");
     title.textContent = entry.description || entry.category;
     const subtitle = document.createElement("small");
-    subtitle.textContent = `${entry.category} · ${entry.visibility === "shared" ? "Conjunto" : "Individual"} · ${formatter.format(new Date(`${entry.occurred_on}T12:00:00`))}`;
+    const payer = entry.visibility === "shared"
+      ? ` · pagou ${currentMembers.find((member) => member.user_id === entry.user_id)?.display_name ?? "membro"}`
+      : "";
+    subtitle.textContent = `${entry.category} · ${entry.visibility === "shared" ? "Conjunto" : "Individual"}${payer} · ${formatter.format(new Date(`${entry.occurred_on}T12:00:00`))}`;
     detail.append(title, subtitle);
     const amount = document.createElement("strong");
     amount.className = `transaction-amount ${entry.direction === "income" ? "income" : ""}`;
     amount.textContent = `${entry.direction === "income" ? "+" : "−"} ${brl(Number(entry.amount))}`;
     row.append(icon, detail, amount);
+    if (currentUser && entry.user_id === currentUser.id) {
+      const actions = document.createElement("span");
+      actions.className = "transaction-actions";
+      const edit = document.createElement("button");
+      edit.type = "button";
+      edit.className = "row-action";
+      edit.textContent = "Editar";
+      edit.setAttribute("aria-label", `Editar ${entry.description || entry.category}`);
+      edit.addEventListener("click", () => openEditTransaction(entry));
+      const remove = document.createElement("button");
+      remove.type = "button";
+      remove.className = "row-action danger";
+      remove.textContent = "Excluir";
+      remove.setAttribute("aria-label", `Excluir ${entry.description || entry.category}`);
+      remove.addEventListener("click", () => deleteTransaction(entry));
+      actions.append(edit, remove);
+      row.append(actions);
+    }
+    container.append(row);
+  });
+  const more = document.querySelector("#load-more-transactions");
+  more.hidden = shownEntries.length >= filteredEntries.length;
+  more.textContent = `Carregar mais (${filteredEntries.length - shownEntries.length})`;
+}
+
+function renderBudgets() {
+  const container = document.querySelector("#budget-list");
+  const panel = document.querySelector("#budget-panel");
+  const currentMonth = new Date();
+  const monthKey = `${currentMonth.getFullYear()}-${String(currentMonth.getMonth() + 1).padStart(2, "0")}-01`;
+  const activeBudgets = monthlyBudgets.filter((budget) => budget.month_start === monthKey);
+  panel.hidden = !usingLiveData || !currentSpace;
+  container.replaceChildren();
+  if (!activeBudgets.length) {
+    const empty = document.createElement("p");
+    empty.className = "empty-transactions";
+    empty.textContent = "Ainda sem limites para este mês. Defina um orçamento por categoria para acompanhar os gastos.";
+    container.append(empty);
+    return;
+  }
+  activeBudgets.forEach((budget) => {
+    const expenses = liveTransactions
+      .filter((entry) => entry.direction === "expense"
+        && entry.category === budget.category
+        && entry.occurred_on.startsWith(monthKey.slice(0, 7))
+        && (budget.visibility === "shared"
+          ? entry.visibility === "shared"
+          : entry.visibility === "personal" && entry.user_id === currentUser.id))
+      .reduce((sum, entry) => sum + Number(entry.amount), 0);
+    const ratio = expenses / Number(budget.limit_amount);
+    const row = document.createElement("div");
+    row.className = "budget-row";
+    const labels = document.createElement("div");
+    labels.className = "budget-labels";
+    const name = document.createElement("strong");
+    name.textContent = budget.category;
+    const description = document.createElement("span");
+    description.textContent = `${budget.visibility === "shared" ? "Lar" : "Pessoal"} · ${brl(expenses)} de ${brl(Number(budget.limit_amount))}`;
+    labels.append(name, description);
+    const track = document.createElement("span");
+    track.className = "budget-track";
+    const fill = document.createElement("span");
+    fill.className = `budget-fill${ratio >= 1 ? " over" : ratio >= .8 ? " near" : ""}`;
+    fill.style.width = `${Math.min(100, Math.max(0, ratio * 100))}%`;
+    track.append(fill);
+    const percentage = document.createElement("strong");
+    percentage.className = `budget-percent${ratio >= 1 ? " over" : ""}`;
+    percentage.textContent = `${Math.round(ratio * 100)}%`;
+    row.append(labels, track, percentage);
+    container.append(row);
+  });
+}
+
+function renderRecurringRules() {
+  const container = document.querySelector("#recurring-list");
+  const panel = document.querySelector("#recurring-panel");
+  if (!currentSpace) panel.hidden = true;
+  container.replaceChildren();
+  if (!recurringRules.length) {
+    const empty = document.createElement("p");
+    empty.className = "empty-transactions";
+    empty.textContent = "Sem recorrências cadastradas. Marque “Repetir mensalmente” ao adicionar um lançamento.";
+    container.append(empty);
+    return;
+  }
+  recurringRules.forEach((rule) => {
+    const row = document.createElement("div");
+    row.className = `recurring-row${rule.active ? "" : " paused"}`;
+    const detail = document.createElement("span");
+    detail.className = "transaction-detail";
+    const title = document.createElement("strong");
+    title.textContent = `${rule.description || rule.category} · ${brl(Number(rule.amount))}`;
+    const subtitle = document.createElement("small");
+    subtitle.textContent = `${rule.visibility === "shared" ? "Lar" : "Pessoal"} · todo dia ${rule.day_of_month} · ${rule.active ? `próxima ${new Intl.DateTimeFormat("pt-BR").format(new Date(`${rule.next_occurrence}T12:00:00`))}` : "pausada"}`;
+    detail.append(title, subtitle);
+    row.append(detail);
+    if (rule.user_id === currentUser?.id) {
+      const pause = document.createElement("button");
+      pause.type = "button";
+      pause.className = "row-action";
+      pause.textContent = rule.active ? "Pausar" : "Retomar";
+      pause.addEventListener("click", () => setRecurringActive(rule, !rule.active));
+      const remove = document.createElement("button");
+      remove.type = "button";
+      remove.className = "row-action danger";
+      remove.textContent = "Excluir regra";
+      remove.addEventListener("click", () => deleteRecurringRule(rule));
+      row.append(pause, remove);
+    }
     container.append(row);
   });
 }
@@ -465,6 +602,8 @@ function renderDashboard() {
   renderHomeSectors();
   renderHomeForecast();
   renderTransactionList(liveTransactions);
+  renderBudgets();
+  renderRecurringRules();
   const setTrend = (selector, change) => {
     const trend = document.querySelector(selector);
     trend.textContent = `${change < 0 ? "↓" : change > 0 ? "↑" : "→"} ${Math.abs(change).toLocaleString("pt-BR")}%`;
@@ -552,6 +691,9 @@ function setDemoData() {
   currentSpace = null;
   currentMembers = [];
   liveTransactions = [];
+  recurringRules = [];
+  monthlyBudgets = [];
+  transactionPageSize = 20;
   months = ["Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out"];
   cashflow = {
     income: [8200, 8450, 8200, 8750, 8750, 8950, 8900, 9200],
@@ -599,6 +741,8 @@ function setEmptyAccountData() {
   currentSpace = null;
   currentMembers = [];
   liveTransactions = [];
+  recurringRules = [];
+  monthlyBudgets = [];
   const today = new Date();
   months = Array.from({ length: 8 }, (_, index) => {
     const date = new Date(today.getFullYear(), today.getMonth() - 7 + index, 1);
@@ -624,9 +768,11 @@ function setEmptyAccountData() {
   renderDashboard();
 }
 
-function renderLiveData(entries, allTimeBalance) {
+function renderLiveData(entries, allTimeBalance, rules = [], budgets = []) {
   usingLiveData = true;
   liveTransactions = entries;
+  recurringRules = rules;
+  monthlyBudgets = budgets;
   const today = new Date();
   months = Array.from({ length: 8 }, (_, index) => {
     const date = new Date(today.getFullYear(), today.getMonth() - 7 + index, 1);
@@ -726,24 +872,32 @@ async function loadSpaceAndData() {
   const startDate = `${start.getFullYear()}-${String(start.getMonth() + 1).padStart(2, "0")}-01`;
   const today = new Date();
   const endDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+  const { error: recurrenceError } = await supabaseClient.rpc("process_recurring_transactions");
+  if (recurrenceError) throw recurrenceError;
   const [
     { data: entries, error: entriesError },
     { data: settlementBalance, error: balanceError },
+    { data: rules, error: rulesError },
+    { data: budgets, error: budgetsError },
   ] = await Promise.all([
     supabaseClient
       .from("transactions")
-      .select("id, direction, visibility, amount, category, description, occurred_on, user_id")
+      .select("id, direction, visibility, amount, category, description, occurred_on, created_at, user_id, recurring_rule_id")
       .eq("space_id", space.id)
       .gte("occurred_on", startDate)
       .lte("occurred_on", endDate)
       .order("occurred_on", { ascending: false })
       .limit(5000),
     supabaseClient.rpc("get_settlement_balance", { p_space_id: space.id }),
+    supabaseClient.from("recurring_rules").select("id, space_id, user_id, direction, visibility, amount, category, description, day_of_month, next_occurrence, ends_on, active").eq("space_id", space.id).order("next_occurrence"),
+    supabaseClient.from("monthly_budgets").select("id, space_id, user_id, visibility, category, month_start, limit_amount").eq("space_id", space.id),
   ]);
   if (entriesError) throw entriesError;
   if (balanceError) throw balanceError;
+  if (rulesError) throw rulesError;
+  if (budgetsError) throw budgetsError;
   if (currentUser?.id !== loadingUserId) return;
-  renderLiveData([...entries].reverse(), Number(settlementBalance));
+  renderLiveData([...entries].reverse(), Number(settlementBalance), rules, budgets);
 }
 
 async function handleSession(session) {
@@ -816,7 +970,16 @@ async function connectSupabase(config) {
   liveTransactions = [];
   setDemoData();
   supabaseClient = clientLibrary.createClient(config.projectUrl, config.publishableKey);
-  const { data: subscriptionData } = supabaseClient.auth.onAuthStateChange((_event, session) => {
+  const { data: subscriptionData } = supabaseClient.auth.onAuthStateChange((event, session) => {
+    if (event === "PASSWORD_RECOVERY") {
+      const form = document.querySelector("#password-form");
+      form.elements.password.required = true;
+      document.querySelector(".recovery-email").hidden = true;
+      document.querySelector(".new-password").hidden = false;
+      document.querySelector("#password-dialog-hint").textContent = "Escolha uma nova senha com pelo menos 8 caracteres.";
+      document.querySelector("#password-submit").textContent = "Salvar nova senha";
+      document.querySelector("#password-dialog").showModal();
+    }
     queueMicrotask(() => handleSession(session).catch((error) => setNotice(`Erro ao atualizar sessão: ${error.message}`, "error")));
   });
   authSubscription = subscriptionData.subscription;
@@ -825,6 +988,30 @@ async function connectSupabase(config) {
   document.querySelector("#backend-dialog").close();
   setNotice("Backend conectado. Entre na sua conta para carregar seus dados.", "success");
   await handleSession(data.session);
+}
+
+function openBackendDialog() {
+  const config = getBackendConfig();
+  const form = document.querySelector("#backend-config-form");
+  form.elements.projectUrl.value = config?.projectUrl ?? "";
+  form.elements.publishableKey.value = config?.publishableKey ?? "";
+  setFormMessage("#backend-config-message", "");
+  document.querySelector("#backend-dialog").showModal();
+}
+
+async function promptInstallApp() {
+  if (!deferredInstallPrompt) return;
+  try {
+    await deferredInstallPrompt.prompt();
+    await deferredInstallPrompt.userChoice;
+  } catch (error) {
+    setNotice(`Não foi possível iniciar a instalação: ${error.message}`, "warning");
+  } finally {
+    deferredInstallPrompt = null;
+    document.querySelector("#install-button").hidden = true;
+    document.querySelector("#mobile-install-button").hidden = true;
+    document.querySelector(".mobile-navigation").classList.remove("has-install");
+  }
 }
 
 function updateAuthMode() {
@@ -907,6 +1094,18 @@ function resetSpaceDialog() {
 }
 
 async function submitTransaction(formData) {
+  const wasEditing = Boolean(editingTransactionId);
+  const occurredOn = formData.get("occurredOn");
+  const endsOn = formData.get("endsOn");
+  const isRecurring = formData.get("recurring") === "on";
+  const today = new Date();
+  const todayKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+  if (!isRecurring && occurredOn > todayKey) {
+    throw new Error("Lançamentos avulsos só podem ser registrados até hoje; use uma recorrência para cobranças mensais futuras.");
+  }
+  if (isRecurring && endsOn && endsOn < occurredOn) {
+    throw new Error("A data final da recorrência precisa ser igual ou posterior à primeira ocorrência.");
+  }
   const entry = {
     space_id: currentSpace.id,
     user_id: currentUser.id,
@@ -915,18 +1114,193 @@ async function submitTransaction(formData) {
     amount: Number(formData.get("amount")),
     category: formData.get("category").trim(),
     description: formData.get("description").trim() || null,
-    occurred_on: formData.get("occurredOn"),
+    occurred_on: occurredOn,
   };
-  const { error } = await supabaseClient.from("transactions").insert(entry);
-  if (error) throw error;
+  const recurring = isRecurring && !editingTransactionId;
+  if (recurring) {
+    const dayOfMonth = Number(entry.occurred_on.slice(-2));
+    if (entry.direction === "expense" && dayOfMonth > 31) {
+      throw new Error("A data precisa ser válida para criar a recorrência mensal.");
+    }
+    const { error } = await supabaseClient.from("recurring_rules").insert({
+      space_id: entry.space_id,
+      user_id: entry.user_id,
+      direction: entry.direction,
+      visibility: entry.visibility,
+      amount: entry.amount,
+      category: entry.category,
+      description: entry.description,
+      day_of_month: dayOfMonth,
+      next_occurrence: entry.occurred_on,
+      ends_on: endsOn || null,
+    });
+    if (error) throw error;
+    const { error: processError } = await supabaseClient.rpc("process_recurring_transactions");
+    if (processError) throw processError;
+  } else if (editingTransactionId) {
+    const { error } = await supabaseClient
+      .from("transactions")
+      .update({ ...entry, recurring_rule_id: null })
+      .eq("id", editingTransactionId)
+      .eq("user_id", currentUser.id);
+    if (error) throw error;
+  } else {
+    const { error } = await supabaseClient.from("transactions").insert(entry);
+    if (error) throw error;
+  }
+  editingTransactionId = null;
   document.querySelector("#transaction-dialog").close();
   document.querySelector("#transaction-form").reset();
   await loadSpaceAndData();
-  setNotice("Lançamento salvo com segurança.", "success");
+  setNotice(recurring ? "Recorrência criada; os lançamentos vencidos foram adicionados uma única vez."
+    : wasEditing ? "Lançamento atualizado." : "Lançamento salvo com segurança.", "success");
+}
+
+function openEditTransaction(entry) {
+  editingTransactionId = entry.id;
+  const dialog = document.querySelector("#transaction-dialog");
+  const form = document.querySelector("#transaction-form");
+  form.reset();
+  form.elements.direction.value = entry.direction;
+  form.elements.visibility.value = entry.visibility;
+  form.elements.amount.value = Number(entry.amount).toFixed(2);
+  form.elements.category.value = entry.category;
+  form.elements.description.value = entry.description ?? "";
+  form.elements.occurredOn.value = entry.occurred_on;
+  form.elements.recurring.checked = false;
+  form.elements.recurring.closest("label").hidden = true;
+  form.elements.endsOn.closest("label").hidden = true;
+  form.elements.visibility.closest("label").hidden = entry.direction === "income";
+  document.querySelector("#transaction-visibility-hint").textContent = entry.direction === "income"
+    ? "Entradas são individuais e privadas por padrão."
+    : "Despesas individuais são privadas. Em despesas do lar, quem registra é considerado pagador.";
+  document.querySelector("#transaction-dialog-title").textContent = "Editar lançamento";
+  document.querySelector("#transaction-dialog-eyebrow").textContent = "ATUALIZAR REGISTRO";
+  setFormMessage("#transaction-message", "");
+  dialog.showModal();
+}
+
+async function deleteTransaction(entry) {
+  const title = entry.description || entry.category;
+  if (!window.confirm(`Excluir "${title}"? Esta ação não pode ser desfeita.`)) return;
+  try {
+    const { error } = await supabaseClient.from("transactions").delete().eq("id", entry.id).eq("user_id", currentUser.id);
+    if (error) throw error;
+    await loadSpaceAndData();
+    setNotice("Lançamento excluído.", "success");
+  } catch (error) {
+    setNotice(`Não foi possível excluir o lançamento: ${error.message}`, "error");
+  }
+}
+
+async function setRecurringActive(rule, active) {
+  try {
+    const { error } = await supabaseClient.from("recurring_rules").update({ active }).eq("id", rule.id).eq("user_id", currentUser.id);
+    if (error) throw error;
+    await loadSpaceAndData();
+    setNotice(active ? "Recorrência retomada." : "Recorrência pausada.", "success");
+  } catch (error) {
+    setNotice(`Não foi possível atualizar a recorrência: ${error.message}`, "error");
+  }
+}
+
+async function deleteRecurringRule(rule) {
+  const confirmed = window.confirm(`Excluir a regra de "${rule.description || rule.category}"? Os lançamentos já criados serão mantidos.`);
+  if (!confirmed) return;
+  try {
+    const { error } = await supabaseClient.from("recurring_rules").delete().eq("id", rule.id).eq("user_id", currentUser.id);
+    if (error) throw error;
+    await loadSpaceAndData();
+    setNotice("Regra removida; os lançamentos existentes foram mantidos.", "success");
+  } catch (error) {
+    setNotice(`Não foi possível excluir a recorrência: ${error.message}`, "error");
+  }
+}
+
+async function submitBudget(formData) {
+  const today = new Date();
+  const monthStart = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-01`;
+  const { error } = await supabaseClient.rpc("set_monthly_budget", {
+    p_space_id: currentSpace.id,
+    p_visibility: formData.get("visibility"),
+    p_category: formData.get("category").trim(),
+    p_month_start: monthStart,
+    p_limit_amount: Number(formData.get("limitAmount")),
+  });
+  if (error) throw error;
+  document.querySelector("#budget-dialog").close();
+  document.querySelector("#budget-form").reset();
+  await loadSpaceAndData();
+  setNotice("Orçamento salvo para o mês atual.", "success");
+}
+
+function openEditTransactionReset() {
+  editingTransactionId = null;
+  const form = document.querySelector("#transaction-form");
+  form.reset();
+  form.elements.occurredOn.max = getTodayDateKey();
+  form.elements.recurring.closest("label").hidden = false;
+  form.elements.endsOn.closest("label").hidden = true;
+  form.elements.visibility.closest("label").hidden = false;
+  document.querySelector("#transaction-visibility-hint").textContent = "Despesas individuais são privadas. Em despesas do lar, quem registra é considerado pagador.";
+  document.querySelector("#transaction-dialog-title").textContent = "Adicionar lançamento";
+  document.querySelector("#transaction-dialog-eyebrow").textContent = "NOVO REGISTRO";
 }
 
 function attachInteractions() {
   document.querySelector("#period-select").addEventListener("change", (event) => renderCashflow(event.target.value));
+  document.querySelector("#transaction-search").addEventListener("input", () => {
+    transactionPageSize = 20;
+    renderTransactionList(liveTransactions);
+  });
+  document.querySelector("#transaction-filter").addEventListener("change", () => {
+    transactionPageSize = 20;
+    renderTransactionList(liveTransactions);
+  });
+  document.querySelector("#transaction-month").addEventListener("change", () => {
+    transactionPageSize = 20;
+    renderTransactionList(liveTransactions);
+  });
+  document.querySelector("#load-more-transactions").addEventListener("click", () => {
+    transactionPageSize += 20;
+    renderTransactionList(liveTransactions);
+  });
+  document.querySelector("#recurring-button").addEventListener("click", () => {
+    document.querySelector("#recurring-panel").hidden = false;
+    document.querySelector("#recurring-panel").scrollIntoView({ behavior: "smooth", block: "center" });
+  });
+  document.querySelector("#close-recurring-panel").addEventListener("click", () => {
+    document.querySelector("#recurring-panel").hidden = true;
+  });
+  document.querySelector("#budget-button").addEventListener("click", () => {
+    const panel = document.querySelector("#budget-panel");
+    panel.hidden = !panel.hidden;
+    panel.scrollIntoView({ behavior: "smooth", block: "center" });
+  });
+  document.querySelector("#new-budget-button").addEventListener("click", () => {
+    document.querySelector("#budget-form").reset();
+    setFormMessage("#budget-message", "");
+    document.querySelector("#budget-dialog").showModal();
+  });
+  document.querySelector("#budget-form").addEventListener("submit", async (event) => {
+    event.preventDefault();
+    try {
+      await submitBudget(new FormData(event.currentTarget));
+    } catch (error) {
+      setFormMessage("#budget-message", `Não foi possível salvar: ${error.message}`);
+    }
+  });
+  document.querySelector("#download-data-button").addEventListener("click", () => {
+    const backup = {
+      exportedAt: new Date().toISOString(),
+      space: currentSpace?.name ?? null,
+      transactions: liveTransactions,
+      recurringRules: recurringRules.filter((rule) => rule.user_id === currentUser?.id),
+      budgets: monthlyBudgets.filter((budget) => budget.visibility === "shared" || budget.user_id === currentUser?.id),
+    };
+    downloadFile(`painel-financeiro-backup-${new Date().toISOString().slice(0, 10)}.json`,
+      JSON.stringify(backup, null, 2), "application/json;charset=utf-8");
+  });
   document.querySelectorAll(".scenario-button").forEach((button) => {
     button.addEventListener("click", () => {
       document.querySelector(".scenario-button.active")?.classList.remove("active");
@@ -948,21 +1322,10 @@ function attachInteractions() {
       ["Acerto acumulado da Ju", document.querySelector("#settlement-total").textContent],
       ["Observação", usingLiveData ? "Despesas individuais só são visíveis pela conta correspondente." : "Valores de demonstração; não são dados financeiros reais."],
     ].map((row) => row.join(";")).join("\n");
-    const url = URL.createObjectURL(new Blob([content], { type: "text/csv;charset=utf-8" }));
-    const anchor = document.createElement("a");
-    anchor.href = url;
-    anchor.download = usingLiveData ? "resumo-financeiro.csv" : "resumo-financeiro-demo.csv";
-    anchor.click();
-    URL.revokeObjectURL(url);
+    downloadFile(usingLiveData ? "resumo-financeiro.csv" : "resumo-financeiro-demo.csv",
+      content, "text/csv;charset=utf-8");
   });
-  document.querySelector("#backend-button").addEventListener("click", () => {
-    const config = getBackendConfig();
-    const form = document.querySelector("#backend-config-form");
-    form.elements.projectUrl.value = config?.projectUrl ?? "";
-    form.elements.publishableKey.value = config?.publishableKey ?? "";
-    setFormMessage("#backend-config-message", "");
-    document.querySelector("#backend-dialog").showModal();
-  });
+  document.querySelector("#backend-button").addEventListener("click", openBackendDialog);
   document.querySelector("#backend-config-form").addEventListener("submit", async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
@@ -1002,7 +1365,7 @@ function attachInteractions() {
       return;
     }
     if (!supabaseClient) {
-      document.querySelector("#backend-button").click();
+      openBackendDialog();
       return;
     }
     setFormMessage("#auth-message", "");
@@ -1020,6 +1383,38 @@ function attachInteractions() {
     authMode = authMode === "signup" ? "signin" : "signup";
     setFormMessage("#auth-message", "");
     updateAuthMode();
+  });
+  document.querySelector("#forgot-password-button").addEventListener("click", () => {
+    const authEmail = document.querySelector("#auth-form [name='email']").value.trim();
+    const form = document.querySelector("#password-form");
+    form.elements.email.value = authEmail;
+    form.elements.password.required = false;
+    document.querySelector(".recovery-email").hidden = false;
+    document.querySelector(".new-password").hidden = true;
+    document.querySelector("#password-dialog-hint").textContent = "Enviaremos um link de recuperação para o e-mail informado.";
+    document.querySelector("#password-submit").textContent = "Enviar link";
+    setFormMessage("#password-message", "");
+    document.querySelector("#auth-dialog").close();
+    document.querySelector("#password-dialog").showModal();
+  });
+  document.querySelector("#password-form").addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    try {
+      if (form.elements.password.required) {
+        const { error } = await supabaseClient.auth.updateUser({ password: form.elements.password.value });
+        if (error) throw error;
+        document.querySelector("#password-dialog").close();
+        setNotice("Senha atualizada.", "success");
+      } else {
+        const redirectTo = `${window.location.origin}${window.location.pathname}`;
+        const { error } = await supabaseClient.auth.resetPasswordForEmail(form.elements.email.value.trim(), { redirectTo });
+        if (error) throw error;
+        setFormMessage("#password-message", "Se houver uma conta com esse e-mail, você receberá um link para redefinir a senha.", "success");
+      }
+    } catch (error) {
+      setFormMessage("#password-message", `Não foi possível concluir: ${error.message}`);
+    }
   });
   document.querySelector("#auth-form").addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -1063,15 +1458,19 @@ function attachInteractions() {
   });
   document.querySelector("#add-transaction-button").addEventListener("click", () => {
     if (!currentSpace) return;
+    openEditTransactionReset();
     const form = document.querySelector("#transaction-form");
-    form.reset();
-    form.elements.visibility.closest("label").hidden = false;
-    document.querySelector("#transaction-visibility-hint").textContent = "Gastos individuais são privados. Apenas lançamentos do lar aparecem para ambas as pessoas.";
     const today = new Date();
     form.elements.occurredOn.value = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
-    form.elements.occurredOn.max = form.elements.occurredOn.value;
     setFormMessage("#transaction-message", "");
     document.querySelector("#transaction-dialog").showModal();
+  });
+  document.querySelector("#mobile-add-button").addEventListener("click", () => {
+    document.querySelector("#add-transaction-button").click();
+  });
+  document.querySelector("#transaction-form [name='recurring']").addEventListener("change", (event) => {
+    document.querySelector("#transaction-form [name='endsOn']").closest("label").hidden = !event.target.checked;
+    document.querySelector("#transaction-form [name='occurredOn']").max = event.target.checked ? "" : getTodayDateKey();
   });
   document.querySelector("#transaction-form [name='direction']").addEventListener("change", (event) => {
     const visibility = document.querySelector("#transaction-form [name='visibility']");
@@ -1090,6 +1489,29 @@ function attachInteractions() {
       setFormMessage("#transaction-message", `Não foi possível salvar: ${error.message}`);
     }
   });
+  document.querySelector("#transaction-dialog").addEventListener("close", openEditTransactionReset);
+  document.querySelector("#space-dialog").addEventListener("close", resetSpaceDialog);
+  document.querySelector("#password-dialog").addEventListener("close", () => {
+    const form = document.querySelector("#password-form");
+    form.elements.password.value = "";
+    form.elements.password.required = false;
+  });
+  document.querySelector("#install-button").addEventListener("click", promptInstallApp);
+  document.querySelector("#mobile-install-button").addEventListener("click", promptInstallApp);
+}
+
+function downloadFile(name, content, type) {
+  const url = URL.createObjectURL(new Blob([content], { type }));
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = name;
+  anchor.click();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function getTodayDateKey() {
+  const today = new Date();
+  return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
 }
 
 setDemoData();
@@ -1098,4 +1520,25 @@ attachInteractions();
 const savedBackendConfig = getBackendConfig();
 if (savedBackendConfig?.projectUrl && savedBackendConfig?.publishableKey) {
   connectSupabase(savedBackendConfig).catch((error) => setNotice(`Não foi possível conectar ao Supabase: ${error.message}`, "error"));
+}
+
+window.addEventListener("beforeinstallprompt", (event) => {
+  event.preventDefault();
+  deferredInstallPrompt = event;
+  document.querySelector("#install-button").hidden = false;
+  document.querySelector("#mobile-install-button").hidden = false;
+  document.querySelector(".mobile-navigation").classList.add("has-install");
+});
+window.addEventListener("appinstalled", () => {
+  document.querySelector("#install-button").hidden = true;
+  document.querySelector("#mobile-install-button").hidden = true;
+  document.querySelector(".mobile-navigation").classList.remove("has-install");
+  setNotice("App instalado. Agora você pode abri-lo pela tela inicial do dispositivo.", "success");
+});
+window.addEventListener("online", () => setNotice("Conexão restabelecida. Seus dados estarão disponíveis após atualizar.", "success"));
+window.addEventListener("offline", () => setNotice("Sem conexão. Dados financeiros não são armazenados offline neste dispositivo.", "warning"));
+if ("serviceWorker" in navigator && window.location.protocol !== "file:") {
+  navigator.serviceWorker.register("./sw.js").catch((error) => {
+    setNotice(`Não foi possível ativar o modo instalável: ${error.message}`, "warning");
+  });
 }

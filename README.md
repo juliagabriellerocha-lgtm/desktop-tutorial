@@ -5,7 +5,7 @@ Painel financeiro responsivo para duas pessoas, com gastos privados e despesas d
 ## Configurar o Supabase
 
 1. Crie um projeto Supabase e abra o **SQL Editor**.
-2. Execute todo o arquivo [`supabase/schema.sql`](supabase/schema.sql). Ele cria as tabelas, índices, funções de convite e políticas RLS.
+2. Execute `supabase/schema.sql` e depois `supabase/daily_management.sql`, nesta ordem, no SQL Editor. O segundo arquivo adiciona recorrências e orçamentos ao banco já criado.
 3. Em **Authentication → URL Configuration**, configure a URL local `http://localhost:8000` como Site URL durante o desenvolvimento. Para publicar, altere para o domínio do app.
 4. Sirva esta pasta por HTTP local (não abra `index.html` diretamente):
 
@@ -18,13 +18,25 @@ Painel financeiro responsivo para duas pessoas, com gastos privados e despesas d
 
 Depois de entrar no espaço, use **Novo lançamento**. Entradas são privadas por padrão. Em despesas, escolha **Individual** (somente sua conta pode ler) ou **Conjunto** (visível aos membros). Quem registra uma despesa conjunta é considerado a pessoa que pagou; cada pessoa deve registrar as despesas que pagou para o acerto ficar correto. A divisão é metade para cada pessoa: o saldo individual é o total pago menos metade das despesas compartilhadas.
 
+Para a gestão diária, busque e filtre lançamentos, edite/exclua os que você criou, defina limites mensais por categoria e use **Ver recorrentes** para pausar, retomar ou remover regras. Marque **Repetir mensalmente** no formulário para gerar lançamentos automaticamente quando vencidos. Lançamentos avulsos aceitam datas até hoje; para cobranças mensais futuras, use uma recorrência. O app processa as regras quando abre online; não envia notificações nem agenda execuções no servidor. Despesas recorrentes compartilhadas são registradas como pagas por quem criou a regra.
+
+Use **Baixar meus dados** para exportar um backup JSON da janela de dados carregada (até 5.000 lançamentos de 24 meses), junto com suas regras de recorrência e orçamentos acessíveis. Guarde o arquivo em local privado: ele pode incluir suas despesas individuais. O resumo CSV é somente um resumo, não um backup.
+
+## Publicar e instalar
+
+1. Publique os arquivos estáticos deste repositório em um host com HTTPS, como Cloudflare Pages, Netlify ou GitHub Pages. Não publique chaves administrativas nem dados financeiros em arquivos estáticos.
+2. No Supabase, defina o domínio publicado como **Site URL** e inclua os endereços locais e de produção em **Redirect URLs**. Habilite confirmação de e-mail, configure recuperação de senha, limites de autenticação e SMTP próprio para produção.
+3. Abra o domínio HTTPS em um navegador compatível e escolha **Instalar app** quando disponível. Em iPhone/iPad, use Compartilhar → Adicionar à Tela de Início.
+
+O service worker armazena somente o shell estático do app para abrir a interface offline; requisições e respostas do Supabase, sessões e dados financeiros nunca são colocados em cache. Edição, gravação, autenticação, recorrências e atualização de dashboards precisam de internet.
+
 ## Segurança
 
 - Não coloque a chave `service_role` neste site, no repositório ou no navegador. A chave pública `anon`/`publishable` é usada com RLS.
 - Despesas individuais são protegidas por políticas PostgreSQL RLS — não apenas escondidas na interface. A leitura de cada registro verifica o membro do espaço e o autor, e todas as mutações ficam limitadas ao próprio autor.
 - Funções SQL autorizam criar um espaço, emitir convites de uso único e limitar o casal a dois membros. Elas validam a identidade no banco.
 - Configure e teste os provedores, a confirmação de e-mail, os limites de autenticação, URLs permitidas e a recuperação de conta nas configurações de Authentication do seu projeto.
-- Confira as políticas após aplicar `schema.sql` e antes de inserir dados reais. A aplicação carrega até 5.000 registros dos últimos 24 meses para os gráficos; o total do acerto é calculado no banco sobre todo o histórico.
+- Confira as políticas após aplicar os dois arquivos SQL e antes de inserir dados reais. A aplicação carrega até 5.000 registros dos últimos 24 meses para os gráficos e backup; o total do acerto é calculado no banco sobre todo o histórico.
 
 ## Demonstração
 
