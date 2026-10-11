@@ -1,14 +1,17 @@
 "use strict";
 
-const CACHE_NAME = "painel-da-ju-v1";
+const CACHE_NAME = "painel-da-ju-static-v2";
+const PREVIOUS_CACHE_NAMES = ["painel-da-ju-v1"];
 const APP_SHELL = [
-  "./",
-  "./index.html",
   "./manifest.webmanifest",
   "./icon.svg",
+  "./icon-180.png",
   "./icon-192.png",
   "./icon-512.png"
 ];
+const CACHEABLE_PATHS = new Set(
+  APP_SHELL.map(path => new URL(path, self.registration.scope).pathname)
+);
 
 self.addEventListener("install",event=>{
   event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(APP_SHELL)));
@@ -17,31 +20,19 @@ self.addEventListener("install",event=>{
 
 self.addEventListener("activate",event=>{
   event.waitUntil(
-    caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE_NAME).map(key=>caches.delete(key))))
+    caches.keys().then(keys=>Promise.all(
+      keys.filter(key=>PREVIOUS_CACHE_NAMES.includes(key)).map(key=>caches.delete(key))
+    ))
   );
   self.clients.claim();
 });
 
 self.addEventListener("fetch",event=>{
   const request=event.request;
-  if(request.method!=="GET" || new URL(request.url).origin!==self.location.origin) return;
-  if(request.mode==="navigate"){
-    event.respondWith(
-      fetch(request).then(response=>{
-        const copy=response.clone();
-        caches.open(CACHE_NAME).then(cache=>cache.put("./index.html",copy));
-        return response;
-      }).catch(()=>caches.match("./index.html"))
-    );
-    return;
-  }
+  const url=new URL(request.url);
+  if(request.method!=="GET" || url.origin!==self.location.origin ||
+     url.search || !CACHEABLE_PATHS.has(url.pathname)) return;
   event.respondWith(
-    caches.match(request).then(cached=>cached||fetch(request).then(response=>{
-      if(response.ok){
-        const copy=response.clone();
-        caches.open(CACHE_NAME).then(cache=>cache.put(request,copy));
-      }
-      return response;
-    }))
+    caches.open(CACHE_NAME).then(cache=>cache.match(request).then(cached=>cached||fetch(request)))
   );
 });
